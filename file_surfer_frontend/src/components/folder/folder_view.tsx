@@ -2,6 +2,7 @@ import "./folder_view.css";
 import { useState, useEffect } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
 import { formatBytes } from "../../utils/formatBytes";
+import { formatDateString } from "../../utils/formatDateString";
 
 type File = {
   name: string,
@@ -136,19 +137,16 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
                 <span>{f.item.name}</span>
 
               </FolderListViewCell>
-              {f.tag == "file" &&
-                <FolderListViewCell selected={selected}>
-                  {formatBytes(f.item.size)}
-                </FolderListViewCell>}
-              {f.tag == "folder" &&
-                <FolderListViewCell selected={selected}>
-                  {formatBytes(f.item.contentSize)}
-                </FolderListViewCell>}
+              <FolderListViewCell selected={selected}>
+                {f.tag == "file" && formatBytes(f.item.size)}
+                {f.tag == "folder" && formatBytes(f.item.contentSize)}
+              </FolderListViewCell>
+              <FolderListViewCell selected={selected}>
+                {f.tag == "file" && f.item.type}
+                {f.tag == "folder" && "Folder"}
+              </FolderListViewCell>
 
-              {f.tag == "file" && <FolderListViewCell selected={selected}>{f.item.type}</FolderListViewCell>}
-              {f.tag == "folder" && <FolderListViewCell selected={selected}>Folder</FolderListViewCell>}
-
-              <FolderListViewCell selected={selected}>{f.item.modified}</FolderListViewCell>
+              <FolderListViewCell selected={selected}>{formatDateString(f.item.modified)}</FolderListViewCell>
             </tr>
           )
         })}
@@ -163,7 +161,6 @@ function FolderListViewHeaderCell({ name, onResize = () => { } }: { name: string
   const mouseMoveHandler = (e: MouseEvent) => {
     const d = e.clientX - lastPos
     onResize(d)
-    console.log(e.clientX, lastPos)
     e.preventDefault()
   }
 
