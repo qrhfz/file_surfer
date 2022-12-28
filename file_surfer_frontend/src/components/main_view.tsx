@@ -66,6 +66,10 @@ export function MainView() {
     "Name", "Size", "Type", "Modified"
   ]
 
+  const selectSingleItem = (selected: boolean, i: number) => {
+    setSelectedIndices([i])
+  }
+
   return (
     <table
       style={{
@@ -85,9 +89,11 @@ export function MainView() {
       </thead>
       <tbody>
         {items.map((f, i) => {
+          const selected = selectedIndices.includes(i)
+
           return (
-            <tr>
-              <ListBodyItem>
+            <tr onClick={_ => selectSingleItem(selected, i)}>
+              <ListBodyItem selected={selected}>
                 <div class="flex flex-row items-center gap-1">
                   <div class="w-4 h-4">
                     {f.tag == "file" && <BiFile />}
@@ -96,13 +102,13 @@ export function MainView() {
                   {f.name}
                 </div>
               </ListBodyItem>
-              {f.tag == "file" && <ListBodyItem>{`${f.size}`}</ListBodyItem>}
-              {f.tag == "folder" && <ListBodyItem>{`${f.contentSize}`}</ListBodyItem>}
+              {f.tag == "file" && <ListBodyItem selected={selected}>{`${f.size}`}</ListBodyItem>}
+              {f.tag == "folder" && <ListBodyItem selected={selected}>{`${f.contentSize}`}</ListBodyItem>}
 
-              {f.tag == "file" && <ListBodyItem>{f.type}</ListBodyItem>}
-              {f.tag == "folder" && <ListBodyItem>Folder</ListBodyItem>}
+              {f.tag == "file" && <ListBodyItem selected={selected}>{f.type}</ListBodyItem>}
+              {f.tag == "folder" && <ListBodyItem selected={selected}>Folder</ListBodyItem>}
 
-              <ListBodyItem>{f.modified}</ListBodyItem>
+              <ListBodyItem selected={selected}>{f.modified}</ListBodyItem>
             </tr>
           )
         })}
@@ -146,12 +152,12 @@ function ListHeaderItem({ name, onResize = () => { } }: { name: string, onResize
   )
 }
 
-const ListBodyItem: preact.FunctionalComponent = ({ children }) => {
+const ListBodyItem: preact.FunctionalComponent<{ selected: boolean }> = ({ selected, children }) => {
 
   let myClass = "px-2 py-1 bg-white overflow-hidden whitespace-nowrap text-ellipsis cursor-default"
 
-  if (false) {
-    myClass += "bg-slate-500"
+  if (selected) {
+    myClass += " bg-slate-200"
   }
 
   return (
