@@ -1,0 +1,505 @@
+openapi: 3.1.0
+x-stoplight:
+  id: 8tzokrxv22c0w
+info:
+  title: File Surfer API
+  version: '1.0'
+  description: File Surfer API
+  contact:
+    name: Qori El-Hafizh
+    url: 'https://www.qori.dev'
+    email: contact@qori.dev
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /folder:
+    get:
+      summary: Your GET endpoint
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/File'
+                  folders:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Folder'
+      operationId: get-folder
+      description: Open a folder and returns list of files and folders inside
+      parameters:
+        - $ref: '#/components/parameters/LocationPath'
+      tags:
+        - folder
+      security:
+        - token: []
+    parameters: []
+    post:
+      summary: ''
+      operationId: post-folder
+      responses:
+        '200':
+          description: OK
+      description: create new folder at location defined in path
+      parameters:
+        - $ref: '#/components/parameters/LocationPath'
+      tags:
+        - folder
+      security:
+        - token: []
+    delete:
+      summary: ''
+      operationId: delete-folder
+      responses:
+        '200':
+          description: OK
+      description: delete folder defined in path
+      parameters:
+        - $ref: '#/components/parameters/LocationPath'
+      tags:
+        - folder
+      security:
+        - token: []
+    patch:
+      summary: ''
+      operationId: patch-folder
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+        description: ''
+      tags:
+        - folder
+      description: Used to rename a folder
+      security:
+        - token: []
+      parameters:
+        - $ref: '#/components/parameters/LocationPath'
+  /file:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - file
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/File'
+                  content:
+                    type: string
+      operationId: get-file
+      description: returns file info. if type is text/* it will returns it content as content property
+      security:
+        - token: []
+      parameters:
+        - $ref: '#/components/parameters/LocationPath'
+    post:
+      summary: ''
+      operationId: post-file
+      responses:
+        '200':
+          description: OK
+      tags:
+        - file
+      description: create new empty file
+      parameters:
+        - $ref: '#/components/parameters/LocationPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                type:
+                  type: string
+      security:
+        - token: []
+    parameters: []
+    delete:
+      summary: ''
+      operationId: delete-file
+      responses:
+        '200':
+          description: OK
+      description: Delete file
+      parameters:
+        - $ref: '#/components/parameters/LocationPath'
+      tags:
+        - file
+      security:
+        - token: []
+    patch:
+      summary: ''
+      operationId: patch-file
+      responses:
+        '200':
+          description: OK
+      description: rename file name
+      tags:
+        - file
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      parameters:
+        - $ref: '#/components/parameters/LocationPath'
+      security:
+        - token: []
+  /blob:
+    get:
+      tags:
+        - blob
+      summary: Your GET endpoint
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+      operationId: get-blob
+      parameters:
+        - $ref: '#/components/parameters/LocationPath'
+      description: Download file at given path
+      security:
+        - token: []
+    post:
+      summary: ''
+      operationId: post-blob
+      responses:
+        '200':
+          description: OK
+      description: Upload a file to folder defined in path
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      tags:
+        - blob
+      security:
+        - token: []
+      parameters:
+        - $ref: '#/components/parameters/LocationPath'
+    parameters: []
+  /login:
+    parameters: []
+    post:
+      summary: ''
+      operationId: post-login
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: invalid username or password
+      tags:
+        - user
+      description: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+  '/user/{id}':
+    get:
+      summary: Your GET endpoint
+      tags:
+        - user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      operationId: get-user
+      description: Get user info
+      security:
+        - token: []
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: post-user-id
+      responses:
+        '201':
+          description: Created
+      description: create new user
+      tags:
+        - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                role:
+                  $ref: '#/components/schemas/Role'
+      security:
+        - token: []
+    patch:
+      summary: ''
+      operationId: patch-user-id
+      responses:
+        '200':
+          description: OK
+      description: rename or change password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                role:
+                  $ref: '#/components/schemas/Role'
+      security:
+        - token: []
+      tags:
+        - user
+    delete:
+      summary: ''
+      operationId: delete-user-id
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: invalid id
+      tags:
+        - user
+      description: delete user
+      security:
+        - token: []
+  /search:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - file
+        - folder
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/File'
+                  folders:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Folder'
+      operationId: get-search
+      description: Search file or folder in scoped folder
+      security:
+        - token: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: path
+        - schema:
+            type: string
+          in: query
+          name: searchQuery
+  /copy:
+    post:
+      summary: ''
+      operationId: post-copy
+      responses:
+        '200':
+          description: OK
+      tags:
+        - copy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sources:
+                  type: array
+                  items:
+                    type: string
+                destination:
+                  type: string
+      description: Copy list of files and folders defined in sources to destination folder
+  /move:
+    post:
+      summary: ''
+      operationId: post-move
+      responses:
+        '200':
+          description: OK
+      description: Move list of files and folders defined in sources to destination folder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sources:
+                  type: array
+                  items:
+                    type: string
+                destination:
+                  type: string
+      tags:
+        - move
+components:
+  schemas:
+    File:
+      title: File
+      x-stoplight:
+        id: u03wzz8mvta0u
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          pattern: ^\w+\/\w+$
+          example: text/plain
+        location:
+          type: string
+        size:
+          type: integer
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    Folder:
+      title: Folder
+      x-stoplight:
+        id: 3leln1kmm2kki
+      type: object
+      properties:
+        name:
+          type: string
+        contentCount:
+          type: integer
+        contentSize:
+          type: integer
+        location:
+          type: string
+        modified:
+          type: string
+          format: date-time
+        created:
+          type: string
+          format: date-time
+        freeSpace:
+          type: integer
+    User:
+      title: User
+      x-stoplight:
+        id: 4fjnlr1gx5ikq
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        role:
+          $ref: '#/components/schemas/Role'
+    Role:
+      title: Role
+      x-stoplight:
+        id: xyqmr13no52bc
+      type: string
+      enum:
+        - admin
+        - regular
+  securitySchemes:
+    token:
+      type: http
+      scheme: bearer
+  parameters:
+    LocationPath:
+      name: path
+      in: query
+      required: false
+      schema:
+        type: string
+tags:
+  - name: blob
+  - name: copy
+  - name: file
+  - name: folder
+  - name: move
+  - name: user

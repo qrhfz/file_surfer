@@ -11,7 +11,8 @@
   "dependencies": {
     "boxicons": "^2.1.4",
     "bulma": "^0.9.4",
-    "preact": "^10.11.3"
+    "preact": "^10.11.3",
+    "react-icons": "^4.7.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.4.0",
