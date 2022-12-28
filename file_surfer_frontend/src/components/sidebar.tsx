@@ -1,15 +1,11 @@
 import { BiFolder } from "react-icons/bi";
 
 export function Sidebar() {
-  return (<div>
-    <aside class="menu">
-      <p class="menu-label">
-        Bookmarks
-      </p>
-      <ul class="menu-list">
-        <li><a><BiFolder /> Documents</a></li>
-        <li><a><BiFolder /> Pictures</a></li>
-      </ul>
+  return (
+    <aside class="p-4">
+      <div class="inline-block align-middle">
+        <BiFolder />
+      </div>  <div class="inline-block align-middle">Documents</div>
     </aside>
-  </div>)
+  )
 }

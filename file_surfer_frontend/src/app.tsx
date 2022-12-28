@@ -6,9 +6,14 @@ export function App() {
   return (
     <div>
       <Nav />
-      <div>
-        <Sidebar />
-        <MainView />
+      <div class="flex flex-row">
+
+        <div class="basis-64">
+          <Sidebar />
+        </div>
+        <div class="flex-grow">
+          <MainView />
+        </div>
       </div>
     </div>
   )
