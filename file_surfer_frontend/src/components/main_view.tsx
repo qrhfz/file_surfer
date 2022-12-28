@@ -1,7 +1,7 @@
 export function MainView() {
     return (
-        <div className="column">
-            <table class="table is-hoverable is-fullwidth">
+        <div>
+            <table>
                 <thead>
                     <th>Name</th>
                     <th>Size</th>

@@ -1,36 +1,14 @@
+import { BiSearch } from "react-icons/bi";
+import { SimpleInput } from "./input/simple_input";
+
 export function Nav() {
-    return <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="https://bulma.io">
-                <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" />
-            </a>
-
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
+  return (
+    <nav class="bg-slate-200 flex flex-row p-4">
+      <div class=" relative ">
+        <div class=" relative ">
+          <SimpleInput placeholder="Search" />
         </div>
-
-        <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
-                <div className="navbar-item">
-                    <input class="navbar-item input is-primary" type="text" placeholder="Primary input" />
-                </div>
-            </div>
-
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a class="button is-primary">
-                            <strong>Sign up</strong>
-                        </a>
-                        <a class="button is-light">
-                            Log in
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </nav>
+  )
 }
