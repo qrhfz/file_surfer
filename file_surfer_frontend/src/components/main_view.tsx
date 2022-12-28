@@ -1,8 +1,53 @@
 import "./main_view.css";
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
+import { BiFile, BiFolder } from "react-icons/bi";
+import { JSX } from "preact/jsx-runtime";
+
+type File = {
+  tag: "file"
+  name: string,
+  type: string,
+  location: string,
+  size: number,
+  created: string,
+  modified: string
+}
+
+type Folder = {
+  tag: "folder"
+  name: string,
+  contentCount: number,
+  contentSize: number,
+  location: string,
+  modified: string,
+  created: string,
+  freeSpace: number
+}
+
+type FileOrFolder = File | Folder
 
 export function MainView() {
-  let [widthList, setWidthList] = useState<number[]>([200, 200, 200, 200])
+  const [widthList, setWidthList] = useState<number[]>([200, 200, 200, 200])
+  const [items, setItems] = useState<FileOrFolder[]>([])
+  const [selectedIndices, setSelectedIndices] = useState<number[]>([])
+
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:3100/folder?path=Documents', {
+      method: "GET",
+      headers: {
+        "Authorization": "Bearer abcdef"
+      }
+    }).then(res => {
+      res.json().then(body => {
+        console.log(body)
+        const files: File[] = body.files.map((f: any) => ({ ...f, tag: "file", }))
+        const folders: Folder[] = body.folders.map((f: any) => ({ ...f, tag: "folder" }))
+        console.log("files", files)
+        setItems([...folders, ...files])
+      })
+    })
+  }, [])
 
   function widthListToTemplate(): string {
     const t = widthList.map(n => `max(${n}px, 10ch)`).join(" ")
@@ -39,12 +84,28 @@ export function MainView() {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <ListBodyItem value="hello" />
-          <ListBodyItem value="1kb" />
-          <ListBodyItem value="text" />
-          <ListBodyItem value="yesterday" />
-        </tr>
+        {items.map((f, i) => {
+          return (
+            <tr>
+              <ListBodyItem>
+                <div class="flex flex-row items-center gap-1">
+                  <div class="w-4 h-4">
+                    {f.tag == "file" && <BiFile />}
+                    {f.tag == "folder" && <BiFolder />}
+                  </div>
+                  {f.name}
+                </div>
+              </ListBodyItem>
+              {f.tag == "file" && <ListBodyItem>{`${f.size}`}</ListBodyItem>}
+              {f.tag == "folder" && <ListBodyItem>{`${f.contentSize}`}</ListBodyItem>}
+
+              {f.tag == "file" && <ListBodyItem>{f.type}</ListBodyItem>}
+              {f.tag == "folder" && <ListBodyItem>Folder</ListBodyItem>}
+
+              <ListBodyItem>{f.modified}</ListBodyItem>
+            </tr>
+          )
+        })}
       </tbody>
     </table>
   )
@@ -72,19 +133,30 @@ function ListHeaderItem({ name, onResize = () => { } }: { name: string, onResize
 
           lastPos = e.clientX
 
-          window.addEventListener('mousemove', mouseMoveHandler)
-          window.addEventListener('mouseup', e => {
+          window.onmousemove = mouseMoveHandler
+          window.onmouseup = e => {
+            e.preventDefault()
             lastPos = e.clientX
-            window.removeEventListener('mousemove', mouseMoveHandler)
-          })
+            window.onmousemove = null
+            window.onmouseup = null
+          }
         }}
       ></span>
     </th>
   )
 }
 
-function ListBodyItem({ value }: { value: string }) {
+const ListBodyItem: preact.FunctionalComponent = ({ children }) => {
+
+  let myClass = "px-2 py-1 bg-white overflow-hidden whitespace-nowrap text-ellipsis cursor-default"
+
+  if (false) {
+    myClass += "bg-slate-500"
+  }
+
   return (
-    <td class="px-2 py-1">{value}</td>
+    <td class={myClass}>
+      {children}
+    </td>
   )
 }

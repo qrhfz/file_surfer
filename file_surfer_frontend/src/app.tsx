@@ -8,10 +8,10 @@ export function App() {
       <Nav />
       <div class="flex flex-row">
 
-        <div class="w-96">
+        <div class="w-64">
           <Sidebar />
         </div>
-        <div class="">
+        <div class="overflow-x-auto">
           <MainView />
         </div>
       </div>

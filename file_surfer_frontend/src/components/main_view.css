@@ -1,6 +1,5 @@
 table {
   display: grid;
-  overflow-x: scroll;
 }
 
 thead,
