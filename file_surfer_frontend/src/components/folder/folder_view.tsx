@@ -1,6 +1,7 @@
 import "./folder_view.css";
 import { useState, useEffect } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
+import { formatBytes } from "../../utils/formatBytes";
 
 type File = {
   name: string,
@@ -134,8 +135,14 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
                 <span>{f.item.name}</span>
 
               </ListBodyItem>
-              {f.tag == "file" && <ListBodyItem selected={selected}>{`${f.item.size}`}</ListBodyItem>}
-              {f.tag == "folder" && <ListBodyItem selected={selected}>{`${f.item.contentSize}`}</ListBodyItem>}
+              {f.tag == "file" &&
+                <ListBodyItem selected={selected}>
+                  {formatBytes(f.item.size)}
+                </ListBodyItem>}
+              {f.tag == "folder" &&
+                <ListBodyItem selected={selected}>
+                  {formatBytes(f.item.contentSize)}
+                </ListBodyItem>}
 
               {f.tag == "file" && <ListBodyItem selected={selected}>{f.item.type}</ListBodyItem>}
               {f.tag == "folder" && <ListBodyItem selected={selected}>Folder</ListBodyItem>}
