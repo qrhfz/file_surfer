@@ -125,13 +125,14 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
           return (
             <tr onClick={e => selectItems(i, e.shiftKey)}>
               <ListBodyItem selected={selected}>
-                <div class="flex flex-row items-center gap-1">
-                  <div class="w-4 h-4">
-                    {f.tag == "file" && <BiFile />}
-                    {f.tag == "folder" && <BiFolder />}
-                  </div>
-                  {f.item.name}
+
+                <div class="w-4 h-4 inline-block align-middle mr-1">
+                  {f.tag == "file" && <BiFile />}
+                  {f.tag == "folder" && <BiFolder />}
                 </div>
+
+                <span>{f.item.name}</span>
+
               </ListBodyItem>
               {f.tag == "file" && <ListBodyItem selected={selected}>{`${f.item.size}`}</ListBodyItem>}
               {f.tag == "folder" && <ListBodyItem selected={selected}>{`${f.item.contentSize}`}</ListBodyItem>}
@@ -185,7 +186,7 @@ function ListHeaderItem({ name, onResize = () => { } }: { name: string, onResize
 
 const ListBodyItem: preact.FunctionalComponent<{ selected: boolean }> = ({ selected, children }) => {
 
-  let myClass = "px-2 py-1 bg-white overflow-hidden whitespace-nowrap text-ellipsis cursor-default"
+  let myClass = "px-2 py-1 overflow-hidden whitespace-nowrap text-ellipsis cursor-default"
 
   if (selected) {
     myClass += " bg-slate-200"
