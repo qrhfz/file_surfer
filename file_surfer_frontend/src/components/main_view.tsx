@@ -5,9 +5,21 @@ export function MainView() {
   let [widthList, setWidthList] = useState<number[]>([200, 200, 200, 200])
 
   function widthListToTemplate(): string {
-    const t = widthList.map(n => `${n}px`).join(" ")
+    const t = widthList.map(n => `max(${n}px, 10ch)`).join(" ")
     return t
   }
+
+  function resizeHandler(i: number) {
+    return function (d: number) {
+      const l = [...widthList]
+      l[i] += d
+      setWidthList(l)
+    }
+  }
+
+  const columns: string[] = [
+    "Name", "Size", "Type", "Modified"
+  ]
 
   return (
     <table
@@ -17,14 +29,13 @@ export function MainView() {
     >
       <thead>
         <tr>
-          <ListHeaderItem name="Name" onResize={(d) => {
-            const l = [...widthList]
-            l[0] += d
-            setWidthList(l)
-          }} />
-          <ListHeaderItem name="Size" />
-          <ListHeaderItem name="Type" />
-          <ListHeaderItem name="Modified" />
+          {columns.map(function (c, i) {
+            return (
+              <ListHeaderItem
+                key={c} name={c}
+                onResize={resizeHandler(i)}
+              />);
+          })}
         </tr>
       </thead>
       <tbody>
