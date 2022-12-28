@@ -1,5 +1,6 @@
 table {
   display: grid;
+  user-select: none;
 }
 
 thead,

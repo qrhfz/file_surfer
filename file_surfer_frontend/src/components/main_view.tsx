@@ -28,6 +28,7 @@ export function MainView() {
   const [widthList, setWidthList] = useState<number[]>([200, 200, 200, 200])
   const [items, setItems] = useState<FileOrFolder[]>([])
   const [selectedIndices, setSelectedIndices] = useState<number[]>([])
+  const [lastSelected, setLastSelected] = useState<number>()
 
 
   useEffect(() => {
@@ -38,7 +39,6 @@ export function MainView() {
       }
     }).then(res => {
       res.json().then(body => {
-        console.log(body)
         const files: FileOrFolder[] = (body.files as Array<File>)
           .map((f) => ({ tag: "file", item: f, }))
         const folders: FileOrFolder[] = (body.folders as Array<Folder>)
@@ -65,8 +65,38 @@ export function MainView() {
     "Name", "Size", "Type", "Modified"
   ]
 
-  const selectSingleItem = (selected: boolean, i: number) => {
-    setSelectedIndices([i])
+  const selectItems = (i: number, selectMany: boolean) => {
+    if (selectMany) {
+      selectManyItems(i)
+    } else {
+      selectSingleItem(i)
+    }
+  }
+
+  const selectManyItems = (i: number) => {
+    if (selectedIndices.length > 0) {
+      const last = lastSelected ?? selectedIndices[selectedIndices.length - 1]
+      let range: number[]
+
+      if (last > i) {
+        range = [...Array(last - i + 1).keys()].map(n => n + i)
+      } else {
+        range = [...Array(i - last + 1).keys()].map(n => n + last)
+      }
+
+      setSelectedIndices(range)
+    } else {
+      selectSingleItem(i)
+    }
+  }
+
+  const selectSingleItem = (i: number) => {
+    if (selectedIndices.includes(i)) {
+      // TODO: open an item
+    } else {
+      setSelectedIndices([i])
+      setLastSelected(i)
+    }
   }
 
   return (
@@ -91,7 +121,7 @@ export function MainView() {
           const selected = selectedIndices.includes(i)
 
           return (
-            <tr onClick={_ => selectSingleItem(selected, i)}>
+            <tr onClick={e => selectItems(i, e.shiftKey)}>
               <ListBodyItem selected={selected}>
                 <div class="flex flex-row items-center gap-1">
                   <div class="w-4 h-4">
