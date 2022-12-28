@@ -4,7 +4,6 @@ import { BiFile, BiFolder } from "react-icons/bi";
 import { JSX } from "preact/jsx-runtime";
 
 type File = {
-  tag: "file"
   name: string,
   type: string,
   location: string,
@@ -14,7 +13,6 @@ type File = {
 }
 
 type Folder = {
-  tag: "folder"
   name: string,
   contentCount: number,
   contentSize: number,
@@ -24,7 +22,7 @@ type Folder = {
   freeSpace: number
 }
 
-type FileOrFolder = File | Folder
+type FileOrFolder = { tag: "file", item: File } | { tag: "folder", item: Folder }
 
 export function MainView() {
   const [widthList, setWidthList] = useState<number[]>([200, 200, 200, 200])
@@ -41,9 +39,10 @@ export function MainView() {
     }).then(res => {
       res.json().then(body => {
         console.log(body)
-        const files: File[] = body.files.map((f: any) => ({ ...f, tag: "file", }))
-        const folders: Folder[] = body.folders.map((f: any) => ({ ...f, tag: "folder" }))
-        console.log("files", files)
+        const files: FileOrFolder[] = (body.files as Array<File>)
+          .map((f) => ({ tag: "file", item: f, }))
+        const folders: FileOrFolder[] = (body.folders as Array<Folder>)
+          .map((f) => ({ tag: "folder", item: f, }))
         setItems([...folders, ...files])
       })
     })
@@ -99,16 +98,16 @@ export function MainView() {
                     {f.tag == "file" && <BiFile />}
                     {f.tag == "folder" && <BiFolder />}
                   </div>
-                  {f.name}
+                  {f.item.name}
                 </div>
               </ListBodyItem>
-              {f.tag == "file" && <ListBodyItem selected={selected}>{`${f.size}`}</ListBodyItem>}
-              {f.tag == "folder" && <ListBodyItem selected={selected}>{`${f.contentSize}`}</ListBodyItem>}
+              {f.tag == "file" && <ListBodyItem selected={selected}>{`${f.item.size}`}</ListBodyItem>}
+              {f.tag == "folder" && <ListBodyItem selected={selected}>{`${f.item.contentSize}`}</ListBodyItem>}
 
-              {f.tag == "file" && <ListBodyItem selected={selected}>{f.type}</ListBodyItem>}
+              {f.tag == "file" && <ListBodyItem selected={selected}>{f.item.type}</ListBodyItem>}
               {f.tag == "folder" && <ListBodyItem selected={selected}>Folder</ListBodyItem>}
 
-              <ListBodyItem selected={selected}>{f.modified}</ListBodyItem>
+              <ListBodyItem selected={selected}>{f.item.modified}</ListBodyItem>
             </tr>
           )
         })}
