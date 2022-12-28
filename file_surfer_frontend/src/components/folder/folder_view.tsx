@@ -1,7 +1,6 @@
-import "./main_view.css";
+import "./folder_view.css";
 import { useState, useEffect } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
-import { JSX } from "preact/jsx-runtime";
 
 type File = {
   name: string,
@@ -24,7 +23,7 @@ type Folder = {
 
 type FileOrFolder = { tag: "file", item: File } | { tag: "folder", item: Folder }
 
-export function MainView() {
+export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }) => {
   const [widthList, setWidthList] = useState<number[]>([200, 200, 200, 200])
   const [items, setItems] = useState<FileOrFolder[]>([])
   const [selectedIndices, setSelectedIndices] = useState<number[]>([])
@@ -32,13 +31,16 @@ export function MainView() {
 
 
   useEffect(() => {
-    fetch('http://127.0.0.1:3100/folder?path=Documents', {
+    fetch("http://127.0.0.1:3100/folder?path=" + loc, {
       method: "GET",
       headers: {
         "Authorization": "Bearer abcdef"
-      }
+      },
+
     }).then(res => {
+
       res.json().then(body => {
+        console.log(body)
         const files: FileOrFolder[] = (body.files as Array<File>)
           .map((f) => ({ tag: "file", item: f, }))
         const folders: FileOrFolder[] = (body.folders as Array<Folder>)

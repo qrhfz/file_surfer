@@ -1,10 +1,12 @@
-import { MainView } from './components/main_view'
+import { FolderView } from './components/folder/folder_view'
 import { Nav } from './components/nav'
 import { Sidebar } from './components/sidebar'
+import Router from "preact-router";
+import { Redirect } from './components/redirect';
 
 export function App() {
   return (
-    <div>
+    <>
       <Nav />
       <div class="flex flex-row">
 
@@ -12,9 +14,12 @@ export function App() {
           <Sidebar />
         </div>
         <div class="overflow-x-auto">
-          <MainView />
+          <Router>
+            <FolderView path="/browse/:loc*" />
+            <Redirect path="/" to="/browse/" />
+          </Router>
         </div>
       </div>
-    </div>
+    </>
   )
 }
