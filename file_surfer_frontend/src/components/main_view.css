@@ -1,0 +1,10 @@
+table {
+  display: grid;
+  overflow-x: scroll;
+}
+
+thead,
+tbody,
+tr {
+  display: contents;
+}
