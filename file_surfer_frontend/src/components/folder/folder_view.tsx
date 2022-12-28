@@ -104,6 +104,7 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
 
   return (
     <table
+      class="folder-list-view"
       style={{
         gridTemplateColumns: widthListToTemplate()
       }}
@@ -112,7 +113,7 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
         <tr>
           {columns.map(function (c, i) {
             return (
-              <ListHeaderItem
+              <FolderListViewHeaderCell
                 key={c} name={c}
                 onResize={resizeHandler(i)}
               />);
@@ -125,7 +126,7 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
 
           return (
             <tr onClick={e => selectItems(i, e.shiftKey)}>
-              <ListBodyItem selected={selected}>
+              <FolderListViewCell selected={selected}>
 
                 <div class="w-4 h-4 inline-block align-middle mr-1">
                   {f.tag == "file" && <BiFile />}
@@ -134,20 +135,20 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
 
                 <span>{f.item.name}</span>
 
-              </ListBodyItem>
+              </FolderListViewCell>
               {f.tag == "file" &&
-                <ListBodyItem selected={selected}>
+                <FolderListViewCell selected={selected}>
                   {formatBytes(f.item.size)}
-                </ListBodyItem>}
+                </FolderListViewCell>}
               {f.tag == "folder" &&
-                <ListBodyItem selected={selected}>
+                <FolderListViewCell selected={selected}>
                   {formatBytes(f.item.contentSize)}
-                </ListBodyItem>}
+                </FolderListViewCell>}
 
-              {f.tag == "file" && <ListBodyItem selected={selected}>{f.item.type}</ListBodyItem>}
-              {f.tag == "folder" && <ListBodyItem selected={selected}>Folder</ListBodyItem>}
+              {f.tag == "file" && <FolderListViewCell selected={selected}>{f.item.type}</FolderListViewCell>}
+              {f.tag == "folder" && <FolderListViewCell selected={selected}>Folder</FolderListViewCell>}
 
-              <ListBodyItem selected={selected}>{f.item.modified}</ListBodyItem>
+              <FolderListViewCell selected={selected}>{f.item.modified}</FolderListViewCell>
             </tr>
           )
         })}
@@ -156,7 +157,7 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
   )
 }
 
-function ListHeaderItem({ name, onResize = () => { } }: { name: string, onResize?: (d: number) => void }) {
+function FolderListViewHeaderCell({ name, onResize = () => { } }: { name: string, onResize?: (d: number) => void }) {
   let lastPos = 0
 
   const mouseMoveHandler = (e: MouseEvent) => {
@@ -191,16 +192,10 @@ function ListHeaderItem({ name, onResize = () => { } }: { name: string, onResize
   )
 }
 
-const ListBodyItem: preact.FunctionalComponent<{ selected: boolean }> = ({ selected, children }) => {
-
-  let myClass = "px-2 py-1 overflow-hidden whitespace-nowrap text-ellipsis cursor-default"
-
-  if (selected) {
-    myClass += " bg-slate-200"
-  }
+const FolderListViewCell: preact.FunctionalComponent<{ selected: boolean }> = ({ selected, children }) => {
 
   return (
-    <td class={myClass}>
+    <td class={selected ? "bg-slate-200" : undefined}>
       {children}
     </td>
   )
