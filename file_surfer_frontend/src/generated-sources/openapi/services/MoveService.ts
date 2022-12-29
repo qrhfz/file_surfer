@@ -15,8 +15,8 @@ export class MoveService {
      */
     public static postMove(
         requestBody?: {
-            sources?: Array<string>;
-            destination?: string;
+            sources: Array<string>;
+            destination: string;
         },
     ): CancelablePromise<any> {
         return __request(OpenAPI, {

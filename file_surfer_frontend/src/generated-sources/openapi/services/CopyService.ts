@@ -15,8 +15,8 @@ export class CopyService {
      */
     public static postCopy(
         requestBody?: {
-            sources?: Array<string>;
-            destination?: string;
+            sources: Array<string>;
+            destination: string;
         },
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
