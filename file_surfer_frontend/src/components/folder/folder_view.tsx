@@ -75,7 +75,7 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
     if (selectedIndices.includes(i)) {
       if (items[i].tag == "folder") {
         const newLoc = '/browse/' + items[i].item.location + '/' + items[i].item.name
-        route(newLoc, true)
+        route(newLoc)
       } else {
         // TODO: open file
       }
