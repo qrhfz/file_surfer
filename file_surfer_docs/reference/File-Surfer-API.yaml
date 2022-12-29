@@ -398,6 +398,9 @@ paths:
                     type: string
                 destination:
                   type: string
+              required:
+                - sources
+                - destination
       description: Copy list of files and folders defined in sources to destination folder
   /move:
     post:
@@ -419,6 +422,9 @@ paths:
                     type: string
                 destination:
                   type: string
+              required:
+                - sources
+                - destination
       tags:
         - move
 components:
