@@ -6,6 +6,7 @@ import { formatDateString } from "../../utils/formatDateString";
 import * as API from "../../generated-sources/openapi";
 import { route } from "preact-router";
 import { MarkedFilesContext, MarkedFilesState } from "../../file_marking";
+import { ContextMenu, ContextMenuPosition } from "../context_menu";
 
 type File = API.File
 
@@ -18,6 +19,7 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
   const [items, setItems] = useState<FileOrFolder[]>([])
   const [selectedIndices, setSelectedIndices] = useState<number[]>([])
   const [lastSelected, setLastSelected] = useState<number>()
+  const [contextMenuPosition, setContextMenuPosition] = useState<ContextMenuPosition>()
 
 
   useEffect(() => {
@@ -48,7 +50,7 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
   ]
 
   const handleItemClick = (i: number) => (e: MouseEvent) => {
-    console.log(e.type)
+    setContextMenuPosition(undefined)
     if (e.type !== 'click') return
     if (e.shiftKey) {
       selectManyItems(i)
@@ -90,6 +92,7 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
   }
 
   const selectSingleItem = (i: number) => {
+
     setSelectedIndices([i])
     setLastSelected(i)
   }
@@ -98,6 +101,10 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
     e.preventDefault()
     if (e.type !== 'contextmenu') return
     selectSingleItem(i)
+    setContextMenuPosition({
+      x: e.x,
+      y: e.y
+    })
   }
 
   useEffect(() => {
@@ -129,59 +136,62 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
   }
 
   return (
-    <table
-      class="folder-list-view"
-      style={{
-        gridTemplateColumns: widthListToTemplate()
-      }}
-    >
-      <thead>
-        <tr>
-          {columns.map(function (c, i) {
+    <>
+      {contextMenuPosition && <ContextMenu position={contextMenuPosition} />}
+      <table
+        class="folder-list-view"
+        style={{
+          gridTemplateColumns: widthListToTemplate()
+        }}
+      >
+        <thead>
+          <tr>
+            {columns.map(function (c, i) {
+              return (
+                <FolderListViewHeaderCell
+                  key={c} name={c}
+                  onResize={resizeHandler(i)}
+                />);
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((f, i) => {
+            const selected = selectedIndices.includes(i)
+
             return (
-              <FolderListViewHeaderCell
-                key={c} name={c}
-                onResize={resizeHandler(i)}
-              />);
+              <tr
+                onClick={handleItemClick(i)}
+                onContextMenu={handleRightClick(i)}>
+
+                <FolderListViewCell selected={selected}>
+                  <div class="w-4 h-4 inline-block align-middle mr-1">
+                    {f.tag == "file" && <BiFile />}
+                    {f.tag == "folder" && <BiFolder />}
+                  </div>
+                  <span>{f.item.name}</span>
+                </FolderListViewCell>
+
+                <FolderListViewCell selected={selected}>
+                  {f.tag == "file" && formatBytes(f.item.size ?? 0)}
+                  {f.tag == "folder" && formatBytes(f.item.contentSize ?? 0)}
+                </FolderListViewCell>
+
+                <FolderListViewCell selected={selected}>
+                  {f.tag == "file" && f.item.type}
+                  {f.tag == "folder" && "Folder"}
+                </FolderListViewCell>
+
+                <FolderListViewCell selected={selected}>
+                  {f.item.modified != undefined ?
+                    formatDateString(f.item.modified) : "N/A"}
+                </FolderListViewCell>
+              </tr>
+            )
           })}
-        </tr>
-      </thead>
-      <tbody>
-        {items.map((f, i) => {
-          const selected = selectedIndices.includes(i)
-
-          return (
-            <tr
-              onClick={handleItemClick(i)}
-              onContextMenu={handleRightClick(i)}>
-
-              <FolderListViewCell selected={selected}>
-                <div class="w-4 h-4 inline-block align-middle mr-1">
-                  {f.tag == "file" && <BiFile />}
-                  {f.tag == "folder" && <BiFolder />}
-                </div>
-                <span>{f.item.name}</span>
-              </FolderListViewCell>
-
-              <FolderListViewCell selected={selected}>
-                {f.tag == "file" && formatBytes(f.item.size ?? 0)}
-                {f.tag == "folder" && formatBytes(f.item.contentSize ?? 0)}
-              </FolderListViewCell>
-
-              <FolderListViewCell selected={selected}>
-                {f.tag == "file" && f.item.type}
-                {f.tag == "folder" && "Folder"}
-              </FolderListViewCell>
-
-              <FolderListViewCell selected={selected}>
-                {f.item.modified != undefined ?
-                  formatDateString(f.item.modified) : "N/A"}
-              </FolderListViewCell>
-            </tr>
-          )
-        })}
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </>
   )
 }
 
