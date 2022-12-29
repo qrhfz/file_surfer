@@ -124,20 +124,28 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
     }
 
     if (e.key == 'c') {
-      const paths = selectedIndices.map(i => {
-        return (items[i].item.location ?? '') + '/' + (items[i].item.name ?? '');
-      })
+      const paths = selectedPaths()
       console.log(paths)
-      markedFiles.setValue(paths)
-
+      markedFiles.copy(paths)
     } else if (e.key == 'v') {
-      console.log('paste')
+      loc && markedFiles.paste(loc)
     }
+  }
+
+  const selectedPaths = () => {
+    return selectedIndices.map(i => {
+      return (items[i].item.location ?? '') + '/' + (items[i].item.name ?? '');
+    })
   }
 
   return (
     <>
-      {contextMenuPosition && <ContextMenu position={contextMenuPosition} />}
+      {contextMenuPosition &&
+        <ContextMenu
+          handleCopy={() => { markedFiles.copy(selectedPaths()) }}
+          handleCut={() => { markedFiles.cut(selectedPaths()) }}
+          handlePaste={() => { loc && markedFiles.paste(loc) }}
+          position={contextMenuPosition} />}
       <table
         class="folder-list-view"
         style={{
