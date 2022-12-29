@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@preact/preset-vite': ^2.4.0
+  '@preact/signals': ^1.1.3
   '@tailwindcss/forms': ^0.5.3
   autoprefixer: ^10.4.13
   openapi-typescript-codegen: ^0.23.0
@@ -14,6 +15,7 @@ specifiers:
   vite: ^4.0.0
 
 dependencies:
+  '@preact/signals': 1.1.3_preact@10.11.3
   '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.4
   preact: 10.11.3
   preact-router: 4.1.0_preact@10.11.3
@@ -565,6 +567,19 @@ packages:
       - preact
       - supports-color
     dev: true
+
+  /@preact/signals-core/1.2.3:
+    resolution: {integrity: sha512-Kui4p7PMcEQevBgsTO0JBo3gyQ88Q3qzEvsVCuSp11t0JcN4DmGCTJcGRVSCq7Bn7lGxJBO+57jNSzDoDJ+QmA==}
+    dev: false
+
+  /@preact/signals/1.1.3_preact@10.11.3:
+    resolution: {integrity: sha512-N09DuAVvc90bBZVRwD+aFhtGyHAmJLhS3IFoawO/bYJRcil4k83nBOchpCEoS0s5+BXBpahgp0Mjf+IOqP57Og==}
+    peerDependencies:
+      preact: 10.x
+    dependencies:
+      '@preact/signals-core': 1.2.3
+      preact: 10.11.3
+    dev: false
 
   /@prefresh/babel-plugin/0.4.4:
     resolution: {integrity: sha512-/EvgIFMDL+nd20WNvMO0JQnzIl1EJPgmSaSYrZUww7A+aSdKsi37aL07TljrZR1cBMuzFxcr4xvqsUQLFJEukw==}

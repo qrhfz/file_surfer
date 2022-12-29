@@ -6,7 +6,7 @@ type ThisPage = preact.FunctionalComponent<{ loc?: string }>
 
 export const FolderBrowserPage: ThisPage = ({ loc }) => {
   return (
-    <>
+    <div>
       <Nav />
       <div class="flex flex-row">
         <div class="w-64">
@@ -17,7 +17,7 @@ export const FolderBrowserPage: ThisPage = ({ loc }) => {
           <FolderView loc={loc} />
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

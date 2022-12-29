@@ -1,10 +1,11 @@
 import "./folder_view.css";
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect, useContext } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
 import { formatBytes } from "../../utils/formatBytes";
 import { formatDateString } from "../../utils/formatDateString";
 import * as API from "../../generated-sources/openapi";
 import { route } from "preact-router";
+import { MarkedFilesContext, MarkedFilesState } from "../../file_marking";
 
 type File = API.File
 
@@ -83,6 +84,34 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
     } else {
       setSelectedIndices([i])
       setLastSelected(i)
+    }
+  }
+
+  useEffect(() => {
+    window.onkeydown = handleKeyboardShortcut
+
+    return () => {
+      window.onkeydown = null
+    }
+  }, [items, selectedIndices]);
+
+  const markedFiles = useContext(MarkedFilesContext)
+
+  const handleKeyboardShortcut = (e: KeyboardEvent) => {
+
+    if (!e.ctrlKey) {
+      return
+    }
+
+    if (e.key == 'c') {
+      const paths = selectedIndices.map(i => {
+        return (items[i].item.location ?? '') + '/' + (items[i].item.name ?? '');
+      })
+      console.log(paths)
+      markedFiles.setValue(paths)
+
+    } else if (e.key == 'v') {
+      console.log('paste')
     }
   }
 
