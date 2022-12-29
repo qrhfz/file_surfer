@@ -4,6 +4,7 @@ import { BiFile, BiFolder } from "react-icons/bi";
 import { formatBytes } from "../../utils/formatBytes";
 import { formatDateString } from "../../utils/formatDateString";
 import * as API from "../../generated-sources/openapi";
+import { route } from "preact-router";
 
 type File = API.File
 
@@ -19,18 +20,14 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
 
 
   useEffect(() => {
-
-
     API.FolderService.getFolder(loc).then(body => {
-
-      console.log(body)
       const files: FileOrFolder[] = (body.files ?? [])
         .map((f) => ({ tag: "file", item: f, }))
       const folders: FileOrFolder[] = (body.folders ?? [])
         .map((f) => ({ tag: "folder", item: f, }))
       setItems([...folders, ...files])
     })
-  }, [])
+  }, [loc])
 
   function widthListToTemplate(): string {
     const t = widthList.map(n => `max(${n}px, 10ch)`).join(" ")
@@ -76,7 +73,12 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
 
   const selectSingleItem = (i: number) => {
     if (selectedIndices.includes(i)) {
-      // TODO: open an item
+      if (items[i].tag == "folder") {
+        const newLoc = '/browse/' + items[i].item.location + '/' + items[i].item.name
+        route(newLoc, true)
+      } else {
+        // TODO: open file
+      }
     } else {
       setSelectedIndices([i])
       setLastSelected(i)
