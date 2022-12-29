@@ -47,11 +47,18 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
     "Name", "Size", "Type", "Modified"
   ]
 
-  const selectItems = (i: number, selectMany: boolean) => {
-    if (selectMany) {
+  const handleItemClick = (i: number) => (e: MouseEvent) => {
+    console.log(e.type)
+    if (e.type !== 'click') return
+    if (e.shiftKey) {
       selectManyItems(i)
     } else {
-      selectSingleItem(i)
+      if (selectedIndices.length <= 1) {
+        selectedIndices.includes(i) ? openItem(i) : selectSingleItem(i)
+      } else {
+        selectSingleItem(i)
+      }
+
     }
   }
 
@@ -68,23 +75,29 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
 
       setSelectedIndices(range)
     } else {
-      selectSingleItem(i)
+      selectedIndices.includes(i) ? openItem(i) : selectSingleItem(i)
+    }
+  }
+
+  const openItem = (i: number) => {
+    if (items[i].tag == "folder") {
+      const newLoc = '/browse/' + items[i].item.location + '/' + items[i].item.name
+      route(newLoc)
+    } else {
+      const newLoc = '/view/' + items[i].item.location + '/' + items[i].item.name
+      route(newLoc)
     }
   }
 
   const selectSingleItem = (i: number) => {
-    if (selectedIndices.includes(i)) {
-      if (items[i].tag == "folder") {
-        const newLoc = '/browse/' + items[i].item.location + '/' + items[i].item.name
-        route(newLoc)
-      } else {
-        const newLoc = '/view/' + items[i].item.location + '/' + items[i].item.name
-        route(newLoc)
-      }
-    } else {
-      setSelectedIndices([i])
-      setLastSelected(i)
-    }
+    setSelectedIndices([i])
+    setLastSelected(i)
+  }
+
+  const handleRightClick = (i: number) => (e: MouseEvent) => {
+    e.preventDefault()
+    if (e.type !== 'contextmenu') return
+    selectSingleItem(i)
   }
 
   useEffect(() => {
@@ -138,21 +151,23 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
           const selected = selectedIndices.includes(i)
 
           return (
-            <tr onClick={e => selectItems(i, e.shiftKey)}>
-              <FolderListViewCell selected={selected}>
+            <tr
+              onClick={handleItemClick(i)}
+              onContextMenu={handleRightClick(i)}>
 
+              <FolderListViewCell selected={selected}>
                 <div class="w-4 h-4 inline-block align-middle mr-1">
                   {f.tag == "file" && <BiFile />}
                   {f.tag == "folder" && <BiFolder />}
                 </div>
-
                 <span>{f.item.name}</span>
-
               </FolderListViewCell>
+
               <FolderListViewCell selected={selected}>
                 {f.tag == "file" && formatBytes(f.item.size ?? 0)}
                 {f.tag == "folder" && formatBytes(f.item.contentSize ?? 0)}
               </FolderListViewCell>
+
               <FolderListViewCell selected={selected}>
                 {f.tag == "file" && f.item.type}
                 {f.tag == "folder" && "Folder"}
