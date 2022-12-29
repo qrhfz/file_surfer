@@ -1,25 +1,14 @@
-import { FolderView } from './components/folder/folder_view'
-import { Nav } from './components/nav'
-import { Sidebar } from './components/sidebar'
 import Router from "preact-router";
 import { Redirect } from './components/redirect';
+import { FileViewPage } from './pages/file_view_page';
+import { FolderBrowserPage } from './pages/folder_browser_page';
 
 export function App() {
   return (
-    <>
-      <Nav />
-      <div class="flex flex-row">
-
-        <div class="w-64">
-          <Sidebar />
-        </div>
-        <div class="overflow-x-auto">
-          <Router>
-            <FolderView path="/browse/:loc*" />
-            <Redirect path="/" to="/browse/" />
-          </Router>
-        </div>
-      </div>
-    </>
+    <Router>
+      <FolderBrowserPage path="/browse/:loc*" />
+      <FileViewPage path="/view/:loc*" />
+      <Redirect path="/" to="/browse/" />
+    </Router>
   )
 }
