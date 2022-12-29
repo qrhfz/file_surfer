@@ -384,6 +384,11 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
       tags:
         - copy
       requestBody:
@@ -409,6 +414,11 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
       description: Move list of files and folders defined in sources to destination folder
       requestBody:
         content:
