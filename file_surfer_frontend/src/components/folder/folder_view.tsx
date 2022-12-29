@@ -3,25 +3,11 @@ import { useState, useEffect } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
 import { formatBytes } from "../../utils/formatBytes";
 import { formatDateString } from "../../utils/formatDateString";
+import * as API from "../../generated-sources/openapi";
 
-type File = {
-  name: string,
-  type: string,
-  location: string,
-  size: number,
-  created: string,
-  modified: string
-}
+type File = API.File
 
-type Folder = {
-  name: string,
-  contentCount: number,
-  contentSize: number,
-  location: string,
-  modified: string,
-  created: string,
-  freeSpace: number
-}
+type Folder = API.Folder
 
 type FileOrFolder = { tag: "file", item: File } | { tag: "folder", item: Folder }
 
@@ -33,22 +19,16 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
 
 
   useEffect(() => {
-    fetch("http://127.0.0.1:3100/folder?path=" + loc, {
-      method: "GET",
-      headers: {
-        "Authorization": "Bearer abcdef"
-      },
 
-    }).then(res => {
 
-      res.json().then(body => {
-        console.log(body)
-        const files: FileOrFolder[] = (body.files as Array<File>)
-          .map((f) => ({ tag: "file", item: f, }))
-        const folders: FileOrFolder[] = (body.folders as Array<Folder>)
-          .map((f) => ({ tag: "folder", item: f, }))
-        setItems([...folders, ...files])
-      })
+    API.FolderService.getFolder(loc).then(body => {
+
+      console.log(body)
+      const files: FileOrFolder[] = (body.files ?? [])
+        .map((f) => ({ tag: "file", item: f, }))
+      const folders: FileOrFolder[] = (body.folders ?? [])
+        .map((f) => ({ tag: "folder", item: f, }))
+      setItems([...folders, ...files])
     })
   }, [])
 
@@ -138,15 +118,18 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
 
               </FolderListViewCell>
               <FolderListViewCell selected={selected}>
-                {f.tag == "file" && formatBytes(f.item.size)}
-                {f.tag == "folder" && formatBytes(f.item.contentSize)}
+                {f.tag == "file" && formatBytes(f.item.size ?? 0)}
+                {f.tag == "folder" && formatBytes(f.item.contentSize ?? 0)}
               </FolderListViewCell>
               <FolderListViewCell selected={selected}>
                 {f.tag == "file" && f.item.type}
                 {f.tag == "folder" && "Folder"}
               </FolderListViewCell>
 
-              <FolderListViewCell selected={selected}>{formatDateString(f.item.modified)}</FolderListViewCell>
+              <FolderListViewCell selected={selected}>
+                {f.item.modified != undefined ?
+                  formatDateString(f.item.modified) : "N/A"}
+              </FolderListViewCell>
             </tr>
           )
         })}
