@@ -201,10 +201,13 @@ paths:
           multipart/form-data:
             schema:
               type: object
+              format: binary
               properties:
-                file:
-                  type: string
-                  format: binary
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: byte
       tags:
         - blob
       security:
@@ -342,9 +345,6 @@ paths:
   /search:
     get:
       summary: Your GET endpoint
-      tags:
-        - file
-        - folder
       responses:
         '200':
           description: OK
@@ -375,6 +375,8 @@ paths:
             type: string
           in: query
           name: searchQuery
+      tags:
+        - search
   /copy:
     post:
       summary: ''
@@ -505,4 +507,5 @@ tags:
   - name: file
   - name: folder
   - name: move
+  - name: search
   - name: user
