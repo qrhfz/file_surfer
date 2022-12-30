@@ -23,7 +23,7 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
     <div class="w-screen h-screen bg-slate-300 pt-24">
 
       <div class="w-5/12 mx-auto bg-white p-4">
-        <h1 class="text-lg font-bold">{loc}</h1>
+        <h1 class="text-lg font-bold">{file.name}</h1>
         <hr class="pt-2" />
         <div>
           {content}
