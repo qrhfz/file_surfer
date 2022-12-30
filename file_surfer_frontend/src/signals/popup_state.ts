@@ -2,15 +2,15 @@ import { signal } from "@preact/signals";
 import { Component, ComponentType, createContext } from "preact";
 
 export class PopupState {
-  content = signal<ComponentType | undefined>(undefined);
+  component = signal<ComponentType | undefined>(undefined);
 
   show(content: ComponentType) {
-    this.content.value = content;
+    this.component.value = content;
     console.log("show popup");
   }
 
   close() {
-    this.content.value = undefined;
+    this.component.value = undefined;
   }
 }
 

@@ -8,6 +8,7 @@ import { route } from "preact-router";
 import { ClipboardContext } from "../../clipboard";
 import { ContextMenu, ContextMenuPosition } from "../context_menu";
 import { PopupContext } from "../../signals/popup_state";
+import { Popup } from "../popup";
 
 type File = API.File
 
@@ -126,7 +127,10 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
     markedFiles.cut(selectedPaths());
   }
   const paste = () => {
-    markedFiles.paste(loc ?? '/').then(_ => popup.show(PastePopupSuccess));
+    popup.show(PastePopupInProgress)
+    markedFiles.paste(loc ?? '/')
+      .then(_ => popup.show(PastePopupSuccess))
+      .catch(_ => popup.show(PastePopupError))
   }
 
   const handleKeyboardShortcut = (e: KeyboardEvent) => {
@@ -261,4 +265,6 @@ const FolderListViewCell: preact.FunctionalComponent<{ selected: boolean }> = ({
 }
 
 
-const PastePopupSuccess: preact.FunctionalComponent = () => <>Paste Success</>
+const PastePopupSuccess: preact.FunctionalComponent = () => <Popup>Paste Success</Popup>
+const PastePopupError: preact.FunctionalComponent = () => <Popup>Paste Error</Popup>
+const PastePopupInProgress: preact.FunctionalComponent = () => <Popup>Pasting in Progress</Popup>

@@ -4,7 +4,6 @@ import { FileViewPage } from './pages/file_view_page';
 import { FolderBrowserPage } from './pages/folder_browser_page';
 import { Clipboard, ClipboardContext } from "./clipboard";
 import { PopupContext, PopupState } from "./signals/popup_state";
-import { Popup } from "./components/popup";
 
 
 
@@ -15,9 +14,9 @@ export function App() {
       <PopupContext.Provider value={new PopupState()}>
         <PopupContext.Consumer>
           {p => {
-            const Content = p.content.value
-            if (Content) {
-              return <Popup><Content /></Popup>;
+            const Popup = p.component.value
+            if (Popup) {
+              return <Popup></Popup>;
             }
           }}
         </PopupContext.Consumer>
