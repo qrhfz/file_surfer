@@ -5,8 +5,9 @@ import { formatBytes } from "../../utils/formatBytes";
 import { formatDateString } from "../../utils/formatDateString";
 import * as API from "../../generated-sources/openapi";
 import { route } from "preact-router";
-import { MarkedFilesContext } from "../../file_marking";
+import { MarkedFilesContext } from "../../marked_files";
 import { ContextMenu, ContextMenuPosition } from "../context_menu";
+import { PopupContext } from "../../signals/popup_state";
 
 type File = API.File
 
@@ -116,6 +117,17 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
   }, [items, selectedIndices]);
 
   const markedFiles = useContext(MarkedFilesContext)
+  const popup = useContext(PopupContext)
+
+  const copy = () => {
+    markedFiles.copy(selectedPaths());
+  }
+  const cut = () => {
+    markedFiles.cut(selectedPaths());
+  }
+  const paste = () => {
+    markedFiles.paste(loc ?? '/').then(_ => popup.show(PastePopupSuccess));
+  }
 
   const handleKeyboardShortcut = (e: KeyboardEvent) => {
 
@@ -124,11 +136,11 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
     }
 
     if (e.key == 'c') {
-      const paths = selectedPaths()
-      console.log(paths)
-      markedFiles.copy(paths)
+      copy()
+    } else if (e.key == 'x') {
+      cut()
     } else if (e.key == 'v') {
-      markedFiles.paste(loc ?? '/')
+      paste()
     }
   }
 
@@ -138,13 +150,15 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
     })
   }
 
+
+
   return (
     <>
       {contextMenuPosition &&
         <ContextMenu
-          handleCopy={() => { markedFiles.copy(selectedPaths()); setContextMenuPosition(undefined) }}
-          handleCut={() => { markedFiles.cut(selectedPaths()); setContextMenuPosition(undefined) }}
-          handlePaste={() => { markedFiles.paste(loc ?? '/'); setContextMenuPosition(undefined) }}
+          handleCopy={() => { copy(); setContextMenuPosition(undefined) }}
+          handleCut={() => { cut(); setContextMenuPosition(undefined) }}
+          handlePaste={() => { paste(); setContextMenuPosition(undefined) }}
           position={contextMenuPosition} />}
       <table
         class="folder-list-view"
@@ -245,3 +259,6 @@ const FolderListViewCell: preact.FunctionalComponent<{ selected: boolean }> = ({
     </td>
   )
 }
+
+
+const PastePopupSuccess: preact.FunctionalComponent = () => <>Paste Success</>

@@ -1,8 +1,7 @@
-import { signal } from "@preact/signals";
 import { createContext } from "preact";
-import { CopyService, MoveService } from "../generated-sources/openapi";
+import { CopyService, MoveService } from "./generated-sources/openapi";
 
-export class MarkedFilesState {
+export class MarkedFiles {
   #items: string[] = [];
   #mode: "copy" | "cut" | undefined;
 
@@ -18,15 +17,15 @@ export class MarkedFilesState {
     this.#items = items;
   }
 
-  paste(destination: string) {
+  async paste(destination: string) {
     console.log("paste");
     if (this.#mode == "copy") {
-      CopyService.postCopy({
+      await CopyService.postCopy({
         sources: this.#items,
         destination,
       });
     } else if (this.#mode == "cut") {
-      MoveService.postMove({
+      await MoveService.postMove({
         sources: this.#items,
         destination,
       });
@@ -44,4 +43,4 @@ export class MarkedFilesState {
     this.#items.splice(i, 1);
   }
 }
-export const MarkedFilesContext = createContext(new MarkedFilesState());
+export const MarkedFilesContext = createContext(new MarkedFiles());
