@@ -1,7 +1,7 @@
 import { createContext } from "preact";
 import { CopyService, MoveService } from "./generated-sources/openapi";
 
-export class MarkedFiles {
+export class Clipboard {
   #items: string[] = [];
   #mode: "copy" | "cut" | undefined;
 
@@ -43,4 +43,4 @@ export class MarkedFiles {
     this.#items.splice(i, 1);
   }
 }
-export const MarkedFilesContext = createContext(new MarkedFiles());
+export const ClipboardContext = createContext(new Clipboard());

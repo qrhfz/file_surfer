@@ -2,7 +2,7 @@ import Router from "preact-router";
 import { Redirect } from './components/redirect';
 import { FileViewPage } from './pages/file_view_page';
 import { FolderBrowserPage } from './pages/folder_browser_page';
-import { MarkedFiles, MarkedFilesContext } from "./marked_files";
+import { Clipboard, ClipboardContext } from "./clipboard";
 import { PopupContext, PopupState } from "./signals/popup_state";
 import { Popup } from "./components/popup";
 
@@ -11,7 +11,7 @@ import { Popup } from "./components/popup";
 export function App() {
 
   return (
-    <MarkedFilesContext.Provider value={new MarkedFiles()}>
+    <ClipboardContext.Provider value={new Clipboard()}>
       <PopupContext.Provider value={new PopupState()}>
         <PopupContext.Consumer>
           {p => {
@@ -27,6 +27,6 @@ export function App() {
           <Redirect path="/" to="/browse/" />
         </Router>
       </PopupContext.Provider>
-    </MarkedFilesContext.Provider>
+    </ClipboardContext.Provider>
   )
 }

@@ -5,7 +5,7 @@ import { formatBytes } from "../../utils/formatBytes";
 import { formatDateString } from "../../utils/formatDateString";
 import * as API from "../../generated-sources/openapi";
 import { route } from "preact-router";
-import { MarkedFilesContext } from "../../marked_files";
+import { ClipboardContext } from "../../clipboard";
 import { ContextMenu, ContextMenuPosition } from "../context_menu";
 import { PopupContext } from "../../signals/popup_state";
 
@@ -116,7 +116,7 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
     }
   }, [items, selectedIndices]);
 
-  const markedFiles = useContext(MarkedFilesContext)
+  const markedFiles = useContext(ClipboardContext)
   const popup = useContext(PopupContext)
 
   const copy = () => {
