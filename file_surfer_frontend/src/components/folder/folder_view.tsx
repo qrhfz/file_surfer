@@ -3,16 +3,12 @@ import { useState, useEffect, useContext } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
 import { formatBytes } from "../../utils/formatBytes";
 import { formatDateString } from "../../utils/formatDateString";
-import * as API from "../../generated-sources/openapi";
+import { File, Folder, FolderService } from "../../generated-sources/openapi";
 import { route } from "preact-router";
 import { ClipboardContext } from "../../clipboard";
 import { ContextMenu, ContextMenuPosition } from "../context_menu";
 import { PopupContext } from "../../signals/popup_state";
 import { Popup } from "../popup";
-
-type File = API.File
-
-type Folder = API.Folder
 
 type FileOrFolder = { tag: "file", item: File } | { tag: "folder", item: Folder }
 
@@ -25,7 +21,7 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
 
 
   useEffect(() => {
-    API.FolderService.getFolder(loc).then(body => {
+    FolderService.getFolder(loc).then(body => {
       const files: FileOrFolder[] = (body.files ?? [])
         .map((f) => ({ tag: "file", item: f, }))
       const folders: FileOrFolder[] = (body.folders ?? [])
