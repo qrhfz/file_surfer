@@ -5,7 +5,7 @@ import { formatBytes } from "../../utils/formatBytes";
 import { formatDateString } from "../../utils/formatDateString";
 import * as API from "../../generated-sources/openapi";
 import { route } from "preact-router";
-import { MarkedFilesContext, MarkedFilesState } from "../../file_marking";
+import { MarkedFilesContext } from "../../file_marking";
 import { ContextMenu, ContextMenuPosition } from "../context_menu";
 
 type File = API.File
@@ -128,7 +128,7 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
       console.log(paths)
       markedFiles.copy(paths)
     } else if (e.key == 'v') {
-      loc && markedFiles.paste(loc)
+      markedFiles.paste(loc ?? '/')
     }
   }
 
@@ -142,9 +142,9 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
     <>
       {contextMenuPosition &&
         <ContextMenu
-          handleCopy={() => { markedFiles.copy(selectedPaths()) }}
-          handleCut={() => { markedFiles.cut(selectedPaths()) }}
-          handlePaste={() => { loc && markedFiles.paste(loc) }}
+          handleCopy={() => { markedFiles.copy(selectedPaths()); setContextMenuPosition(undefined) }}
+          handleCut={() => { markedFiles.cut(selectedPaths()); setContextMenuPosition(undefined) }}
+          handlePaste={() => { markedFiles.paste(loc ?? '/'); setContextMenuPosition(undefined) }}
           position={contextMenuPosition} />}
       <table
         class="folder-list-view"
