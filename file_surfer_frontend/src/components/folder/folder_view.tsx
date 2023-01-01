@@ -11,24 +11,11 @@ import { FileOrFolder } from "./model";
 import { useClipboard } from "./useClipboard";
 import { useSelect } from "./useSelect";
 
+type FolderView = preact.FunctionalComponent<{ items: FileOrFolder[], loc?: string }>
 
-export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }) => {
-  const [items, setItems] = useState<FileOrFolder[]>([])
-
+export const FolderView: FolderView = ({ loc, items }) => {
   const [contextMenuPosition, setContextMenuPosition] = useState<ContextMenuPosition>()
   const { columns, resizeHandler, gridColTemplate } = useResize(["Name", "Size", "Type", "Modified"])
-
-
-  useEffect(() => {
-    FolderService.getFolder(loc).then(body => {
-      const files: FileOrFolder[] = (body.files ?? [])
-        .map((f) => ({ tag: "file", item: f, }))
-      const folders: FileOrFolder[] = (body.folders ?? [])
-        .map((f) => ({ tag: "folder", item: f, }))
-      setItems([...folders, ...files])
-    })
-  }, [loc])
-
 
   const {
     handleItemClick,

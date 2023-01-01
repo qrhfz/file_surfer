@@ -1,11 +1,25 @@
+import { useEffect, useState } from "preact/hooks"
 import { FolderView } from "../components/folder/folder_view"
+import { FileOrFolder } from "../components/folder/model"
 import { Nav } from "../components/nav"
-import { Popup } from "../components/popup"
 import { Sidebar } from "../components/sidebar"
+import { FolderService } from "../generated-sources/openapi"
 
 type ThisPage = preact.FunctionalComponent<{ loc?: string }>
 
+
 export const FolderBrowserPage: ThisPage = ({ loc }) => {
+  const [items, setItems] = useState<FileOrFolder[]>([])
+
+  useEffect(() => {
+    FolderService.getFolder(loc).then(body => {
+      const files: FileOrFolder[] = (body.files ?? [])
+        .map((f) => ({ tag: "file", item: f, }))
+      const folders: FileOrFolder[] = (body.folders ?? [])
+        .map((f) => ({ tag: "folder", item: f, }))
+      setItems([...folders, ...files])
+    })
+  }, [loc])
   return (
     <div>
       <Nav />
@@ -14,7 +28,7 @@ export const FolderBrowserPage: ThisPage = ({ loc }) => {
           <Sidebar />
         </div>
         <div class="overflow-x-auto">
-          <FolderView loc={loc} />
+          <FolderView loc={loc} items={items} />
         </div>
       </div>
     </div>

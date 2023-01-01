@@ -4,6 +4,7 @@ import { FileViewPage } from './pages/file_view_page';
 import { FolderBrowserPage } from './pages/folder_browser_page';
 import { Clipboard, ClipboardContext } from "./clipboard";
 import { PopupContext, PopupState } from "./signals/popup_state";
+import { SearchPage } from "./pages/search_page";
 
 
 
@@ -21,6 +22,7 @@ export function App() {
           }}
         </PopupContext.Consumer>
         <Router>
+          <SearchPage path="/search/:loc*" />
           <FolderBrowserPage path="/browse/:loc*" />
           <FileViewPage path="/view/:loc*" />
           <Redirect path="/" to="/browse/" />
