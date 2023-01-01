@@ -6,12 +6,13 @@ import { SimpleInput } from "./input/simple_input";
 type Prop = { q?: string, at?: string }
 
 export const Nav: preact.FunctionalComponent<Prop> = ({ q, at }) => {
-  const [term, setTerm] = useState(q ?? "")
+  const [term, setTerm] = useState(q?.replaceAll("+", " ") ?? "")
 
 
   const handleSubmit = (e: Event) => {
     e.preventDefault()
-    const path = new URLSearchParams({ "q": term, "in": at ?? getCurrentUrl() })
+    const curr = getCurrentUrl().replace(/^\/browse/, "")
+    const path = new URLSearchParams({ "q": term, "in": at ?? curr })
     route("/search?" + path.toString(), false)
   }
 
