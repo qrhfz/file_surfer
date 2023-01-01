@@ -10,6 +10,14 @@ import { LoadingCircle } from "../components/loading_circle"
 type ThisPage = preact.FunctionalComponent<{ loc?: string, matches?: { query: string | undefined } }>
 
 export const SearchPage: ThisPage = ({ loc, matches }) => {
+  if (loc == undefined) {
+    return <>Error</>
+  }
+
+  if ((matches?.query) == undefined) {
+    return <>Error</>
+  }
+
   const task = SearchService.getSearch(loc, matches?.query)
 
   const result = useAsync(task, body => {

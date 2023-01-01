@@ -5,6 +5,10 @@ import { useAsync } from "../utils/useAsync"
 type FilveViewPageType = preact.FunctionalComponent<{ loc?: string }>
 
 export const FileViewPage: FilveViewPageType = ({ loc }) => {
+  if (loc == undefined) {
+    return <>Error</>
+  }
+
   const fileState = useAsync(API.FileService.getFile(loc), ok => ok, err => err,)
 
   return (

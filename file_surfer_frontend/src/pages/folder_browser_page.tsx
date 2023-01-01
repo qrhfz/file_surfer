@@ -9,6 +9,10 @@ type ThisPage = preact.FunctionalComponent<{ loc?: string }>
 
 
 export const FolderBrowserPage: ThisPage = ({ loc }) => {
+  if (loc == undefined) {
+    return <>Error</>
+  }
+
   const [items, setItems] = useState<FileOrFolder[]>([])
 
   useEffect(() => {

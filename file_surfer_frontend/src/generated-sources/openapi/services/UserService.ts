@@ -18,8 +18,8 @@ export class UserService {
      */
     public static postLogin(
         requestBody?: {
-            username?: string;
-            password?: string;
+            username: string;
+            password: string;
         },
     ): CancelablePromise<{
         token?: string;

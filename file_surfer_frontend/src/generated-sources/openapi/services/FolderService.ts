@@ -18,7 +18,7 @@ export class FolderService {
      * @throws ApiError
      */
     public static getFolder(
-        path?: string,
+        path: string,
     ): CancelablePromise<{
         files?: Array<File>;
         folders?: Array<Folder>;
@@ -39,7 +39,7 @@ export class FolderService {
      * @throws ApiError
      */
     public static postFolder(
-        path?: string,
+        path: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -57,7 +57,7 @@ export class FolderService {
      * @throws ApiError
      */
     public static deleteFolder(
-        path?: string,
+        path: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
@@ -76,7 +76,7 @@ export class FolderService {
      * @throws ApiError
      */
     public static patchFolder(
-        path?: string,
+        path: string,
         requestBody?: {
             name?: string;
         },

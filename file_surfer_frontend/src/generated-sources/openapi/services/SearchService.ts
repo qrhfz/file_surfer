@@ -19,8 +19,8 @@ export class SearchService {
      * @throws ApiError
      */
     public static getSearch(
-        path?: string,
-        searchQuery?: string,
+        path: string,
+        searchQuery: string,
     ): CancelablePromise<{
         files?: Array<File>;
         folders?: Array<Folder>;

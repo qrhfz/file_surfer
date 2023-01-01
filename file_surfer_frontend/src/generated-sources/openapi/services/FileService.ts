@@ -17,7 +17,7 @@ export class FileService {
      * @throws ApiError
      */
     public static getFile(
-        path?: string,
+        path: string,
     ): CancelablePromise<{
         info?: File;
         content?: string;
@@ -39,7 +39,7 @@ export class FileService {
      * @throws ApiError
      */
     public static postFile(
-        path?: string,
+        path: string,
         requestBody?: {
             name?: string;
             type?: string;
@@ -63,7 +63,7 @@ export class FileService {
      * @throws ApiError
      */
     public static deleteFile(
-        path?: string,
+        path: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
@@ -82,7 +82,7 @@ export class FileService {
      * @throws ApiError
      */
     public static patchFile(
-        path?: string,
+        path: string,
         requestBody?: {
             name?: string;
         },

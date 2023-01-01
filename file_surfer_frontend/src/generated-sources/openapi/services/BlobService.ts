@@ -15,7 +15,7 @@ export class BlobService {
      * @throws ApiError
      */
     public static getBlob(
-        path?: string,
+        path: string,
     ): CancelablePromise<Blob> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -34,7 +34,7 @@ export class BlobService {
      * @throws ApiError
      */
     public static postBlob(
-        path?: string,
+        path: string,
         formData?: {
             files?: Array<string>;
         },
