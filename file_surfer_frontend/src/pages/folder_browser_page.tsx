@@ -5,10 +5,9 @@ import { Nav } from "../components/nav"
 import { Sidebar } from "../components/sidebar"
 import { FolderService } from "../generated-sources/openapi"
 
-type ThisPage = preact.FunctionalComponent<{ loc?: string }>
+type FolderBrowserPage = preact.FunctionalComponent<{ loc?: string }>
 
-
-export const FolderBrowserPage: ThisPage = ({ loc }) => {
+export const FolderBrowserPage: FolderBrowserPage = ({ loc }) => {
   if (loc === undefined) {
     return <>Error</>
   }
@@ -38,5 +37,3 @@ export const FolderBrowserPage: ThisPage = ({ loc }) => {
     </div>
   )
 }
-
-//path="/browse/:loc*" 
