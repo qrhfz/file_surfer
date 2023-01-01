@@ -522,6 +522,7 @@ components:
       in: query
       schema:
         type: string
+      required: true
 tags:
   - name: blob
   - name: copy

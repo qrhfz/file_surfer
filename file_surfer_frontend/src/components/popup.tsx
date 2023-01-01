@@ -1,8 +1,19 @@
-import { useContext } from "preact/hooks"
+import { useContext, useEffect } from "preact/hooks"
 import { PopupContext } from "../signals/popup_state"
 
 export const Popup: preact.FunctionalComponent = ({ children }) => {
   const popup = useContext(PopupContext)
+
+  useEffect(() => {
+
+    const to = setTimeout(() => {
+      popup.close()
+    }, 3000)
+
+    return () => clearTimeout(to)
+  }, [])
+
+
 
   return (
     <aside
