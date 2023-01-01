@@ -9,14 +9,14 @@ type ThisPage = preact.FunctionalComponent<{ loc?: string }>
 
 
 export const FolderBrowserPage: ThisPage = ({ loc }) => {
-  if (loc == undefined) {
+  if (loc === undefined) {
     return <>Error</>
   }
 
   const [items, setItems] = useState<FileOrFolder[]>([])
 
   useEffect(() => {
-    FolderService.getFolder(loc).then(body => {
+    FolderService.getFolder(loc === "" ? "/" : loc).then(body => {
       const files: FileOrFolder[] = (body.files ?? [])
         .map((f) => ({ tag: "file", item: f, }))
       const folders: FileOrFolder[] = (body.folders ?? [])
