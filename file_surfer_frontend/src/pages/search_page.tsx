@@ -4,11 +4,14 @@ import { Nav } from "../components/nav"
 import { Sidebar } from "../components/sidebar"
 import { SearchService } from "../generated-sources/openapi"
 import { useAsync } from "../utils/useAsync"
+import { BiLoaderCircle } from "react-icons/bi";
+import { LoadingCircle } from "../components/loading_circle"
 
 type ThisPage = preact.FunctionalComponent<{ loc?: string, matches?: { query: string | undefined } }>
 
 export const SearchPage: ThisPage = ({ loc, matches }) => {
   const task = SearchService.getSearch(loc, matches?.query)
+
   const result = useAsync(task, body => {
     const files: FileOrFolder[] = (body.files ?? [])
       .map((f) => ({ tag: "file", item: f, }))
@@ -24,10 +27,14 @@ export const SearchPage: ThisPage = ({ loc, matches }) => {
         <div class="w-64">
           <Sidebar />
         </div>
-        <div class="overflow-x-auto">
-
-          {result.tag == "ok" && <FolderView loc={loc} items={result.data} />}
-        </div>
+        {result.tag == "loading" &&
+          <LoadingCircle></LoadingCircle>
+        }
+        {result.tag == "ok" &&
+          <div class="overflow-x-auto">
+            <FolderView loc={loc} items={result.data} />
+          </div>
+        }
       </div>
     </div>
   )
