@@ -1,4 +1,5 @@
 import { useEffect, useState } from "preact/hooks"
+import { useGuard } from "../auth/useGuard"
 import { FolderView } from "../components/folder/folder_view"
 import { FileOrFolder } from "../components/folder/model"
 import { Nav } from "../components/nav"
@@ -9,6 +10,8 @@ type Prop = { loc?: string, matches?: { q: string | undefined, in: string | unde
 type FolderBrowserPage = preact.FunctionalComponent<Prop>
 
 export const FolderBrowserPage: FolderBrowserPage = ({ loc, matches }) => {
+  useGuard()
+
   if (loc === undefined) {
     return <>Error</>
   }

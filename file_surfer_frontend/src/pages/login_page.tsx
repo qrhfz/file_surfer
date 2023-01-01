@@ -6,13 +6,13 @@ import { UserService } from "../generated-sources/openapi"
 export const LoginPage: preact.FunctionalComponent = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [hidden, setHidden] = useState(false)
+  const [hidden, setHidden] = useState(true)
 
   const submit = async (e: Event) => {
     e.preventDefault()
-    const token = await UserService.postLogin({ username, password })
-
-    if (token !== undefined) {
+    const result = await UserService.postLogin({ username, password })
+    if (result?.token !== undefined) {
+      localStorage.setItem("token", result.token);
       route("/browse/")
     }
   }
