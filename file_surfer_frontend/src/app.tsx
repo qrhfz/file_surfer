@@ -22,7 +22,7 @@ export function App() {
           }}
         </PopupContext.Consumer>
         <Router>
-          <SearchPage path="/search/:loc*" />
+          <SearchPage path="/search" />
           <FolderBrowserPage path="/browse/:loc*" />
           <FileViewPage path="/view/:loc*" />
           <Redirect path="/" to="/browse/" />
