@@ -1,4 +1,4 @@
-import { File, Folder, FolderService } from "../../generated-sources/openapi";
+import { File, Folder } from "../../generated-sources/openapi";
 
 export type FileOrFolder =
   | { tag: "file"; item: File }
