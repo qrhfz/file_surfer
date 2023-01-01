@@ -4,8 +4,6 @@ import { BiFile, BiFolder } from "react-icons/bi";
 import { formatBytes } from "../../utils/formatBytes";
 import { formatDateString } from "../../utils/formatDateString";
 import { FolderService } from "../../generated-sources/openapi";
-
-import { route } from "preact-router";
 import { ContextMenu, ContextMenuPosition } from "../context_menu";
 import { FolderListViewCell, FolderListViewHeaderCell } from "./cell";
 import { useResize } from "./useResize";
@@ -30,6 +28,7 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
       setItems([...folders, ...files])
     })
   }, [loc])
+
 
   const {
     handleItemClick,
