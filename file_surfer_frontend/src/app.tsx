@@ -5,6 +5,7 @@ import { FolderBrowserPage } from './pages/folder_browser_page';
 import { Clipboard, ClipboardContext } from "./clipboard";
 import { PopupContext, PopupState } from "./signals/popup_state";
 import { SearchPage } from "./pages/search_page";
+import { LoginPage } from "./pages/login_page";
 
 
 
@@ -22,6 +23,7 @@ export function App() {
           }}
         </PopupContext.Consumer>
         <Router>
+          <LoginPage path="/login" />
           <SearchPage path="/search" />
           <FolderBrowserPage path="/browse/:loc*" />
           <FileViewPage path="/view/:loc*" />
