@@ -14,10 +14,11 @@ export type AsyncState<T, E> =
 type OkCb<R, T> = (ok: R) => T;
 type ErrCb<E> = (err: any) => E;
 
-export const useAsync = <R, T, E>(
+export const useAsync = <K, R, T, E>(
   task: Promise<R>,
   ok: OkCb<R, T>,
   err: ErrCb<E>,
+  key: K,
 ) => {
   const [state, setState] = useState<AsyncState<T, E>>(loading);
 
@@ -25,7 +26,7 @@ export const useAsync = <R, T, E>(
     task
       .then((t) => setState({ tag: "ok", data: ok(t) }))
       .catch((e) => setState({ tag: "error", error: err(e) }));
-  }, []);
+  }, [key]);
 
   return state;
 };

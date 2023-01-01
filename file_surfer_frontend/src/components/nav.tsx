@@ -3,15 +3,15 @@ import { useState } from "preact/hooks";
 import { BiSearch } from "react-icons/bi";
 import { SimpleInput } from "./input/simple_input";
 
-type Prop = { matches?: { q: string | undefined, in: string | undefined } }
+type Prop = { q?: string, at?: string }
 
-export const Nav: preact.FunctionalComponent<Prop> = ({ matches }) => {
-  const [term, setTerm] = useState(matches?.q ?? "")
+export const Nav: preact.FunctionalComponent<Prop> = ({ q, at }) => {
+  const [term, setTerm] = useState(q ?? "")
 
 
   const handleSubmit = (e: Event) => {
     e.preventDefault()
-    const path = new URLSearchParams({ "q": term, "in": matches?.in ?? getCurrentUrl() })
+    const path = new URLSearchParams({ "q": term, "in": at ?? getCurrentUrl() })
     route("/search?" + path.toString(), false)
   }
 

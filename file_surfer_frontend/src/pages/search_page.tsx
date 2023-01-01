@@ -25,11 +25,11 @@ export const SearchPage: SearchPage = ({ matches }) => {
     const folders: FileOrFolder[] = (body.folders ?? [])
       .map((f) => ({ tag: "folder", item: f, }))
     return [...folders, ...files]
-  }, e => e)
+  }, e => e, matches?.q)
 
   return (
     <div>
-      <Nav />
+      <Nav q={matches.q} at={matches.in} />
       <div class="flex flex-row">
         <div class="w-64">
           <Sidebar />

@@ -5,9 +5,10 @@ import { Nav } from "../components/nav"
 import { Sidebar } from "../components/sidebar"
 import { FolderService } from "../generated-sources/openapi"
 
-type FolderBrowserPage = preact.FunctionalComponent<{ loc?: string }>
+type Prop = { loc?: string, matches?: { q: string | undefined, in: string | undefined } }
+type FolderBrowserPage = preact.FunctionalComponent<Prop>
 
-export const FolderBrowserPage: FolderBrowserPage = ({ loc }) => {
+export const FolderBrowserPage: FolderBrowserPage = ({ loc, matches }) => {
   if (loc === undefined) {
     return <>Error</>
   }
@@ -25,7 +26,7 @@ export const FolderBrowserPage: FolderBrowserPage = ({ loc }) => {
   }, [loc])
   return (
     <div>
-      <Nav />
+      <Nav q={matches?.q} at={matches?.in} />
       <div class="flex flex-row">
         <div class="w-64">
           <Sidebar />
