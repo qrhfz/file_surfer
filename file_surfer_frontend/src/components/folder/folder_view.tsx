@@ -36,6 +36,11 @@ export const FolderView: FolderView = ({ loc, items }) => {
           handleCopy={() => { copy(); setContextMenuPosition(undefined) }}
           handleCut={() => { cut(); setContextMenuPosition(undefined) }}
           handlePaste={() => { paste(); setContextMenuPosition(undefined) }}
+          handleDownload={() => {
+            // TODO: download link
+            window.open("download");
+            setContextMenuPosition(undefined)
+          }}
           position={contextMenuPosition} />}
       <table
         class="folder-list-view"

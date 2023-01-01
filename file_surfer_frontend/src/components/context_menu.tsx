@@ -4,11 +4,12 @@ type ContextMenuProp = {
   handleCopy: () => void,
   handleCut: () => void,
   handlePaste: () => void,
+  handleDownload: () => void,
   position: ContextMenuPosition
 }
 
 export const ContextMenu: preact.FunctionComponent<ContextMenuProp> = (prop) => {
-  const { position, handleCopy, handleCut, handlePaste } = prop
+  const { position, handleCopy, handleCut, handlePaste, handleDownload } = prop
 
   return (
     <nav
@@ -25,6 +26,10 @@ export const ContextMenu: preact.FunctionComponent<ContextMenuProp> = (prop) => 
 
       <ContextMenuItem onClick={handlePaste}>
         Paste
+      </ContextMenuItem>
+
+      <ContextMenuItem onClick={handleDownload}>
+        Download
       </ContextMenuItem>
     </nav>
   )
