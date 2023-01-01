@@ -14,17 +14,11 @@ import { ComponentChildren, JSX } from "preact";
 
 
 export function App() {
-
-  useEffect(() => {
-    OpenAPI.TOKEN = "aaaa"
-    OpenAPI.BASE = "http://127.0.0.1:3100"
-  }, [])
-
   return (
     <MultiProvider providers={[
-      _ => <ClipboardContext.Provider value={new Clipboard()}>_</ClipboardContext.Provider>,
-      _ => <PopupContext.Provider value={new PopupState()}>_</PopupContext.Provider>,
-      _ => <TokenContext.Provider value={createTokenSignal()}>_</TokenContext.Provider>,
+      _ => <ClipboardContext.Provider value={new Clipboard()}>{_}</ClipboardContext.Provider>,
+      _ => <PopupContext.Provider value={new PopupState()}>{_}</PopupContext.Provider>,
+      _ => <TokenContext.Provider value={createTokenSignal()}>{_}</TokenContext.Provider>,
     ]}>
       <PopupContext.Consumer>
         {p => {
@@ -53,11 +47,12 @@ type MultiProvider = preact.FunctionalComponent<MultiProviderProp>
 const MultiProvider: MultiProvider = (
   { children, providers }
 ) => {
+  const first = providers.shift()
   return (
     <>
       {providers.reduce((prev, next) => {
         return next(prev)
-      }, providers[0](children))}
+      }, first!(children))}
     </>
   )
 }

@@ -1,9 +1,11 @@
 import { route } from "preact-router";
-import { useEffect } from "preact/hooks";
+import { useContext, useEffect } from "preact/hooks";
+import { TokenContext } from "./tokenSignal";
 
 export const useGuard = () => {
+  const tokenSignal = useContext(TokenContext);
   useEffect(() => {
-    if (localStorage.getItem("token") === null) {
+    if (tokenSignal.token === null) {
       route("/login");
     }
   }, []);
