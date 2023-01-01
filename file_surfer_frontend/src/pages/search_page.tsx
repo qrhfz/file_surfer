@@ -7,18 +7,17 @@ import { useAsync } from "../utils/useAsync"
 import { BiLoaderCircle } from "react-icons/bi";
 import { LoadingCircle } from "../components/loading_circle"
 
-type ThisPage = preact.FunctionalComponent<{ loc?: string, matches?: { query: string | undefined } }>
+type Prop = { matches?: { q: string | undefined, in: string | undefined } }
 
-export const SearchPage: ThisPage = ({ loc, matches }) => {
-  if (loc == undefined) {
+type SearchPage = preact.FunctionalComponent<Prop>
+
+export const SearchPage: SearchPage = ({ matches }) => {
+
+  if ((matches?.q) === undefined) {
     return <>Error</>
   }
 
-  if ((matches?.query) == undefined) {
-    return <>Error</>
-  }
-
-  const task = SearchService.getSearch(loc, matches?.query)
+  const task = SearchService.getSearch(matches?.in ?? '', matches?.q)
 
   const result = useAsync(task, body => {
     const files: FileOrFolder[] = (body.files ?? [])
@@ -40,7 +39,7 @@ export const SearchPage: ThisPage = ({ loc, matches }) => {
         }
         {result.tag == "ok" &&
           <div class="overflow-x-auto">
-            <FolderView loc={loc} items={result.data} />
+            <FolderView items={result.data} />
           </div>
         }
       </div>
