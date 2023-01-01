@@ -1,23 +1,24 @@
 import "./folder_view.css";
-import { useState, useEffect, useContext } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
 import { formatBytes } from "../../utils/formatBytes";
 import { formatDateString } from "../../utils/formatDateString";
-import { File, Folder, FolderService } from "../../generated-sources/openapi";
-import { route } from "preact-router";
-import { ClipboardContext } from "../../clipboard";
-import { ContextMenu, ContextMenuPosition } from "../context_menu";
-import { PopupContext } from "../../signals/popup_state";
-import { Popup } from "../popup";
+import { FolderService } from "../../generated-sources/openapi";
 
-type FileOrFolder = { tag: "file", item: File } | { tag: "folder", item: Folder }
+import { route } from "preact-router";
+import { ContextMenu, ContextMenuPosition } from "../context_menu";
+import { FolderListViewCell, FolderListViewHeaderCell } from "./cell";
+import { useResize } from "./useResize";
+import { FileOrFolder } from "./model";
+import { useClipboard } from "./useClipboard";
+import { useSelect } from "./useSelect";
+
 
 export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }) => {
-  const [widthList, setWidthList] = useState<number[]>([200, 200, 200, 200])
   const [items, setItems] = useState<FileOrFolder[]>([])
-  const [selectedIndices, setSelectedIndices] = useState<number[]>([])
-  const [lastSelected, setLastSelected] = useState<number>()
+
   const [contextMenuPosition, setContextMenuPosition] = useState<ContextMenuPosition>()
+  const { columns, resizeHandler, gridColTemplate } = useResize(["Name", "Size", "Type", "Modified"])
 
 
   useEffect(() => {
@@ -30,127 +31,17 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
     })
   }, [loc])
 
-  function widthListToTemplate(): string {
-    const t = widthList.map(n => `max(${n}px, 10ch)`).join(" ")
-    return t
-  }
+  const {
+    handleItemClick,
+    handleRightClick,
+    selectedIndices,
+  } = useSelect(
+    items,
+    (x, y) => { setContextMenuPosition({ x, y }) },
+    () => setContextMenuPosition(undefined),
+  )
 
-  function resizeHandler(i: number) {
-    return function (d: number) {
-      const l = [...widthList]
-      l[i] += d
-      setWidthList(l)
-    }
-  }
-
-  const columns: string[] = [
-    "Name", "Size", "Type", "Modified"
-  ]
-
-  const handleItemClick = (i: number) => (e: MouseEvent) => {
-    setContextMenuPosition(undefined)
-    if (e.type !== 'click') return
-    if (e.shiftKey) {
-      selectManyItems(i)
-    } else {
-      if (selectedIndices.length <= 1) {
-        selectedIndices.includes(i) ? openItem(i) : selectSingleItem(i)
-      } else {
-        selectSingleItem(i)
-      }
-
-    }
-  }
-
-  const selectManyItems = (i: number) => {
-    if (selectedIndices.length > 0) {
-      const last = lastSelected ?? selectedIndices[selectedIndices.length - 1]
-      let range: number[]
-
-      if (last > i) {
-        range = [...Array(last - i + 1).keys()].map(n => n + i)
-      } else {
-        range = [...Array(i - last + 1).keys()].map(n => n + last)
-      }
-
-      setSelectedIndices(range)
-    } else {
-      selectedIndices.includes(i) ? openItem(i) : selectSingleItem(i)
-    }
-  }
-
-  const openItem = (i: number) => {
-    if (items[i].tag == "folder") {
-      const newLoc = '/browse/' + items[i].item.location + '/' + items[i].item.name
-      route(newLoc)
-    } else {
-      const newLoc = '/view/' + items[i].item.location + '/' + items[i].item.name
-      route(newLoc)
-    }
-  }
-
-  const selectSingleItem = (i: number) => {
-
-    setSelectedIndices([i])
-    setLastSelected(i)
-  }
-
-  const handleRightClick = (i: number) => (e: MouseEvent) => {
-    e.preventDefault()
-    if (e.type !== 'contextmenu') return
-    selectSingleItem(i)
-    setContextMenuPosition({
-      x: e.x,
-      y: e.y
-    })
-  }
-
-  useEffect(() => {
-    window.onkeydown = handleKeyboardShortcut
-
-    return () => {
-      window.onkeydown = null
-    }
-  }, [items, selectedIndices]);
-
-  const markedFiles = useContext(ClipboardContext)
-  const popup = useContext(PopupContext)
-
-  const copy = () => {
-    markedFiles.copy(selectedPaths());
-  }
-  const cut = () => {
-    markedFiles.cut(selectedPaths());
-  }
-  const paste = () => {
-    popup.show(PastePopupInProgress)
-    markedFiles.paste(loc ?? '/')
-      .then(_ => popup.show(PastePopupSuccess))
-      .catch(_ => popup.show(PastePopupError))
-  }
-
-  const handleKeyboardShortcut = (e: KeyboardEvent) => {
-
-    if (!e.ctrlKey) {
-      return
-    }
-
-    if (e.key == 'c') {
-      copy()
-    } else if (e.key == 'x') {
-      cut()
-    } else if (e.key == 'v') {
-      paste()
-    }
-  }
-
-  const selectedPaths = () => {
-    return selectedIndices.map(i => {
-      return (items[i].item.location ?? '') + '/' + (items[i].item.name ?? '');
-    })
-  }
-
-
+  const { copy, cut, paste, } = useClipboard(loc ?? '/', selectedIndices, items)
 
   return (
     <>
@@ -163,18 +54,17 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
       <table
         class="folder-list-view"
         style={{
-          gridTemplateColumns: widthListToTemplate()
+          gridTemplateColumns: gridColTemplate
         }}
       >
         <thead>
           <tr>
-            {columns.map(function (c, i) {
-              return (
-                <FolderListViewHeaderCell
-                  key={c} name={c}
-                  onResize={resizeHandler(i)}
-                />);
-            })}
+            {columns.map((c, i) => (
+              <FolderListViewHeaderCell
+                key={c} name={c}
+                onResize={resizeHandler(i)}
+              />)
+            )}
           </tr>
         </thead>
         <tbody>
@@ -217,50 +107,3 @@ export const FolderView: preact.FunctionalComponent<{ loc?: string }> = ({ loc }
   )
 }
 
-function FolderListViewHeaderCell({ name, onResize = () => { } }: { name: string, onResize?: (d: number) => void }) {
-  let lastPos = 0
-
-  const mouseMoveHandler = (e: MouseEvent) => {
-    const d = e.clientX - lastPos
-    onResize(d)
-    e.preventDefault()
-  }
-
-  return (
-    <th class="
-  bg-slate-100 hover:bg-slate-50
-    flex flex-row items-stretch 
-    ">
-      <div class="cursor-pointer p-2 inline-block flex-grow">{name}</div>
-      <span class="border-2 cursor-ew-resize w-1"
-        onMouseDown={e => {
-          e.preventDefault()
-
-          lastPos = e.clientX
-
-          window.onmousemove = mouseMoveHandler
-          window.onmouseup = e => {
-            e.preventDefault()
-            lastPos = e.clientX
-            window.onmousemove = null
-            window.onmouseup = null
-          }
-        }}
-      ></span>
-    </th>
-  )
-}
-
-const FolderListViewCell: preact.FunctionalComponent<{ selected: boolean }> = ({ selected, children }) => {
-
-  return (
-    <td class={selected ? "bg-slate-200" : undefined}>
-      {children}
-    </td>
-  )
-}
-
-
-const PastePopupSuccess: preact.FunctionalComponent = () => <Popup>Paste Success</Popup>
-const PastePopupError: preact.FunctionalComponent = () => <Popup>Paste Error</Popup>
-const PastePopupInProgress: preact.FunctionalComponent = () => <Popup>Pasting in Progress</Popup>
