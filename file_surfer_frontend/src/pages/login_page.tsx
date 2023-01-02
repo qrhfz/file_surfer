@@ -1,7 +1,7 @@
 import { route } from "preact-router"
 import { useState } from "preact/hooks"
 import { BiHide, BiShow, BiUserCircle } from "react-icons/bi"
-import { UserService } from "../generated-sources/openapi"
+import { AuthService } from "../generated-sources/openapi"
 
 export const LoginPage: preact.FunctionalComponent = () => {
   const [username, setUsername] = useState("")
@@ -10,7 +10,7 @@ export const LoginPage: preact.FunctionalComponent = () => {
 
   const submit = async (e: Event) => {
     e.preventDefault()
-    const result = await UserService.postLogin({ username, password })
+    const result = await AuthService.postLogin({ username, password })
     if (result?.token !== undefined) {
       localStorage.setItem("token", result.token);
       route("/browse/")

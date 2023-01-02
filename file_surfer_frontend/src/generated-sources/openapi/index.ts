@@ -11,6 +11,7 @@ export type { Folder } from './models/Folder';
 export { Role } from './models/Role';
 export type { User } from './models/User';
 
+export { AuthService } from './services/AuthService';
 export { BlobService } from './services/BlobService';
 export { CopyService } from './services/CopyService';
 export { FileService } from './services/FileService';

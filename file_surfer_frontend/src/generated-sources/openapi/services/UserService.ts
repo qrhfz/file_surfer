@@ -11,31 +11,6 @@ import { request as __request } from '../core/request';
 export class UserService {
 
     /**
-     * Login
-     * @param requestBody
-     * @returns any OK
-     * @throws ApiError
-     */
-    public static postLogin(
-        requestBody?: {
-            username: string;
-            password: string;
-        },
-    ): CancelablePromise<{
-        token?: string;
-    }> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/login',
-            body: requestBody,
-            mediaType: 'application/json',
-            errors: {
-                401: `Unauthorized`,
-            },
-        });
-    }
-
-    /**
      * Your GET endpoint
      * Get user info
      * @param id
