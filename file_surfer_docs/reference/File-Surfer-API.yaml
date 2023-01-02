@@ -188,7 +188,7 @@ paths:
         - $ref: '#/components/parameters/LocationPath'
       description: Download file at given path
       security:
-        - token: []
+        - accessToken: []
     post:
       summary: ''
       operationId: post-blob
@@ -240,8 +240,6 @@ paths:
                   message:
                     type: string
                     default: invalid username or password
-      tags:
-        - user
       description: Login
       requestBody:
         content:
@@ -258,6 +256,8 @@ paths:
               required:
                 - username
                 - password
+      tags:
+        - auth
   '/user/{id}':
     get:
       summary: Your GET endpoint
@@ -444,6 +444,26 @@ paths:
                 - destination
       tags:
         - move
+  /access-token:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - auth
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+      operationId: get-access-token
+      description: Ask for token to access file download etc
+      security:
+        - token: []
+    parameters: []
 components:
   schemas:
     File:
@@ -518,6 +538,10 @@ components:
     token:
       type: http
       scheme: bearer
+    accessToken:
+      name: accessToken
+      type: apiKey
+      in: query
   parameters:
     LocationPath:
       name: path
@@ -526,6 +550,7 @@ components:
         type: string
       required: true
 tags:
+  - name: auth
   - name: blob
   - name: copy
   - name: file
