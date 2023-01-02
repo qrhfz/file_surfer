@@ -1,6 +1,6 @@
 import { useEffect, useState } from "preact/hooks"
 import { PrimaryButton } from "../components/buttons"
-import * as API from "../generated-sources/openapi"
+import { AuthService, FileService } from "../generated-sources/openapi"
 import { useAsync } from "../utils/useAsync"
 
 type FilveViewPageType = preact.FunctionalComponent<{ loc?: string }>
@@ -11,7 +11,7 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
   }
 
   const fileState = useAsync(
-    API.FileService.getFile(loc),
+    FileService.getFile(loc),
     {
       ok: ok => ok,
       err: err => err,
@@ -28,8 +28,13 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
         {fileState.tag == "ok" && <>
           <div className="flex flex-row justify-between pb-4 border-b-2 items-center">
             <h1 class="text-lg font-bold">{fileState.data.info?.name}</h1>
-            <PrimaryButton onClick={() => {
-              window.open(`http://127.0.0.1:3100/blob?path=${fileState.data.info?.location}`)
+            <PrimaryButton onClick={async () => {
+              const result = await AuthService.getAccessToken();
+
+              if (result.accessToken) {
+                window.open(`http://127.0.0.1:3100/blob?path=${fileState.data.info?.location}&accessToken=${result.accessToken}`)
+              }
+
             }}>
               Download
             </PrimaryButton>
