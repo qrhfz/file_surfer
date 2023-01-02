@@ -32,7 +32,6 @@ export const SearchPage: SearchPage = ({ matches }) => {
       <Nav q={matches.q} at={matches.in} />
       <div class="flex flex-row">
         <div class="w-64">
-          <Sidebar />
         </div>
         {result.tag == "loading" &&
           <LoadingCircle></LoadingCircle>

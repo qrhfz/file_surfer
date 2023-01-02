@@ -32,7 +32,7 @@ export const FolderBrowserPage: FolderBrowserPage = ({ loc, matches }) => {
       <Nav q={matches?.q} at={matches?.in} />
       <div class="flex flex-row">
         <div class="w-64">
-          <Sidebar />
+          <Sidebar loc={loc} />
         </div>
         <div class="overflow-x-auto">
           <FolderView loc={loc} items={items} />

@@ -1,7 +1,11 @@
+import { FunctionComponent } from "preact";
+import { route, useRouter } from "preact-router";
 import { BiFolder } from "react-icons/bi";
 import { PrimaryButton, SecondaryButton } from "./buttons";
 
-export function Sidebar() {
+export const Sidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
+
+
   return (
     <aside class="p-4">
       <div className="p-4 flex flex-col flex-shrink gap-4">
