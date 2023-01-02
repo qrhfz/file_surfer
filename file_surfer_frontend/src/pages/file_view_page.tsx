@@ -1,4 +1,5 @@
 import { useEffect, useState } from "preact/hooks"
+import { PrimaryButton } from "../components/buttons"
 import * as API from "../generated-sources/openapi"
 import { useAsync } from "../utils/useAsync"
 
@@ -21,13 +22,22 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
   return (
     <div class="w-screen h-screen bg-slate-300 pt-24">
 
-      <div class="w-5/12 mx-auto bg-white p-4">
+      <div class="w-5/12 mx-auto bg-white p-8">
         {fileState.tag == "error" && "loading"}
         {fileState.tag == "loading" && "loading"}
         {fileState.tag == "ok" && <>
-          <h1 class="text-lg font-bold">{fileState.data.info?.name}</h1>
-          <hr class="pt-2" />
-          {fileState.data.content}
+          <div className="flex flex-row justify-between pb-4 border-b-2 items-center">
+            <h1 class="text-lg font-bold">{fileState.data.info?.name}</h1>
+            <PrimaryButton onClick={() => {
+              window.open(`http://127.0.0.1:3100/blob?path=${fileState.data.info?.location}`)
+            }}>
+              Download
+            </PrimaryButton>
+          </div>
+          <div class="py-4 font-mono overflow-y-auto">
+
+            {fileState.data.content}
+          </div>
         </>}
       </div>
     </div>
