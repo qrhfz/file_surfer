@@ -13,12 +13,11 @@ export type AsyncState<T, E> =
 
 type OkCb<R, T> = (ok: R) => T;
 type ErrCb<E> = (err: any) => E;
+type Config<K, R, T, E> = { ok: OkCb<R, T>; err: ErrCb<E>; key: K };
 
 export const useAsync = <K, R, T, E>(
   task: Promise<R>,
-  ok: OkCb<R, T>,
-  err: ErrCb<E>,
-  key: K,
+  { ok, err, key }: Config<K, R, T, E>,
 ) => {
   const [state, setState] = useState<AsyncState<T, E>>(loading);
 

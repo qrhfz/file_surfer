@@ -1,12 +1,10 @@
 import { FolderView } from "../components/folder/folder_view"
-import { FileOrFolder } from "../components/folder/model"
 import { Nav } from "../components/nav"
-import { Sidebar } from "../components/sidebar"
 import { SearchService } from "../generated-sources/openapi"
 import { useAsync } from "../utils/useAsync"
-import { BiLoaderCircle } from "react-icons/bi";
 import { LoadingCircle } from "../components/loading_circle"
 import { FolderLayout } from "../layout/folder_layout"
+import { mergeFilesAndFolders } from "../utils/mergeFilesAndFolders"
 
 type Prop = { matches?: { q: string | undefined, in: string | undefined } }
 
@@ -20,13 +18,11 @@ export const SearchPage: SearchPage = ({ matches }) => {
 
   const task = SearchService.getSearch(matches?.in ?? '', matches?.q)
 
-  const result = useAsync(task, body => {
-    const files: FileOrFolder[] = (body.files ?? [])
-      .map((f) => ({ tag: "file", item: f, }))
-    const folders: FileOrFolder[] = (body.folders ?? [])
-      .map((f) => ({ tag: "folder", item: f, }))
-    return [...folders, ...files]
-  }, e => e, matches?.q)
+  const result = useAsync(task, {
+    ok: body => mergeFilesAndFolders(body.files ?? [], body.folders ?? []),
+    err: e => e,
+    key: matches.q
+  })
 
   return (
     <FolderLayout

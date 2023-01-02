@@ -7,6 +7,7 @@ import { Nav } from "../components/nav"
 import { Sidebar } from "../components/sidebar"
 import { FolderService } from "../generated-sources/openapi"
 import { FolderLayout } from "../layout/folder_layout"
+import { mergeFilesAndFolders } from "../utils/mergeFilesAndFolders"
 import { useAsync } from "../utils/useAsync"
 
 type Prop = { loc?: string, matches?: { q: string | undefined, in: string | undefined } }
@@ -21,13 +22,11 @@ export const FolderBrowserPage: FolderBrowserPage = ({ loc, matches }) => {
 
   const task = FolderService.getFolder(loc === "" ? "/" : loc)
 
-  const result = useAsync(task, body => {
-    const files: FileOrFolder[] = (body.files ?? [])
-      .map((f) => ({ tag: "file", item: f, }))
-    const folders: FileOrFolder[] = (body.folders ?? [])
-      .map((f) => ({ tag: "folder", item: f, }))
-    return [...folders, ...files]
-  }, e => e, loc)
+  const result = useAsync(task, {
+    ok: body => mergeFilesAndFolders(body.files ?? [], body.folders ?? []),
+    err: e => e,
+    key: loc,
+  })
   return (
     <FolderLayout
       Header={() => <Nav q={matches?.q} at={matches?.in} />}

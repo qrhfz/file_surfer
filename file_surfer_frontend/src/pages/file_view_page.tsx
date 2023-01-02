@@ -9,7 +9,14 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
     return <>Error</>
   }
 
-  const fileState = useAsync(API.FileService.getFile(loc), ok => ok, err => err, loc)
+  const fileState = useAsync(
+    API.FileService.getFile(loc),
+    {
+      ok: ok => ok,
+      err: err => err,
+      key: loc
+    }
+  )
 
   return (
     <div class="w-screen h-screen bg-slate-300 pt-24">
