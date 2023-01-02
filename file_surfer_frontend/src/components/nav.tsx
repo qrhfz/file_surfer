@@ -17,7 +17,8 @@ export const Nav: preact.FunctionalComponent<Prop> = ({ q, at }) => {
   }
 
   return (
-    <nav class="bg-slate-200 flex flex-row p-4">
+    <nav class="bg-slate-200 flex flex-row py-4">
+      <div className="w-64"></div>
       <div class=" relative ">
         <div class=" relative ">
           <form onSubmit={handleSubmit}>
