@@ -23,6 +23,7 @@ export const useAsync = <K, R, T, E>(
   const [state, setState] = useState<AsyncState<T, E>>(loading);
 
   useEffect(() => {
+    setState(loading);
     task
       .then((t) => setState({ tag: "ok", data: ok(t) }))
       .catch((e) => setState({ tag: "error", error: err(e) }));

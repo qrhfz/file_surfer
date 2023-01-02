@@ -2,9 +2,12 @@ import { useEffect, useState } from "preact/hooks"
 import { useGuard } from "../auth/useGuard"
 import { FolderView } from "../components/folder/folder_view"
 import { FileOrFolder } from "../components/folder/model"
+import { LoadingCircle } from "../components/loading_circle"
 import { Nav } from "../components/nav"
 import { Sidebar } from "../components/sidebar"
 import { FolderService } from "../generated-sources/openapi"
+import { FolderLayout } from "../layout/folder_layout"
+import { useAsync } from "../utils/useAsync"
 
 type Prop = { loc?: string, matches?: { q: string | undefined, in: string | undefined } }
 type FolderBrowserPage = preact.FunctionalComponent<Prop>
@@ -16,28 +19,32 @@ export const FolderBrowserPage: FolderBrowserPage = ({ loc, matches }) => {
     return <>Error</>
   }
 
-  const [items, setItems] = useState<FileOrFolder[]>([])
+  const task = FolderService.getFolder(loc === "" ? "/" : loc)
 
-  useEffect(() => {
-    FolderService.getFolder(loc === "" ? "/" : loc).then(body => {
-      const files: FileOrFolder[] = (body.files ?? [])
-        .map((f) => ({ tag: "file", item: f, }))
-      const folders: FileOrFolder[] = (body.folders ?? [])
-        .map((f) => ({ tag: "folder", item: f, }))
-      setItems([...folders, ...files])
-    })
-  }, [loc])
+  const result = useAsync(task, body => {
+    const files: FileOrFolder[] = (body.files ?? [])
+      .map((f) => ({ tag: "file", item: f, }))
+    const folders: FileOrFolder[] = (body.folders ?? [])
+      .map((f) => ({ tag: "folder", item: f, }))
+    return [...folders, ...files]
+  }, e => e, loc)
   return (
-    <div>
-      <Nav q={matches?.q} at={matches?.in} />
-      <div class="flex flex-row">
-        <div class="w-64">
-          <Sidebar loc={loc} />
-        </div>
-        <div class="overflow-x-auto">
-          <FolderView loc={loc} items={items} />
-        </div>
-      </div>
-    </div>
+    <FolderLayout
+      Header={() => <Nav q={matches?.q} at={matches?.in} />}
+      Aside={() => <Sidebar loc={loc} />}
+      Main={() => {
+        if (result.tag === "loading") {
+          return <LoadingCircle></LoadingCircle>
+        } else if (result.tag === "ok") {
+          return (
+            <div class="overflow-x-auto">
+              <FolderView items={result.data} />
+            </div>
+          )
+        } else {
+          return <>Error</>
+        }
+      }}
+    />
   )
 }

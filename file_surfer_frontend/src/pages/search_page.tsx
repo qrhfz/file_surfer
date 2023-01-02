@@ -6,6 +6,7 @@ import { SearchService } from "../generated-sources/openapi"
 import { useAsync } from "../utils/useAsync"
 import { BiLoaderCircle } from "react-icons/bi";
 import { LoadingCircle } from "../components/loading_circle"
+import { FolderLayout } from "../layout/folder_layout"
 
 type Prop = { matches?: { q: string | undefined, in: string | undefined } }
 
@@ -28,22 +29,22 @@ export const SearchPage: SearchPage = ({ matches }) => {
   }, e => e, matches?.q)
 
   return (
-    <div>
-      <Nav q={matches.q} at={matches.in} />
-      <div class="flex flex-row">
-        <div class="w-64">
-        </div>
-        {result.tag == "loading" &&
-          <LoadingCircle></LoadingCircle>
+    <FolderLayout
+      Header={() => <Nav q={matches?.q} at={matches?.in} />}
+      Aside={() => <></>}
+      Main={() => {
+        if (result.tag === "loading") {
+          return <LoadingCircle></LoadingCircle>
+        } else if (result.tag === "ok") {
+          return (
+            <div class="overflow-x-auto">
+              <FolderView items={result.data} />
+            </div>
+          )
+        } else {
+          return <>Error</>
         }
-        {result.tag == "ok" &&
-          <div class="overflow-x-auto">
-            <FolderView items={result.data} />
-          </div>
-        }
-      </div>
-    </div>
+      }}
+    />
   )
 }
-
-//path="/browse/:loc*" 
