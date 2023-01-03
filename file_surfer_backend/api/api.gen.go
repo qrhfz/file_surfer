@@ -89,7 +89,7 @@ type GetBlobParams struct {
 
 // PostBlobMultipartBody defines parameters for PostBlob.
 type PostBlobMultipartBody struct {
-	Files *[][]byte `json:"files,omitempty"`
+	Files [][]byte `json:"files"`
 }
 
 // PostBlobParams defines parameters for PostBlob.
@@ -125,8 +125,9 @@ type PatchFileParams struct {
 
 // PostFileJSONBody defines parameters for PostFile.
 type PostFileJSONBody struct {
-	Name *string `json:"name,omitempty"`
-	Type *string `json:"type,omitempty"`
+	IsDir bool    `json:"isDir"`
+	Name  string  `json:"name"`
+	Type  *string `json:"type,omitempty"`
 }
 
 // PostFileParams defines parameters for PostFile.
@@ -134,28 +135,8 @@ type PostFileParams struct {
 	Path LocationPath `form:"path" json:"path"`
 }
 
-// DeleteFolderParams defines parameters for DeleteFolder.
-type DeleteFolderParams struct {
-	Path LocationPath `form:"path" json:"path"`
-}
-
 // GetFolderParams defines parameters for GetFolder.
 type GetFolderParams struct {
-	Path LocationPath `form:"path" json:"path"`
-}
-
-// PatchFolderJSONBody defines parameters for PatchFolder.
-type PatchFolderJSONBody struct {
-	Name *string `json:"name,omitempty"`
-}
-
-// PatchFolderParams defines parameters for PatchFolder.
-type PatchFolderParams struct {
-	Path LocationPath `form:"path" json:"path"`
-}
-
-// PostFolderParams defines parameters for PostFolder.
-type PostFolderParams struct {
 	Path LocationPath `form:"path" json:"path"`
 }
 
@@ -186,9 +167,9 @@ type PatchUserIdJSONBody struct {
 
 // PostUserIdJSONBody defines parameters for PostUserId.
 type PostUserIdJSONBody struct {
-	Password *string `json:"password,omitempty"`
-	Role     *Role   `json:"role,omitempty"`
-	Username *string `json:"username,omitempty"`
+	Password string `json:"password"`
+	Role     Role   `json:"role"`
+	Username string `json:"username"`
 }
 
 // PostBlobMultipartRequestBody defines body for PostBlob for multipart/form-data ContentType.
@@ -202,9 +183,6 @@ type PatchFileJSONRequestBody PatchFileJSONBody
 
 // PostFileJSONRequestBody defines body for PostFile for application/json ContentType.
 type PostFileJSONRequestBody PostFileJSONBody
-
-// PatchFolderJSONRequestBody defines body for PatchFolder for application/json ContentType.
-type PatchFolderJSONRequestBody PatchFolderJSONBody
 
 // PostLoginJSONRequestBody defines body for PostLogin for application/json ContentType.
 type PostLoginJSONRequestBody PostLoginJSONBody
@@ -321,19 +299,8 @@ type ClientInterface interface {
 
 	PostFile(ctx context.Context, params *PostFileParams, body PostFileJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// DeleteFolder request
-	DeleteFolder(ctx context.Context, params *DeleteFolderParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// GetFolder request
 	GetFolder(ctx context.Context, params *GetFolderParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// PatchFolder request with any body
-	PatchFolderWithBody(ctx context.Context, params *PatchFolderParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	PatchFolder(ctx context.Context, params *PatchFolderParams, body PatchFolderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// PostFolder request
-	PostFolder(ctx context.Context, params *PostFolderParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PostLogin request with any body
 	PostLoginWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -497,56 +464,8 @@ func (c *Client) PostFile(ctx context.Context, params *PostFileParams, body Post
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteFolder(ctx context.Context, params *DeleteFolderParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteFolderRequest(c.Server, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) GetFolder(ctx context.Context, params *GetFolderParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetFolderRequest(c.Server, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PatchFolderWithBody(ctx context.Context, params *PatchFolderParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPatchFolderRequestWithBody(c.Server, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PatchFolder(ctx context.Context, params *PatchFolderParams, body PatchFolderJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPatchFolderRequest(c.Server, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PostFolder(ctx context.Context, params *PostFolderParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPostFolderRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1042,49 +961,6 @@ func NewPostFileRequestWithBody(server string, params *PostFileParams, contentTy
 	return req, nil
 }
 
-// NewDeleteFolderRequest generates requests for DeleteFolder
-func NewDeleteFolderRequest(server string, params *DeleteFolderParams) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/folder")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	queryValues := queryURL.Query()
-
-	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "path", runtime.ParamLocationQuery, params.Path); err != nil {
-		return nil, err
-	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-		return nil, err
-	} else {
-		for k, v := range parsed {
-			for _, v2 := range v {
-				queryValues.Add(k, v2)
-			}
-		}
-	}
-
-	queryURL.RawQuery = queryValues.Encode()
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
 // NewGetFolderRequest generates requests for GetFolder
 func NewGetFolderRequest(server string, params *GetFolderParams) (*http.Request, error) {
 	var err error
@@ -1121,105 +997,6 @@ func NewGetFolderRequest(server string, params *GetFolderParams) (*http.Request,
 	queryURL.RawQuery = queryValues.Encode()
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewPatchFolderRequest calls the generic PatchFolder builder with application/json body
-func NewPatchFolderRequest(server string, params *PatchFolderParams, body PatchFolderJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPatchFolderRequestWithBody(server, params, "application/json", bodyReader)
-}
-
-// NewPatchFolderRequestWithBody generates requests for PatchFolder with any type of body
-func NewPatchFolderRequestWithBody(server string, params *PatchFolderParams, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/folder")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	queryValues := queryURL.Query()
-
-	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "path", runtime.ParamLocationQuery, params.Path); err != nil {
-		return nil, err
-	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-		return nil, err
-	} else {
-		for k, v := range parsed {
-			for _, v2 := range v {
-				queryValues.Add(k, v2)
-			}
-		}
-	}
-
-	queryURL.RawQuery = queryValues.Encode()
-
-	req, err := http.NewRequest("PATCH", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewPostFolderRequest generates requests for PostFolder
-func NewPostFolderRequest(server string, params *PostFolderParams) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/folder")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	queryValues := queryURL.Query()
-
-	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "path", runtime.ParamLocationQuery, params.Path); err != nil {
-		return nil, err
-	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-		return nil, err
-	} else {
-		for k, v := range parsed {
-			for _, v2 := range v {
-				queryValues.Add(k, v2)
-			}
-		}
-	}
-
-	queryURL.RawQuery = queryValues.Encode()
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1597,19 +1374,8 @@ type ClientWithResponsesInterface interface {
 
 	PostFileWithResponse(ctx context.Context, params *PostFileParams, body PostFileJSONRequestBody, reqEditors ...RequestEditorFn) (*PostFileResponse, error)
 
-	// DeleteFolder request
-	DeleteFolderWithResponse(ctx context.Context, params *DeleteFolderParams, reqEditors ...RequestEditorFn) (*DeleteFolderResponse, error)
-
 	// GetFolder request
 	GetFolderWithResponse(ctx context.Context, params *GetFolderParams, reqEditors ...RequestEditorFn) (*GetFolderResponse, error)
-
-	// PatchFolder request with any body
-	PatchFolderWithBodyWithResponse(ctx context.Context, params *PatchFolderParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchFolderResponse, error)
-
-	PatchFolderWithResponse(ctx context.Context, params *PatchFolderParams, body PatchFolderJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchFolderResponse, error)
-
-	// PostFolder request
-	PostFolderWithResponse(ctx context.Context, params *PostFolderParams, reqEditors ...RequestEditorFn) (*PostFolderResponse, error)
 
 	// PostLogin request with any body
 	PostLoginWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostLoginResponse, error)
@@ -1890,38 +1656,6 @@ func (r PostFileResponse) StatusCode() int {
 	return 0
 }
 
-type DeleteFolderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *struct {
-		Success *string `json:"success,omitempty"`
-	}
-	JSON400 *struct {
-		Error   *string `json:"error,omitempty"`
-		Message *string `json:"message,omitempty"`
-	}
-	JSON403 *struct {
-		Error   *string `json:"error,omitempty"`
-		Message *string `json:"message,omitempty"`
-	}
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteFolderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteFolderResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type GetFolderResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -1959,75 +1693,11 @@ func (r GetFolderResponse) StatusCode() int {
 	return 0
 }
 
-type PatchFolderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *struct {
-		Success *string `json:"success,omitempty"`
-	}
-	JSON400 *struct {
-		Error   *string `json:"error,omitempty"`
-		Message *string `json:"message,omitempty"`
-	}
-	JSON403 *struct {
-		Error   *string `json:"error,omitempty"`
-		Message *string `json:"message,omitempty"`
-	}
-}
-
-// Status returns HTTPResponse.Status
-func (r PatchFolderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PatchFolderResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type PostFolderResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON201      *struct {
-		Success *string `json:"success,omitempty"`
-	}
-	JSON400 *struct {
-		Error   *string `json:"error,omitempty"`
-		Message *string `json:"message,omitempty"`
-	}
-	JSON403 *struct {
-		Error   *string `json:"error,omitempty"`
-		Message *string `json:"message,omitempty"`
-	}
-}
-
-// Status returns HTTPResponse.Status
-func (r PostFolderResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PostFolderResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type PostLoginResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Token *string `json:"token,omitempty"`
+		Token string `json:"token"`
 	}
 	JSON401 *struct {
 		Message *string `json:"message,omitempty"`
@@ -2079,7 +1749,7 @@ type GetSearchResponse struct {
 		Files   *[]File   `json:"files,omitempty"`
 		Folders *[]Folder `json:"folders,omitempty"`
 	}
-	JSON404 *struct {
+	JSON400 *struct {
 		Error   *string `json:"error,omitempty"`
 		Message *string `json:"message,omitempty"`
 	}
@@ -2104,7 +1774,10 @@ func (r GetSearchResponse) StatusCode() int {
 type DeleteUserIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON400      *struct {
+	JSON200      *struct {
+		Success *string `json:"success,omitempty"`
+	}
+	JSON400 *struct {
 		Error   *string `json:"error,omitempty"`
 		Message *string `json:"message,omitempty"`
 	}
@@ -2324,15 +1997,6 @@ func (c *ClientWithResponses) PostFileWithResponse(ctx context.Context, params *
 	return ParsePostFileResponse(rsp)
 }
 
-// DeleteFolderWithResponse request returning *DeleteFolderResponse
-func (c *ClientWithResponses) DeleteFolderWithResponse(ctx context.Context, params *DeleteFolderParams, reqEditors ...RequestEditorFn) (*DeleteFolderResponse, error) {
-	rsp, err := c.DeleteFolder(ctx, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDeleteFolderResponse(rsp)
-}
-
 // GetFolderWithResponse request returning *GetFolderResponse
 func (c *ClientWithResponses) GetFolderWithResponse(ctx context.Context, params *GetFolderParams, reqEditors ...RequestEditorFn) (*GetFolderResponse, error) {
 	rsp, err := c.GetFolder(ctx, params, reqEditors...)
@@ -2340,32 +2004,6 @@ func (c *ClientWithResponses) GetFolderWithResponse(ctx context.Context, params 
 		return nil, err
 	}
 	return ParseGetFolderResponse(rsp)
-}
-
-// PatchFolderWithBodyWithResponse request with arbitrary body returning *PatchFolderResponse
-func (c *ClientWithResponses) PatchFolderWithBodyWithResponse(ctx context.Context, params *PatchFolderParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchFolderResponse, error) {
-	rsp, err := c.PatchFolderWithBody(ctx, params, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePatchFolderResponse(rsp)
-}
-
-func (c *ClientWithResponses) PatchFolderWithResponse(ctx context.Context, params *PatchFolderParams, body PatchFolderJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchFolderResponse, error) {
-	rsp, err := c.PatchFolder(ctx, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePatchFolderResponse(rsp)
-}
-
-// PostFolderWithResponse request returning *PostFolderResponse
-func (c *ClientWithResponses) PostFolderWithResponse(ctx context.Context, params *PostFolderParams, reqEditors ...RequestEditorFn) (*PostFolderResponse, error) {
-	rsp, err := c.PostFolder(ctx, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostFolderResponse(rsp)
 }
 
 // PostLoginWithBodyWithResponse request with arbitrary body returning *PostLoginResponse
@@ -2834,54 +2472,6 @@ func ParsePostFileResponse(rsp *http.Response) (*PostFileResponse, error) {
 	return response, nil
 }
 
-// ParseDeleteFolderResponse parses an HTTP response from a DeleteFolderWithResponse call
-func ParseDeleteFolderResponse(rsp *http.Response) (*DeleteFolderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteFolderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			Success *string `json:"success,omitempty"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest struct {
-			Error   *string `json:"error,omitempty"`
-			Message *string `json:"message,omitempty"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest struct {
-			Error   *string `json:"error,omitempty"`
-			Message *string `json:"message,omitempty"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseGetFolderResponse parses an HTTP response from a GetFolderWithResponse call
 func ParseGetFolderResponse(rsp *http.Response) (*GetFolderResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -2941,102 +2531,6 @@ func ParseGetFolderResponse(rsp *http.Response) (*GetFolderResponse, error) {
 	return response, nil
 }
 
-// ParsePatchFolderResponse parses an HTTP response from a PatchFolderWithResponse call
-func ParsePatchFolderResponse(rsp *http.Response) (*PatchFolderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PatchFolderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			Success *string `json:"success,omitempty"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest struct {
-			Error   *string `json:"error,omitempty"`
-			Message *string `json:"message,omitempty"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest struct {
-			Error   *string `json:"error,omitempty"`
-			Message *string `json:"message,omitempty"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParsePostFolderResponse parses an HTTP response from a PostFolderWithResponse call
-func ParsePostFolderResponse(rsp *http.Response) (*PostFolderResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PostFolderResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest struct {
-			Success *string `json:"success,omitempty"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON201 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest struct {
-			Error   *string `json:"error,omitempty"`
-			Message *string `json:"message,omitempty"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest struct {
-			Error   *string `json:"error,omitempty"`
-			Message *string `json:"message,omitempty"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParsePostLoginResponse parses an HTTP response from a PostLoginWithResponse call
 func ParsePostLoginResponse(rsp *http.Response) (*PostLoginResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -3053,7 +2547,7 @@ func ParsePostLoginResponse(rsp *http.Response) (*PostLoginResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Token *string `json:"token,omitempty"`
+			Token string `json:"token"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -3124,7 +2618,7 @@ func ParseGetSearchResponse(rsp *http.Response) (*GetSearchResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest struct {
 			Error   *string `json:"error,omitempty"`
 			Message *string `json:"message,omitempty"`
@@ -3132,7 +2626,7 @@ func ParseGetSearchResponse(rsp *http.Response) (*GetSearchResponse, error) {
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.JSON404 = &dest
+		response.JSON400 = &dest
 
 	}
 
@@ -3153,6 +2647,15 @@ func ParseDeleteUserIdResponse(rsp *http.Response) (*DeleteUserIdResponse, error
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Success *string `json:"success,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest struct {
 			Error   *string `json:"error,omitempty"`
@@ -3356,18 +2859,9 @@ type ServerInterface interface {
 
 	// (POST /file)
 	PostFile(ctx echo.Context, params PostFileParams) error
-
-	// (DELETE /folder)
-	DeleteFolder(ctx echo.Context, params DeleteFolderParams) error
 	// Your GET endpoint
 	// (GET /folder)
 	GetFolder(ctx echo.Context, params GetFolderParams) error
-
-	// (PATCH /folder)
-	PatchFolder(ctx echo.Context, params PatchFolderParams) error
-
-	// (POST /folder)
-	PostFolder(ctx echo.Context, params PostFolderParams) error
 
 	// (POST /login)
 	PostLogin(ctx echo.Context) error
@@ -3536,26 +3030,6 @@ func (w *ServerInterfaceWrapper) PostFile(ctx echo.Context) error {
 	return err
 }
 
-// DeleteFolder converts echo context to params.
-func (w *ServerInterfaceWrapper) DeleteFolder(ctx echo.Context) error {
-	var err error
-
-	ctx.Set(TokenScopes, []string{""})
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params DeleteFolderParams
-	// ------------- Required query parameter "path" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "path", ctx.QueryParams(), &params.Path)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.DeleteFolder(ctx, params)
-	return err
-}
-
 // GetFolder converts echo context to params.
 func (w *ServerInterfaceWrapper) GetFolder(ctx echo.Context) error {
 	var err error
@@ -3573,46 +3047,6 @@ func (w *ServerInterfaceWrapper) GetFolder(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.GetFolder(ctx, params)
-	return err
-}
-
-// PatchFolder converts echo context to params.
-func (w *ServerInterfaceWrapper) PatchFolder(ctx echo.Context) error {
-	var err error
-
-	ctx.Set(TokenScopes, []string{""})
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PatchFolderParams
-	// ------------- Required query parameter "path" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "path", ctx.QueryParams(), &params.Path)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.PatchFolder(ctx, params)
-	return err
-}
-
-// PostFolder converts echo context to params.
-func (w *ServerInterfaceWrapper) PostFolder(ctx echo.Context) error {
-	var err error
-
-	ctx.Set(TokenScopes, []string{""})
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PostFolderParams
-	// ------------- Required query parameter "path" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "path", ctx.QueryParams(), &params.Path)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.PostFolder(ctx, params)
 	return err
 }
 
@@ -3769,10 +3203,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/file", wrapper.GetFile)
 	router.PATCH(baseURL+"/file", wrapper.PatchFile)
 	router.POST(baseURL+"/file", wrapper.PostFile)
-	router.DELETE(baseURL+"/folder", wrapper.DeleteFolder)
 	router.GET(baseURL+"/folder", wrapper.GetFolder)
-	router.PATCH(baseURL+"/folder", wrapper.PatchFolder)
-	router.POST(baseURL+"/folder", wrapper.PostFolder)
 	router.POST(baseURL+"/login", wrapper.PostLogin)
 	router.POST(baseURL+"/move", wrapper.PostMove)
 	router.GET(baseURL+"/search", wrapper.GetSearch)
@@ -3786,35 +3217,35 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"5eTgIO1N8Xz+XwAAAP//xpxpNnUmAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

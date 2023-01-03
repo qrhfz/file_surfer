@@ -22,11 +22,6 @@ func (s Server) PostFile(ctx echo.Context, params api.PostFileParams) error {
 	panic("not implemented") // TODO: Implement
 }
 
-// (DELETE /folder)
-func (s Server) DeleteFolder(ctx echo.Context, params api.DeleteFolderParams) error {
-	panic("not implemented") // TODO: Implement
-}
-
 // (DELETE /file)
 func (s Server) DeleteFile(ctx echo.Context, params api.DeleteFileParams) error {
 	panic("not implemented") // TODO: Implement

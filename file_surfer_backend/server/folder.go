@@ -88,13 +88,3 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 
 	return ctx.JSON(http.StatusOK, response)
 }
-
-// (PATCH /folder)
-func (s Server) PatchFolder(ctx echo.Context, params api.PatchFolderParams) error {
-	panic("not implemented") // TODO: Implement
-}
-
-// (POST /folder)
-func (s Server) PostFolder(ctx echo.Context, params api.PostFolderParams) error {
-	panic("not implemented") // TODO: Implement
-}
