@@ -4,7 +4,7 @@ export const joinPath = (a: string, b: string): string => {
 
   const joinSegments = segmentsA.concat(segmentsB);
 
-  return "";
+  return buildPath(joinSegments);
 };
 
 const parsePath = (path: string): string[] => {
