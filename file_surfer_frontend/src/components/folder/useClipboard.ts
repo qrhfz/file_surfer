@@ -10,7 +10,7 @@ import {
 } from "./popups";
 
 export const useClipboard = (
-  loc: string,
+  loc: string | undefined,
   selectedIndices: number[],
   items: FileOrFolder[],
 ) => {
@@ -26,14 +26,24 @@ export const useClipboard = (
   }, [items, selectedIndices]);
 
   const copy = () => {
+    if (loc === undefined) {
+      return;
+    }
     markedFiles.copy(selectedPaths());
   };
   const cut = () => {
+    if (loc === undefined) {
+      return;
+    }
     markedFiles.cut(selectedPaths());
   };
   const paste = () => {
+    if (loc === undefined) {
+      return;
+    }
     popup.show(PastePopupInProgress);
-    markedFiles.paste(loc ?? "/")
+
+    markedFiles.paste(loc)
       .then((_) => popup.show(PastePopupSuccess))
       .catch((_) => popup.show(PastePopupError));
   };

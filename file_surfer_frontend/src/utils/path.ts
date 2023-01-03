@@ -14,7 +14,7 @@ export const joinPath = (a: string, b: string): string => {
   return out;
 };
 
-const parsePath = (path: string): string[] => {
+export const parsePath = (path: string): string[] => {
   const segments = path.split("/").filter((val) => val !== "");
   if (path.startsWith("/")) {
     segments.splice(0, 0, "/");
@@ -23,7 +23,7 @@ const parsePath = (path: string): string[] => {
   return segments;
 };
 
-const buildPath = (segments: string[]): string => {
+export const buildPath = (segments: string[]): string => {
   const newSegments: string[] = [];
   for (let index = 0; index < segments.length; index++) {
     const seg = segments[index];

@@ -27,7 +27,7 @@ export const FolderView: FolderView = ({ loc, items }) => {
     () => setContextMenuPosition(undefined),
   )
 
-  const { copy, cut, paste, } = useClipboard(loc ?? '/', selectedIndices, items)
+  const { copy, cut, paste, } = useClipboard(loc, selectedIndices, items)
 
   return (
     <>

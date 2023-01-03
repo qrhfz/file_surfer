@@ -13,8 +13,10 @@ import (
 // Your GET endpoint
 // (GET /folder)
 func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
-	location := params.Path
-	files, err := os.ReadDir(location)
+	base := "/home/q/"
+	relativePath := params.Path
+	workingDir := path.Join(base, relativePath)
+	files, err := os.ReadDir(workingDir)
 	if err != nil {
 		return err
 	}
@@ -35,7 +37,7 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 		name := f.Name()
 		size := int(fileInfo.Size())
 		modified := fileInfo.ModTime()
-		fileLocation := path.Join(location, name)
+		fileLocation := path.Join(workingDir, name)
 
 		if fileInfo.IsDir() {
 			var items, err = os.ReadDir(fileLocation)
@@ -49,7 +51,7 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 				Name:         &name,
 				Size:         &size,
 				Modified:     &modified,
-				Location:     &location,
+				Location:     &relativePath,
 				ContentCount: &contentCount,
 			})
 
@@ -77,7 +79,7 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 				Name:     &name,
 				Size:     &size,
 				Modified: &modified,
-				Location: &location,
+				Location: &relativePath,
 				Type:     &fileType,
 			})
 		}
