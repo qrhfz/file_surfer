@@ -10,14 +10,35 @@ import { useResize } from "./useResize";
 import { FileOrFolder } from "./model";
 import { useClipboard } from "./useClipboard";
 import { useSelect } from "./useSelect";
-import { FunctionComponent } from "preact";
+import { createContext, FunctionComponent } from "preact";
 import { memo } from "preact/compat";
+import { computed, signal } from "@preact/signals";
 
 type FolderView = preact.FunctionalComponent<{ items: FileOrFolder[], loc?: string }>
 
+export const createColumnResizer = (columns: string[]) => {
+
+  const widths = signal(columns.map(_ => 200))
+
+  const template = computed(() => widths.value.map((n) => `max(${n}px, 10ch)`).join(" "))
+
+  const resize = (index: number, amount: number) => {
+    const l = [...widths.value];
+    l[index] += amount
+    widths.value = l
+  }
+
+  return {
+    widths, template, resize
+  }
+}
+
+export const ColumnResizerContext = createContext(createColumnResizer([]))
+
 export const FolderView: FolderView = ({ loc, items }) => {
   const [contextMenuPosition, setContextMenuPosition] = useState<ContextMenuPosition>()
-  const { columns, resizeHandler, gridColTemplate } = useResize(["Name", "Size", "Type", "Modified"])
+
+  const columns = ["Name", "Size", "Type", "Modified"]
 
   const {
     handleItemClick,
@@ -32,7 +53,29 @@ export const FolderView: FolderView = ({ loc, items }) => {
   const { copy, cut, paste, } = useClipboard(loc, selectedIndices, items)
 
   return (
-    <>
+    <ColumnResizerContext.Provider value={createColumnResizer(columns)}>
+      <ColumnResizerContext.Consumer>
+        {resizer => {
+          return (
+            <table
+              class="folder-list-view"
+              style={{
+                gridTemplateColumns: resizer.template.value
+              }}
+            >
+
+              <FolderListViewHead columns={columns} />
+
+              <FolderListViewBody
+                items={items}
+                selectedIndices={selectedIndices}
+                handleItemClick={handleItemClick}
+                handleRightClick={handleRightClick} />
+
+            </table>
+          )
+        }}
+      </ColumnResizerContext.Consumer>
       {contextMenuPosition &&
         <ContextMenu
           handleCopy={() => { copy(); setContextMenuPosition(undefined) }}
@@ -44,38 +87,18 @@ export const FolderView: FolderView = ({ loc, items }) => {
             setContextMenuPosition(undefined)
           }}
           position={contextMenuPosition} />}
-      <table
-        class="folder-list-view"
-        style={{
-          gridTemplateColumns: gridColTemplate
-        }}
-      >
 
-        <FolderListViewHead
-          columns={columns}
-          resizeHandler={resizeHandler} />
-
-        <FolderListViewBody
-          items={items}
-          selectedIndices={selectedIndices}
-          handleItemClick={handleItemClick}
-          handleRightClick={handleRightClick} />
-
-      </table>
-    </>
+    </ColumnResizerContext.Provider>
   )
 }
 
 const FolderListViewHead: FunctionComponent<{
-  columns: string[], resizeHandler: (i: number) => (d: number) => void
-}> = memo(({ columns, resizeHandler }) => {
+  columns: string[],
+}> = memo(({ columns }) => {
   return <thead>
     <tr>
       {columns.map((c, i) => (
-        <FolderListViewHeaderCell
-          key={c} name={c}
-          onResize={resizeHandler(i)}
-        />)
+        <FolderListViewHeaderCell key={c} name={c} index={i} />)
       )}
     </tr>
   </thead>

@@ -1,3 +1,7 @@
+import { FunctionComponent } from "preact"
+import { useContext } from "preact/hooks"
+import { ColumnResizerContext } from "./folder_view"
+
 type CellType = preact.FunctionalComponent<{ selected: boolean }>
 
 export const FolderListViewCell: CellType = ({ selected, children }) => {
@@ -9,13 +13,17 @@ export const FolderListViewCell: CellType = ({ selected, children }) => {
   )
 }
 
-export function FolderListViewHeaderCell({ name, onResize = () => { } }: { name: string, onResize?: (d: number) => void }) {
+export const FolderListViewHeaderCell: FunctionComponent<{ index: number, name: string }> = ({ index, name }) => {
   let lastPos = 0
 
+  const resizer = useContext(ColumnResizerContext)
+
   const mouseMoveHandler = (e: MouseEvent) => {
-    const d = e.clientX - lastPos
-    onResize(d)
     e.preventDefault()
+    const distance = e.clientX - lastPos
+    console.log('distance', distance)
+    resizer.resize(index, distance)
+    lastPos = e.clientX
   }
 
   return (
@@ -32,7 +40,6 @@ export function FolderListViewHeaderCell({ name, onResize = () => { } }: { name:
           window.onmousemove = mouseMoveHandler
           window.onmouseup = e => {
             e.preventDefault()
-            lastPos = e.clientX
             window.onmousemove = null
             window.onmouseup = null
           }
