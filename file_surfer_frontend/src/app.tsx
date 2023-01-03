@@ -12,6 +12,7 @@ import { createTokenSignal, TokenContext } from "./auth/tokenSignal";
 import { ComponentChildren, JSX } from "preact";
 import { ModalContext, ModalState } from "./signals/modal_state";
 import { Modal } from "./components/modal";
+import { EntriesContext, EntriesState } from "./signals/entries_state";
 
 
 
@@ -22,6 +23,7 @@ export function App() {
       _ => <TokenContext.Provider value={createTokenSignal()}>{_}</TokenContext.Provider>,
       _ => <PopupContext.Provider value={new PopupState()}>{_}</PopupContext.Provider>,
       _ => <ModalContext.Provider value={new ModalState()}>{_}</ModalContext.Provider>,
+      _ => <EntriesContext.Provider value={new EntriesState()}>{_}</EntriesContext.Provider>,
     ]}>
       <PopupContext.Consumer>
         {p => {
