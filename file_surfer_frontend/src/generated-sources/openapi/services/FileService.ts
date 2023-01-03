@@ -35,7 +35,7 @@ export class FileService {
      * create new empty file
      * @param path
      * @param requestBody
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static postFile(
@@ -44,7 +44,9 @@ export class FileService {
             name?: string;
             type?: string;
         },
-    ): CancelablePromise<any> {
+    ): CancelablePromise<{
+        success?: string;
+    }> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/file',
@@ -59,12 +61,14 @@ export class FileService {
     /**
      * Delete file
      * @param path
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static deleteFile(
         path: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<{
+        success?: string;
+    }> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/file',
@@ -78,7 +82,7 @@ export class FileService {
      * rename file name
      * @param path
      * @param requestBody
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static patchFile(
@@ -86,7 +90,9 @@ export class FileService {
         requestBody?: {
             name?: string;
         },
-    ): CancelablePromise<any> {
+    ): CancelablePromise<{
+        success?: string;
+    }> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/file',

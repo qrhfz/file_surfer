@@ -33,7 +33,7 @@ export class UserService {
      * create new user
      * @param id
      * @param requestBody
-     * @returns any Created
+     * @returns any
      * @throws ApiError
      */
     public static postUserId(
@@ -43,7 +43,9 @@ export class UserService {
             password?: string;
             role?: Role;
         },
-    ): CancelablePromise<any> {
+    ): CancelablePromise<{
+        success?: string;
+    }> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/user/{id}',
@@ -59,7 +61,7 @@ export class UserService {
      * rename or change password
      * @param id
      * @param requestBody
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static patchUserId(
@@ -69,7 +71,9 @@ export class UserService {
             password?: string;
             role?: Role;
         },
-    ): CancelablePromise<any> {
+    ): CancelablePromise<{
+        success?: string;
+    }> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/user/{id}',
@@ -95,9 +99,6 @@ export class UserService {
             url: '/user/{id}',
             path: {
                 'id': id,
-            },
-            errors: {
-                404: `Not Found`,
             },
         });
     }

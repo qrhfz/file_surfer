@@ -7,7 +7,6 @@ export type File = {
     type?: string;
     location?: string;
     size?: number;
-    created?: string;
     modified?: string;
 };
 

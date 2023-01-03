@@ -9,7 +9,6 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
-	"encoding/xml"
 	"fmt"
 	"io"
 	"net/http"
@@ -19,6 +18,7 @@ import (
 	"time"
 
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
+	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/labstack/echo/v4"
 )
@@ -65,10 +65,21 @@ type User struct {
 // LocationPath defines model for LocationPath.
 type LocationPath = string
 
+// Error defines model for Error.
+type Error struct {
+	Error   *string `json:"error,omitempty"`
+	Message *string `json:"message,omitempty"`
+}
+
 // FolderContent defines model for FolderContent.
 type FolderContent struct {
 	Files   *[]File   `json:"files,omitempty"`
 	Folders *[]Folder `json:"folders,omitempty"`
+}
+
+// SuccessMessage defines model for SuccessMessage.
+type SuccessMessage struct {
+	Success *string `json:"success,omitempty"`
 }
 
 // GetBlobParams defines parameters for GetBlob.
@@ -1636,6 +1647,10 @@ type GetAccessTokenResponse struct {
 	JSON200      *struct {
 		AccessToken *string `json:"accessToken,omitempty"`
 	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -1657,6 +1672,19 @@ func (r GetAccessTokenResponse) StatusCode() int {
 type GetBlobResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON200      *openapi_types.File
+	JSON400      *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON404 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -1678,6 +1706,17 @@ func (r GetBlobResponse) StatusCode() int {
 type PostBlobResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON201      *struct {
+		Success *string `json:"success,omitempty"`
+	}
+	JSON400 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -1721,6 +1760,17 @@ func (r PostCopyResponse) StatusCode() int {
 type DeleteFileResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON200      *struct {
+		Success *string `json:"success,omitempty"`
+	}
+	JSON400 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -1746,6 +1796,18 @@ type GetFileResponse struct {
 		Content *string `json:"content,omitempty"`
 		Info    *File   `json:"info,omitempty"`
 	}
+	JSON400 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON401 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON404 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -1767,6 +1829,17 @@ func (r GetFileResponse) StatusCode() int {
 type PatchFileResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON200      *struct {
+		Success *string `json:"success,omitempty"`
+	}
+	JSON400 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -1788,6 +1861,17 @@ func (r PatchFileResponse) StatusCode() int {
 type PostFileResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON200      *struct {
+		Success *string `json:"success,omitempty"`
+	}
+	JSON400 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -1809,6 +1893,17 @@ func (r PostFileResponse) StatusCode() int {
 type DeleteFolderResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON200      *struct {
+		Success *string `json:"success,omitempty"`
+	}
+	JSON400 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -1834,8 +1929,17 @@ type GetFolderResponse struct {
 		Files   *[]File   `json:"files,omitempty"`
 		Folders *[]Folder `json:"folders,omitempty"`
 	}
-	XML200 *struct {
-		Empty *string `json:",omitempty"`
+	JSON400 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON401 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON404 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
 	}
 }
 
@@ -1858,6 +1962,17 @@ func (r GetFolderResponse) StatusCode() int {
 type PatchFolderResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON200      *struct {
+		Success *string `json:"success,omitempty"`
+	}
+	JSON400 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -1879,6 +1994,17 @@ func (r PatchFolderResponse) StatusCode() int {
 type PostFolderResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON201      *struct {
+		Success *string `json:"success,omitempty"`
+	}
+	JSON400 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -1953,8 +2079,9 @@ type GetSearchResponse struct {
 		Files   *[]File   `json:"files,omitempty"`
 		Folders *[]Folder `json:"folders,omitempty"`
 	}
-	XML200 *struct {
-		Empty *string `json:",omitempty"`
+	JSON404 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
 	}
 }
 
@@ -1977,7 +2104,12 @@ func (r GetSearchResponse) StatusCode() int {
 type DeleteUserIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON404      *struct {
+	JSON400      *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
 		Message *string `json:"message,omitempty"`
 	}
 }
@@ -2002,6 +2134,18 @@ type GetUserResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *User
+	JSON400      *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON404 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -2023,6 +2167,17 @@ func (r GetUserResponse) StatusCode() int {
 type PatchUserIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON200      *struct {
+		Success *string `json:"success,omitempty"`
+	}
+	JSON400 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -2044,6 +2199,17 @@ func (r PatchUserIdResponse) StatusCode() int {
 type PostUserIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON201      *struct {
+		Success *string `json:"success,omitempty"`
+	}
+	JSON400 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
+	JSON403 *struct {
+		Error   *string `json:"error,omitempty"`
+		Message *string `json:"message,omitempty"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -2320,6 +2486,16 @@ func ParseGetAccessTokenResponse(rsp *http.Response) (*GetAccessTokenResponse, e
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
 	}
 
 	return response, nil
@@ -2338,6 +2514,46 @@ func ParseGetBlobResponse(rsp *http.Response) (*GetBlobResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest openapi_types.File
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
 	return response, nil
 }
 
@@ -2352,6 +2568,38 @@ func ParsePostBlobResponse(rsp *http.Response) (*PostBlobResponse, error) {
 	response := &PostBlobResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			Success *string `json:"success,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
 	}
 
 	return response, nil
@@ -2396,6 +2644,38 @@ func ParseDeleteFileResponse(rsp *http.Response) (*DeleteFileResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Success *string `json:"success,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
 	return response, nil
 }
 
@@ -2423,6 +2703,36 @@ func ParseGetFileResponse(rsp *http.Response) (*GetFileResponse, error) {
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2441,6 +2751,38 @@ func ParsePatchFileResponse(rsp *http.Response) (*PatchFileResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Success *string `json:"success,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
 	return response, nil
 }
 
@@ -2457,6 +2799,38 @@ func ParsePostFileResponse(rsp *http.Response) (*PostFileResponse, error) {
 		HTTPResponse: rsp,
 	}
 
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Success *string `json:"success,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
 	return response, nil
 }
 
@@ -2471,6 +2845,38 @@ func ParseDeleteFolderResponse(rsp *http.Response) (*DeleteFolderResponse, error
 	response := &DeleteFolderResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Success *string `json:"success,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
 	}
 
 	return response, nil
@@ -2500,17 +2906,35 @@ func ParseGetFolderResponse(rsp *http.Response) (*GetFolderResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "xml") && rsp.StatusCode == 200:
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest struct {
-			Empty *string `json:",omitempty"`
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
 		}
-		if err := xml.Unmarshal(bodyBytes, &dest); err != nil {
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.XML200 = &dest
+		response.JSON400 = &dest
 
-	case rsp.StatusCode == 200:
-		// Content-type (application/javascript) unsupported
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	}
 
@@ -2530,6 +2954,38 @@ func ParsePatchFolderResponse(rsp *http.Response) (*PatchFolderResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Success *string `json:"success,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
 	return response, nil
 }
 
@@ -2544,6 +3000,38 @@ func ParsePostFolderResponse(rsp *http.Response) (*PostFolderResponse, error) {
 	response := &PostFolderResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			Success *string `json:"success,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
 	}
 
 	return response, nil
@@ -2636,17 +3124,15 @@ func ParseGetSearchResponse(rsp *http.Response) (*GetSearchResponse, error) {
 		}
 		response.JSON200 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "xml") && rsp.StatusCode == 200:
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest struct {
-			Empty *string `json:",omitempty"`
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
 		}
-		if err := xml.Unmarshal(bodyBytes, &dest); err != nil {
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.XML200 = &dest
-
-	case rsp.StatusCode == 200:
-		// Content-type (application/javascript) unsupported
+		response.JSON404 = &dest
 
 	}
 
@@ -2667,14 +3153,25 @@ func ParseDeleteUserIdResponse(rsp *http.Response) (*DeleteUserIdResponse, error
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest struct {
+			Error   *string `json:"error,omitempty"`
 			Message *string `json:"message,omitempty"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.JSON404 = &dest
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
 
 	}
 
@@ -2702,6 +3199,36 @@ func ParseGetUserResponse(rsp *http.Response) (*GetUserResponse, error) {
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2720,6 +3247,38 @@ func ParsePatchUserIdResponse(rsp *http.Response) (*PatchUserIdResponse, error) 
 		HTTPResponse: rsp,
 	}
 
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Success *string `json:"success,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	}
+
 	return response, nil
 }
 
@@ -2734,6 +3293,38 @@ func ParsePostUserIdResponse(rsp *http.Response) (*PostUserIdResponse, error) {
 	response := &PostUserIdResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			Success *string `json:"success,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Error   *string `json:"error,omitempty"`
+			Message *string `json:"message,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
 	}
 
 	return response, nil
@@ -3195,34 +3786,35 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

@@ -30,7 +30,7 @@ export class BlobService {
      * Upload a file to folder defined in path
      * @param path
      * @param formData
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static postBlob(
@@ -38,7 +38,9 @@ export class BlobService {
         formData?: {
             files?: Array<string>;
         },
-    ): CancelablePromise<any> {
+    ): CancelablePromise<{
+        success?: string;
+    }> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/blob',

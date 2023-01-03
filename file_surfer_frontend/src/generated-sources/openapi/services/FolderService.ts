@@ -14,7 +14,7 @@ export class FolderService {
      * Your GET endpoint
      * Open a folder and returns list of files and folders inside
      * @param path
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static getFolder(
@@ -35,12 +35,14 @@ export class FolderService {
     /**
      * create new folder at location defined in path
      * @param path
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static postFolder(
         path: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<{
+        success?: string;
+    }> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/folder',
@@ -53,12 +55,14 @@ export class FolderService {
     /**
      * delete folder defined in path
      * @param path
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static deleteFolder(
         path: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<{
+        success?: string;
+    }> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/folder',
@@ -72,7 +76,7 @@ export class FolderService {
      * Used to rename a folder
      * @param path
      * @param requestBody
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static patchFolder(
@@ -80,7 +84,9 @@ export class FolderService {
         requestBody?: {
             name?: string;
         },
-    ): CancelablePromise<any> {
+    ): CancelablePromise<{
+        success?: string;
+    }> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/folder',

@@ -15,7 +15,7 @@ export class SearchService {
      * Search file or folder in scoped folder
      * @param path
      * @param searchQuery
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static getSearch(
