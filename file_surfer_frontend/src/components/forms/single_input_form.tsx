@@ -18,26 +18,25 @@ export const SingleInputForm: SingleInputForm = ({ onSubmit, placeholder, onDone
 
   return (
     <form onSubmit={e => e.preventDefault()}>
-      <div class="relative">
+      <div class="flex flex-row gap-4">
         <SimpleInput
           value={name}
           handleChange={v => setName(v)}
           placeholder={placeholder}
         />
-      </div>
-      <div className="h-4"></div>
-      <div className="flex flex-row justify-between">
-        <div>
-          {loading && <span>loading...</span>}
-        </div>
-        <SmallPrimaryButton onClick={async () => {
-          setLoading(true)
-          await onSubmit(name)
-          setLoading(false)
-          onDone()
-        }}>
+
+        <SmallPrimaryButton
+          onClick={async () => {
+            setLoading(true)
+            await onSubmit(name)
+            setLoading(false)
+            onDone()
+          }}>
           Save
         </SmallPrimaryButton>
+      </div>
+      <div className="h-4">
+        {loading && <span>loading...</span>}
       </div>
     </form>
   )
