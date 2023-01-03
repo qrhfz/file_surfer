@@ -1,5 +1,8 @@
 export const joinPaths = (...paths: string[]): string => {
-  return paths.reduce((prev, next) => joinPath(prev, next), "");
+  return paths.reduce(
+    (prev, next) => joinPath(prev, next),
+    paths[0].startsWith("/") ? "/" : "",
+  );
 };
 
 export const joinPath = (a: string, b: string): string => {
