@@ -20,7 +20,7 @@ export const FolderBrowserPage: FolderBrowserPage = ({ loc, matches }) => {
     return <>Error</>
   }
 
-  const task = FolderService.getFolder(loc === "" ? "/" : loc)
+  const task = FolderService.getFolder(loc === undefined || loc === "" ? "." : loc)
 
   const result = useAsync(task, {
     ok: body => mergeFilesAndFolders(body.files ?? [], body.folders ?? []),

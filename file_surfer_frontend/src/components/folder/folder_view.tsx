@@ -77,11 +77,11 @@ export const FolderView: FolderView = ({ loc, items }) => {
 
                 <FolderListViewCell selected={selected}>
                   {f.tag == "file" && formatBytes(f.item.size ?? 0)}
-                  {f.tag == "folder" && formatBytes(f.item.contentSize ?? 0)}
+                  {f.tag == "folder" && `${f.item.contentCount} items`}
                 </FolderListViewCell>
 
                 <FolderListViewCell selected={selected}>
-                  {f.tag == "file" && f.item.type}
+                  {f.tag == "file" && f.item.type?.split(';')[0]}
                   {f.tag == "folder" && "Folder"}
                 </FolderListViewCell>
 

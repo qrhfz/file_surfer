@@ -3,5 +3,5 @@ import { App } from './app'
 import { OpenAPI } from './generated-sources/openapi';
 import "./index.css";
 
-OpenAPI.BASE = "http://127.0.0.1:3100"
+OpenAPI.BASE = "http://localhost:3000"
 render(<App />, document.getElementById('app') as HTMLElement)
