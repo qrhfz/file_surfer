@@ -23,10 +23,14 @@ export const SingleInputForm: SingleInputForm = ({ onSubmit, placeholder, onDone
           value={name}
           handleChange={v => setName(v)}
           placeholder={placeholder}
+          disabled={loading}
         />
 
         <SmallPrimaryButton
           onClick={async () => {
+            if (loading) {
+              return
+            }
             setLoading(true)
             await onSubmit(name)
             setLoading(false)
