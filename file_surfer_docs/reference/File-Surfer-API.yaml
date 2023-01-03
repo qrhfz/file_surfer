@@ -475,6 +475,9 @@ components:
         size:
           type: integer
           minimum: 0
+        contentCount:
+          type: integer
+          minimum: 0
     User:
       title: User
       x-stoplight:
