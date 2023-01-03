@@ -28,6 +28,9 @@ export const buildPath = (segments: string[]): string => {
   for (let index = 0; index < segments.length; index++) {
     const seg = segments[index];
 
+    if (seg === "/" && index != 0) {
+      continue;
+    }
     if (seg === ".") {
       continue;
     } else if (seg === "..") {
