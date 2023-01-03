@@ -1,14 +1,20 @@
+export const joinPaths = (...paths: string[]): string => {
+  return paths.reduce((prev, next) => joinPath(prev, next), "");
+};
+
 export const joinPath = (a: string, b: string): string => {
+  const leadingSlash = a.startsWith("/");
+
   const segmentsA = parsePath(a);
   const segmentsB = parsePath(b);
 
   const joinSegments = segmentsA.concat(segmentsB);
-
-  return buildPath(joinSegments);
+  const out = buildPath(joinSegments);
+  return leadingSlash ? "/" + out : out;
 };
 
 const parsePath = (path: string): string[] => {
-  return path.split("/");
+  return path.split("/").filter((val) => val !== "");
 };
 
 const buildPath = (segments: string[]): string => {
@@ -20,8 +26,10 @@ const buildPath = (segments: string[]): string => {
       continue;
     } else if (seg === "..") {
       newSegments.pop();
+    } else {
+      newSegments.push(seg);
     }
   }
 
-  return newSegments.reduce((prev, next) => prev + next + "/");
+  return newSegments.join("/");
 };

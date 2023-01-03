@@ -1,5 +1,6 @@
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
+import { joinPath, joinPaths } from "../../utils/path";
 import { FileOrFolder } from "./model";
 
 export const useSelect = (
@@ -52,12 +53,19 @@ export const useSelect = (
 
   const openItem = (i: number) => {
     if (items[i].tag == "folder") {
-      const newLoc = "/browse/" + items[i].item.location + "/" +
-        items[i].item.name;
+      const newLoc = joinPaths(
+        "/browse/",
+        items[i].item.location ?? ".",
+        items[i].item.name ?? ".",
+      );
+      console.log(newLoc);
       route(newLoc);
     } else {
-      const newLoc = "/view/" + items[i].item.location + "/" +
-        items[i].item.name;
+      const newLoc = joinPaths(
+        "/view/",
+        items[i].item.location ?? ".",
+        items[i].item.name ?? ".",
+      );
       route(newLoc);
     }
   };
