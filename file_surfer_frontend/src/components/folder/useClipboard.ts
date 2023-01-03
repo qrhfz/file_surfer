@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "preact/hooks";
 import { ClipboardContext } from "../../clipboard";
 import { PopupContext } from "../../signals/popup_state";
+import { joinPaths } from "../../utils/path";
 import { FileOrFolder } from "./model";
 import {
   PastePopupError,
@@ -53,7 +54,10 @@ export const useClipboard = (
 
   const selectedPaths = () => {
     return selectedIndices.map((i) => {
-      return (items[i].item.location ?? "") + "/" + (items[i].item.name ?? "");
+      return joinPaths(
+        items[i].item.location ?? ".",
+        items[i].item.name ?? ".",
+      );
     });
   };
 
