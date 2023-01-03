@@ -6,7 +6,14 @@ export const Modal: FunctionComponent = ({ children }) => {
   const modal = useContext(ModalContext);
 
   return (
-    <div className="fixed h-screen w-screen bg-neutral-900 bg-opacity-80 z-50
+    <div
+      onClick={e => {
+        e.preventDefault()
+        if (e.currentTarget === e.target) {
+          modal.close()
+        }
+      }}
+      className="fixed h-screen w-screen bg-neutral-900 bg-opacity-80 z-50
       grid items-center justify-center">
       <div class="relative rounded-lg border border-gray-200 shadow-lg bg-white">
         <button
