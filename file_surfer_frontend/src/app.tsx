@@ -13,17 +13,30 @@ import { ComponentChildren, JSX } from "preact";
 import { ModalContext, ModalState } from "./signals/modal_state";
 import { Modal } from "./components/modal";
 import { EntriesContext, EntriesState } from "./signals/entries_state";
-
+import { ColumnResizerContext, createColumnResizer } from "./components/folder/folder_view";
 
 
 export function App() {
   return (
     <MultiProvider providers={[
-      _ => <ClipboardContext.Provider value={new Clipboard()}>{_}</ClipboardContext.Provider>,
-      _ => <TokenContext.Provider value={createTokenSignal()}>{_}</TokenContext.Provider>,
-      _ => <PopupContext.Provider value={new PopupState()}>{_}</PopupContext.Provider>,
-      _ => <ModalContext.Provider value={new ModalState()}>{_}</ModalContext.Provider>,
-      _ => <EntriesContext.Provider value={new EntriesState()}>{_}</EntriesContext.Provider>,
+      children => <ClipboardContext.Provider value={new Clipboard()}>
+        {children}
+      </ClipboardContext.Provider>,
+      children => <TokenContext.Provider value={createTokenSignal()}>
+        {children}
+      </TokenContext.Provider>,
+      children => <PopupContext.Provider value={new PopupState()}>
+        {children}
+      </PopupContext.Provider>,
+      children => <ModalContext.Provider value={new ModalState()}>
+        {children}
+      </ModalContext.Provider>,
+      children => <EntriesContext.Provider value={new EntriesState()}>
+        {children}
+      </EntriesContext.Provider>,
+      children => <ColumnResizerContext.Provider value={createColumnResizer()}>
+        {children}
+      </ColumnResizerContext.Provider>
     ]}>
       <PopupContext.Consumer>
         {p => {
