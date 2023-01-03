@@ -5,6 +5,7 @@ import { BiFolder } from "react-icons/bi";
 import { FileService } from "../generated-sources/openapi";
 import { ModalContext } from "../signals/modal_state";
 import { PrimaryButton, SecondaryButton } from "./buttons";
+import { SingleInputForm } from "./forms/single_input_form";
 import { SimpleInput } from "./input/simple_input";
 
 export const Sidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
@@ -18,7 +19,7 @@ export const Sidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
         </>)}>
           Upload File
         </PrimaryButton>
-        <SecondaryButton onClick={() => { }}>
+        <SecondaryButton onClick={() => (modal.show(<NewFileForm path={loc} />))}>
           New File
         </SecondaryButton>
         <SecondaryButton onClick={() => (modal.show(<NewFolderForm path={loc} />))}>
@@ -54,35 +55,31 @@ export const Sidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
   )
 }
 
+
+
+
 const NewFolderForm: FunctionComponent<{ path: string }> = ({ path }) => {
-  const [name, setName] = useState("")
-  const [loading, setLoading] = useState(false)
   const modal = useContext(ModalContext)
-
-
   return (
-    <form onSubmit={e => e.preventDefault()}>
-      <div class="relative">
-        <SimpleInput
-          value={name}
-          handleChange={v => setName(v)}
-          placeholder="New Folder Name"
-        />
-      </div>
-      <div className="h-4"></div>
-      <div className="flex flex-row justify-between">
-        <div>
-          {loading && <span>loading...</span>}
-        </div>
-        <PrimaryButton onClick={async () => {
-          setLoading(true)
-          await FileService.postFile(path, { name, isDir: true })
-          setLoading(false)
-          modal.close()
-        }}>
-          Save
-        </PrimaryButton>
-      </div>
-    </form>
+    <SingleInputForm
+      placeholder="New Folder Name"
+      onSubmit={async (name) => {
+        await FileService.postFile(path, { name, isDir: true })
+      }}
+
+      onDone={() => { modal.close() }} />
+  )
+}
+
+const NewFileForm: FunctionComponent<{ path: string }> = ({ path }) => {
+  const modal = useContext(ModalContext)
+  return (
+    <SingleInputForm
+      placeholder="New File Name"
+      onSubmit={async (name) => {
+        await FileService.postFile(path, { name, isDir: false })
+      }}
+
+      onDone={() => { modal.close() }} />
   )
 }
