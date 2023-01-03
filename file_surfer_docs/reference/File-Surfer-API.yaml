@@ -17,20 +17,7 @@ paths:
       summary: Your GET endpoint
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  files:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/File'
-                  folders:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Folder'
+          $ref: '#/components/responses/FolderContent'
       operationId: get-folder
       description: Open a folder and returns list of files and folders inside
       parameters:
@@ -352,21 +339,7 @@ paths:
       summary: Your GET endpoint
       responses:
         '200':
-          description: OK
-          headers: {}
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  files:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/File'
-                  folders:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Folder'
+          $ref: '#/components/responses/FolderContent'
       operationId: get-search
       description: Search file or folder in scoped folder
       security:
@@ -483,9 +456,6 @@ components:
         size:
           type: integer
           minimum: 0
-        created:
-          type: string
-          format: date-time
         modified:
           type: string
           format: date-time
@@ -497,21 +467,12 @@ components:
       properties:
         name:
           type: string
-        contentCount:
-          type: integer
-          minimum: 0
-        contentSize:
-          type: integer
-          minimum: 0
         location:
           type: string
         modified:
           type: string
           format: date-time
-        created:
-          type: string
-          format: date-time
-        freeSpace:
+        size:
           type: integer
           minimum: 0
     User:
@@ -549,6 +510,32 @@ components:
       schema:
         type: string
       required: true
+  responses:
+    FolderContent:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              files:
+                type: array
+                items:
+                  $ref: '#/components/schemas/File'
+              folders:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Folder'
+        application/javascript:
+          schema:
+            type: object
+            properties: {}
+        application/xml:
+          schema:
+            type: object
+            properties:
+              '':
+                type: string
 tags:
   - name: auth
   - name: blob
