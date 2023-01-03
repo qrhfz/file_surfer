@@ -13,7 +13,7 @@ import (
 // Your GET endpoint
 // (GET /folder)
 func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
-	base := "/home/q/"
+
 	relativePath := params.Path
 	workingDir := path.Join(base, relativePath)
 	files, err := os.ReadDir(workingDir)

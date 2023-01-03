@@ -43,7 +43,6 @@ export class FileService {
         requestBody?: {
             name: string;
             isDir: boolean;
-            type?: string;
         },
     ): CancelablePromise<{
         success?: string;

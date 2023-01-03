@@ -77,23 +77,10 @@ paths:
       description: create new empty file
       parameters:
         - $ref: '#/components/parameters/LocationPath'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                isDir:
-                  type: boolean
-                type:
-                  type: string
-              required:
-                - name
-                - isDir
       security:
         - token: []
+      requestBody:
+        $ref: '#/components/requestBodies/NewFileRequest'
     parameters: []
     delete:
       summary: ''
@@ -568,6 +555,21 @@ components:
             Example 1:
               value:
                 success: File renamed successfully
+  requestBodies:
+    NewFileRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              isDir:
+                type: boolean
+            required:
+              - name
+              - isDir
+      description: ''
 tags:
   - name: auth
   - name: blob
