@@ -12,5 +12,5 @@ func main() {
 	var s server.Server
 
 	api.RegisterHandlers(e, s)
-	e.Logger.Fatal(e.Start(":3000"))
+	e.Logger.Fatal(e.Start(":1323"))
 }
