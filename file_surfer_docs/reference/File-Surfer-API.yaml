@@ -33,66 +33,6 @@ paths:
       security:
         - token: []
     parameters: []
-    post:
-      summary: ''
-      operationId: post-folder
-      responses:
-        '201':
-          $ref: '#/components/responses/SuccessMessage'
-        '400':
-          $ref: '#/components/responses/Error'
-        '403':
-          $ref: '#/components/responses/Error'
-      description: create new folder at location defined in path
-      parameters:
-        - $ref: '#/components/parameters/LocationPath'
-      tags:
-        - folder
-      security:
-        - token: []
-    delete:
-      summary: ''
-      operationId: delete-folder
-      responses:
-        '200':
-          $ref: '#/components/responses/SuccessMessage'
-        '400':
-          $ref: '#/components/responses/Error'
-        '403':
-          $ref: '#/components/responses/Error'
-      description: delete folder defined in path
-      parameters:
-        - $ref: '#/components/parameters/LocationPath'
-      tags:
-        - folder
-      security:
-        - token: []
-    patch:
-      summary: ''
-      operationId: patch-folder
-      responses:
-        '200':
-          $ref: '#/components/responses/SuccessMessage'
-        '400':
-          $ref: '#/components/responses/Error'
-        '403':
-          $ref: '#/components/responses/Error'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-        description: ''
-      tags:
-        - folder
-      description: Used to rename a folder
-      security:
-        - token: []
-      parameters:
-        - $ref: '#/components/parameters/LocationPath'
   /file:
     get:
       summary: Your GET endpoint
@@ -145,8 +85,13 @@ paths:
               properties:
                 name:
                   type: string
+                isDir:
+                  type: boolean
                 type:
                   type: string
+              required:
+                - name
+                - isDir
       security:
         - token: []
     parameters: []
@@ -240,6 +185,8 @@ paths:
                   items:
                     type: string
                     format: byte
+              required:
+                - files
       tags:
         - blob
       security:
@@ -262,6 +209,8 @@ paths:
                 properties:
                   token:
                     type: string
+                required:
+                  - token
         '401':
           description: Unauthorized
           content:
@@ -343,6 +292,10 @@ paths:
                   type: string
                 role:
                   $ref: '#/components/schemas/Role'
+              required:
+                - username
+                - password
+                - role
       security:
         - token: []
     patch:
@@ -377,7 +330,7 @@ paths:
       operationId: delete-user-id
       responses:
         '200':
-          description: OK
+          $ref: '#/components/responses/SuccessMessage'
         '400':
           $ref: '#/components/responses/Error'
         '403':
@@ -393,7 +346,7 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/FolderContent'
-        '404':
+        '400':
           $ref: '#/components/responses/Error'
       operationId: get-search
       description: Search file or folder in scoped folder
@@ -424,8 +377,6 @@ paths:
               schema:
                 type: object
                 properties: {}
-      tags:
-        - copy
       requestBody:
         content:
           application/json:
@@ -442,6 +393,8 @@ paths:
                 - sources
                 - destination
       description: Copy list of files and folders defined in sources to destination folder
+      tags:
+        - clipboard
   /move:
     post:
       summary: ''
@@ -471,7 +424,7 @@ paths:
                 - sources
                 - destination
       tags:
-        - move
+        - clipboard
   /access-token:
     get:
       summary: Your GET endpoint
@@ -618,9 +571,8 @@ components:
 tags:
   - name: auth
   - name: blob
-  - name: copy
+  - name: clipboard
   - name: file
   - name: folder
-  - name: move
   - name: search
   - name: user
