@@ -2,7 +2,6 @@ package server
 
 import (
 	"file_surfer_backend/api"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -14,7 +13,7 @@ import (
 // Your GET endpoint
 // (GET /folder)
 func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
-	location := "/home/q"
+	location := params.Path
 	files, err := os.ReadDir(location)
 	if err != nil {
 		return err
@@ -39,11 +38,19 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 		fileLocation := path.Join(location, name)
 
 		if fileInfo.IsDir() {
+			var items, err = os.ReadDir(fileLocation)
+			if err != nil {
+				return ctx.JSON(http.StatusInternalServerError, err.Error())
+			}
+
+			contentCount := len(items)
+
 			folders = append(folders, api.Folder{
-				Name:     &name,
-				Size:     &size,
-				Modified: &modified,
-				Location: &location,
+				Name:         &name,
+				Size:         &size,
+				Modified:     &modified,
+				Location:     &location,
+				ContentCount: &contentCount,
 			})
 
 			continue
@@ -51,7 +58,6 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 
 		if (fileInfo.Mode() & os.ModeSymlink) != os.ModeSymlink {
 			f, err := os.Open(fileLocation)
-			fmt.Println(fileLocation)
 
 			if err != nil {
 				return ctx.JSON(http.StatusInternalServerError, err.Error())
