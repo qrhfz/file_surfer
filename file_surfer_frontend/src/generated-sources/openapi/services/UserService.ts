@@ -39,9 +39,9 @@ export class UserService {
     public static postUserId(
         id: string,
         requestBody?: {
-            username?: string;
-            password?: string;
-            role?: Role;
+            username: string;
+            password: string;
+            role: Role;
         },
     ): CancelablePromise<{
         success?: string;
@@ -88,12 +88,14 @@ export class UserService {
     /**
      * delete user
      * @param id
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static deleteUserId(
         id: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<{
+        success?: string;
+    }> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/user/{id}',

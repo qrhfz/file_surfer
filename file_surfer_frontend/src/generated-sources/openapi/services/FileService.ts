@@ -41,7 +41,8 @@ export class FileService {
     public static postFile(
         path: string,
         requestBody?: {
-            name?: string;
+            name: string;
+            isDir: boolean;
             type?: string;
         },
     ): CancelablePromise<{

@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { CopyService, MoveService } from "./generated-sources/openapi";
+import { ClipboardService } from "./generated-sources/openapi";
 
 export class Clipboard {
   #items: string[] = [];
@@ -20,12 +20,12 @@ export class Clipboard {
   async paste(destination: string) {
     console.log("paste");
     if (this.#mode == "copy") {
-      await CopyService.postCopy({
+      await ClipboardService.postCopy({
         sources: this.#items,
         destination,
       });
     } else if (this.#mode == "cut") {
-      await MoveService.postMove({
+      await ClipboardService.postMove({
         sources: this.#items,
         destination,
       });

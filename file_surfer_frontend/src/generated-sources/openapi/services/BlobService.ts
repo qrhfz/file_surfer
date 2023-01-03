@@ -36,7 +36,7 @@ export class BlobService {
     public static postBlob(
         path: string,
         formData?: {
-            files?: Array<string>;
+            files: Array<string>;
         },
     ): CancelablePromise<{
         success?: string;

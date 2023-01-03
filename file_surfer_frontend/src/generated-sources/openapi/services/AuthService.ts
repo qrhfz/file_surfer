@@ -19,7 +19,7 @@ export class AuthService {
             password: string;
         },
     ): CancelablePromise<{
-        token?: string;
+        token: string;
     }> {
         return __request(OpenAPI, {
             method: 'POST',

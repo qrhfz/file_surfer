@@ -13,9 +13,8 @@ export type { User } from './models/User';
 
 export { AuthService } from './services/AuthService';
 export { BlobService } from './services/BlobService';
-export { CopyService } from './services/CopyService';
+export { ClipboardService } from './services/ClipboardService';
 export { FileService } from './services/FileService';
 export { FolderService } from './services/FolderService';
-export { MoveService } from './services/MoveService';
 export { SearchService } from './services/SearchService';
 export { UserService } from './services/UserService';
