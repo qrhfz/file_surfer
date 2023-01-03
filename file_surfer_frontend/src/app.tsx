@@ -10,6 +10,8 @@ import { useEffect } from "preact/hooks";
 import { OpenAPI } from "./generated-sources/openapi";
 import { createTokenSignal, TokenContext } from "./auth/tokenSignal";
 import { ComponentChildren, JSX } from "preact";
+import { ModalContext, ModalState } from "./signals/modal_state";
+import { Modal } from "./components/modal";
 
 
 
@@ -17,8 +19,9 @@ export function App() {
   return (
     <MultiProvider providers={[
       _ => <ClipboardContext.Provider value={new Clipboard()}>{_}</ClipboardContext.Provider>,
-      _ => <PopupContext.Provider value={new PopupState()}>{_}</PopupContext.Provider>,
       _ => <TokenContext.Provider value={createTokenSignal()}>{_}</TokenContext.Provider>,
+      _ => <PopupContext.Provider value={new PopupState()}>{_}</PopupContext.Provider>,
+      _ => <ModalContext.Provider value={new ModalState()}>{_}</ModalContext.Provider>,
     ]}>
       <PopupContext.Consumer>
         {p => {
@@ -28,6 +31,12 @@ export function App() {
           }
         }}
       </PopupContext.Consumer>
+      <ModalContext.Consumer>
+        {m => {
+          const modalContent = m.component.value
+          return (<>{modalContent && <Modal>{modalContent}</Modal>}</>)
+        }}
+      </ModalContext.Consumer>
       <Router>
         <LoginPage path="/login" />
         <SearchPage path="/search" />

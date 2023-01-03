@@ -1,15 +1,19 @@
 import { FunctionComponent } from "preact";
 import { route, useRouter } from "preact-router";
+import { useContext } from "preact/hooks";
 import { BiFolder } from "react-icons/bi";
+import { ModalContext } from "../signals/modal_state";
 import { PrimaryButton, SecondaryButton } from "./buttons";
 
 export const Sidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
-
+  const modal = useContext(ModalContext)
 
   return (
     <aside class="p-4">
       <div className="p-4 flex flex-col flex-shrink gap-4">
-        <PrimaryButton onClick={() => { }}>
+        <PrimaryButton onClick={() => modal.show(<>
+          upload file
+        </>)}>
           Upload File
         </PrimaryButton>
         <SecondaryButton onClick={() => { }}>
