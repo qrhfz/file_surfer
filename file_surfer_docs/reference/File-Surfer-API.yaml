@@ -18,6 +18,12 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/FolderContent'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
       operationId: get-folder
       description: Open a folder and returns list of files and folders inside
       parameters:
@@ -31,8 +37,12 @@ paths:
       summary: ''
       operationId: post-folder
       responses:
-        '200':
-          description: OK
+        '201':
+          $ref: '#/components/responses/SuccessMessage'
+        '400':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
       description: create new folder at location defined in path
       parameters:
         - $ref: '#/components/parameters/LocationPath'
@@ -45,7 +55,11 @@ paths:
       operationId: delete-folder
       responses:
         '200':
-          description: OK
+          $ref: '#/components/responses/SuccessMessage'
+        '400':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
       description: delete folder defined in path
       parameters:
         - $ref: '#/components/parameters/LocationPath'
@@ -58,7 +72,11 @@ paths:
       operationId: patch-folder
       responses:
         '200':
-          description: OK
+          $ref: '#/components/responses/SuccessMessage'
+        '400':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
       requestBody:
         content:
           application/json:
@@ -92,6 +110,12 @@ paths:
                     $ref: '#/components/schemas/File'
                   content:
                     type: string
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
       operationId: get-file
       description: returns file info. if type is text/* it will returns it content as content property
       security:
@@ -103,7 +127,11 @@ paths:
       operationId: post-file
       responses:
         '200':
-          description: OK
+          $ref: '#/components/responses/SuccessMessage'
+        '400':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
       tags:
         - file
       description: create new empty file
@@ -127,7 +155,11 @@ paths:
       operationId: delete-file
       responses:
         '200':
-          description: OK
+          $ref: '#/components/responses/SuccessMessage'
+        '400':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
       description: Delete file
       parameters:
         - $ref: '#/components/parameters/LocationPath'
@@ -140,7 +172,11 @@ paths:
       operationId: patch-file
       responses:
         '200':
-          description: OK
+          $ref: '#/components/responses/SuccessMessage'
+        '400':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
       description: rename file name
       tags:
         - file
@@ -164,12 +200,17 @@ paths:
       responses:
         '200':
           description: OK
-          headers: {}
           content:
-            application/octet-stream:
+            application/json:
               schema:
                 type: string
                 format: binary
+        '400':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
       operationId: get-blob
       parameters:
         - $ref: '#/components/parameters/LocationPath'
@@ -180,8 +221,12 @@ paths:
       summary: ''
       operationId: post-blob
       responses:
-        '200':
-          description: OK
+        '201':
+          $ref: '#/components/responses/SuccessMessage'
+        '400':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
       description: Upload a file to folder defined in path
       requestBody:
         content:
@@ -257,6 +302,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
       operationId: get-user
       description: Get user info
       security:
@@ -272,7 +323,11 @@ paths:
       operationId: post-user-id
       responses:
         '201':
-          description: Created
+          $ref: '#/components/responses/SuccessMessage'
+        '400':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
       description: create new user
       tags:
         - user
@@ -295,7 +350,11 @@ paths:
       operationId: patch-user-id
       responses:
         '200':
-          description: OK
+          $ref: '#/components/responses/SuccessMessage'
+        '400':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
       description: rename or change password
       requestBody:
         content:
@@ -319,16 +378,10 @@ paths:
       responses:
         '200':
           description: OK
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    default: invalid id
+        '400':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
       tags:
         - user
       description: delete user
@@ -340,6 +393,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/FolderContent'
+        '404':
+          $ref: '#/components/responses/Error'
       operationId: get-search
       description: Search file or folder in scoped folder
       security:
@@ -432,6 +487,8 @@ paths:
                 properties:
                   accessToken:
                     type: string
+        '403':
+          $ref: '#/components/responses/Error'
       operationId: get-access-token
       description: Ask for token to access file download etc
       security:
@@ -515,7 +572,7 @@ components:
       required: true
   responses:
     FolderContent:
-      description: Example response
+      description: ''
       content:
         application/json:
           schema:
@@ -529,16 +586,35 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/Folder'
-        application/javascript:
-          schema:
-            type: object
-            properties: {}
-        application/xml:
+    Error:
+      description: ''
+      content:
+        application/json:
           schema:
             type: object
             properties:
-              '':
+              error:
                 type: string
+              message:
+                type: string
+          examples:
+            Example 1:
+              value:
+                error: string
+                message: string
+    SuccessMessage:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+          examples:
+            Example 1:
+              value:
+                success: File renamed successfully
 tags:
   - name: auth
   - name: blob
