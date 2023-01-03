@@ -3,6 +3,7 @@ import { route, useRouter } from "preact-router";
 import { useContext, useState } from "preact/hooks";
 import { BiFolder } from "react-icons/bi";
 import { FileService } from "../generated-sources/openapi";
+import { EntriesContext } from "../signals/entries_state";
 import { ModalContext } from "../signals/modal_state";
 import { PrimaryButton, SecondaryButton } from "./buttons";
 import { SingleInputForm } from "./forms/single_input_form";
@@ -66,7 +67,8 @@ const NewFolderForm: FunctionComponent<{ path: string }> = ({ path }) => {
 
 const NewFileForm: FunctionComponent<{ path: string, isDir?: boolean }> = ({ path, isDir = false }) => {
   const modal = useContext(ModalContext)
-  const [routerContext] = useRouter()
+  const entries = useContext(EntriesContext)
+
   return (
     <SingleInputForm
       placeholder={isDir ? "New Folder Name" : "New File Name"}
@@ -76,7 +78,7 @@ const NewFileForm: FunctionComponent<{ path: string, isDir?: boolean }> = ({ pat
 
       onDone={() => {
         modal.close();
-        routerContext.router.forceUpdate();
+        entries.fetch();
       }} />
   )
 }
