@@ -20,11 +20,10 @@ export function FolderListViewHeaderCell({ name, onResize = () => { } }: { name:
 
   return (
     <th class="
-  bg-slate-100 hover:bg-slate-50
     flex flex-row items-stretch 
     ">
       <div class="cursor-pointer p-2 inline-block flex-grow">{name}</div>
-      <span class="border-2 cursor-ew-resize w-1"
+      <span class="border-r-2 cursor-ew-resize w-1"
         onMouseDown={e => {
           e.preventDefault()
 

@@ -64,6 +64,7 @@ export const FolderView: FolderView = ({ loc, items }) => {
 
             return (
               <tr
+                key={JSON.stringify(f.item)}
                 onClick={handleItemClick(i)}
                 onContextMenu={handleRightClick(i)}>
 

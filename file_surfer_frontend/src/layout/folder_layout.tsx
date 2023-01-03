@@ -5,7 +5,7 @@ export const FolderLayout: FunctionComponent<FolderLayout> = ({ Header, Main, As
     <div>
       <Header />
       <div class="flex flex-row">
-        <div class="w-64 border-r-2">
+        <div class="w-64 pr-4">
           <Aside />
         </div>
         <div class="overflow-x-auto">

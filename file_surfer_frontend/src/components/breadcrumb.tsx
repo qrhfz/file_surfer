@@ -7,7 +7,7 @@ type BreadcrumbProp = { path: string }
 export const Breadcrumb: FunctionComponent<BreadcrumbProp> = ({ path }) => {
   const segments = parsePath(path)
   return (
-    <nav aria-label="Breadcrumb" class="flex p-2">
+    <nav aria-label="Breadcrumb" class="flex py-2">
       <ol
         role="list"
         class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600">
