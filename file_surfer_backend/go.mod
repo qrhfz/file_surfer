@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
 	github.com/deepmap/oapi-codegen v1.12.4 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.1 // indirect
 	github.com/getkin/kin-openapi v0.112.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
 	github.com/go-openapi/swag v0.22.3 // indirect
