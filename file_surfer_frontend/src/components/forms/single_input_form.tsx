@@ -1,7 +1,7 @@
 import { FunctionComponent } from "preact"
 import { useContext, useState } from "preact/hooks"
 import { ModalContext } from "../../signals/modal_state"
-import { PrimaryButton } from "../buttons"
+import { PrimaryButton, SmallPrimaryButton } from "../buttons"
 import { SimpleInput } from "../input/simple_input"
 
 type SingleInputFormProp = {
@@ -30,14 +30,14 @@ export const SingleInputForm: SingleInputForm = ({ onSubmit, placeholder, onDone
         <div>
           {loading && <span>loading...</span>}
         </div>
-        <PrimaryButton onClick={async () => {
+        <SmallPrimaryButton onClick={async () => {
           setLoading(true)
           await onSubmit(name)
           setLoading(false)
           onDone()
         }}>
           Save
-        </PrimaryButton>
+        </SmallPrimaryButton>
       </div>
     </form>
   )

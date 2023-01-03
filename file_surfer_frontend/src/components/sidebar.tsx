@@ -59,27 +59,24 @@ export const Sidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
 
 
 const NewFolderForm: FunctionComponent<{ path: string }> = ({ path }) => {
-  const modal = useContext(ModalContext)
   return (
-    <SingleInputForm
-      placeholder="New Folder Name"
-      onSubmit={async (name) => {
-        await FileService.postFile(path, { name, isDir: true })
-      }}
-
-      onDone={() => { modal.close() }} />
+    <NewFileForm path={path} isDir={true} />
   )
 }
 
-const NewFileForm: FunctionComponent<{ path: string }> = ({ path }) => {
+const NewFileForm: FunctionComponent<{ path: string, isDir?: boolean }> = ({ path, isDir = false }) => {
   const modal = useContext(ModalContext)
+  const [routerContext] = useRouter()
   return (
     <SingleInputForm
-      placeholder="New File Name"
+      placeholder={isDir ? "New Folder Name" : "New File Name"}
       onSubmit={async (name) => {
-        await FileService.postFile(path, { name, isDir: false })
+        await FileService.postFile(path, { name, isDir: isDir })
       }}
 
-      onDone={() => { modal.close() }} />
+      onDone={() => {
+        modal.close();
+        routerContext.router.forceUpdate();
+      }} />
   )
 }

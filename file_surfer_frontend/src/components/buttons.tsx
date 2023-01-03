@@ -15,6 +15,17 @@ export const PrimaryButton: FunctionComponent<ButtonProp> = ({ children, onClick
   )
 }
 
+export const SmallPrimaryButton: FunctionComponent<ButtonProp> = ({ children, onClick }) => {
+  return (
+    <button
+      class="inline-block rounded-xl border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  )
+}
+
 export const SecondaryButton: FunctionComponent<ButtonProp> = ({ children, onClick }) => {
   return (
     <button
