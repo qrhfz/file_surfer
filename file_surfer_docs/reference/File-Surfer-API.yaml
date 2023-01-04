@@ -27,7 +27,7 @@ paths:
       operationId: get-folder
       description: Open a folder and returns list of files and folders inside
       parameters:
-        - $ref: '#/components/parameters/LocationPath'
+        - $ref: '#/components/parameters/PathParam'
       tags:
         - folder
       security:
@@ -52,7 +52,7 @@ paths:
       security:
         - token: []
       parameters:
-        - $ref: '#/components/parameters/LocationPath'
+        - $ref: '#/components/parameters/PathParam'
     post:
       summary: ''
       operationId: post-file
@@ -67,7 +67,7 @@ paths:
         - file
       description: create new empty file
       parameters:
-        - $ref: '#/components/parameters/LocationPath'
+        - $ref: '#/components/parameters/PathParam'
       security:
         - token: []
       requestBody:
@@ -85,7 +85,14 @@ paths:
           $ref: '#/components/responses/Error'
       description: Delete file
       parameters:
-        - $ref: '#/components/parameters/LocationPath'
+        - schema:
+            type: array
+            items:
+              type: string
+            minItems: 1
+          in: query
+          name: paths
+          required: true
       tags:
         - file
       security:
@@ -112,7 +119,7 @@ paths:
                 name:
                   type: string
       parameters:
-        - $ref: '#/components/parameters/LocationPath'
+        - $ref: '#/components/parameters/PathParam'
       security:
         - token: []
   /blob:
@@ -136,7 +143,7 @@ paths:
           $ref: '#/components/responses/Error'
       operationId: get-blob
       parameters:
-        - $ref: '#/components/parameters/LocationPath'
+        - $ref: '#/components/parameters/PathParam'
       description: Download file at given path
       security:
         - accessToken: []
@@ -170,7 +177,7 @@ paths:
       security:
         - token: []
       parameters:
-        - $ref: '#/components/parameters/LocationPath'
+        - $ref: '#/components/parameters/PathParam'
     parameters: []
   /login:
     parameters: []
@@ -349,60 +356,24 @@ paths:
       operationId: post-copy
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                sources:
-                  type: array
-                  items:
-                    type: string
-                destination:
-                  type: string
-              required:
-                - sources
-                - destination
+          $ref: '#/components/responses/SuccessMessage'
       description: Copy list of files and folders defined in sources to destination folder
       tags:
         - clipboard
+      requestBody:
+        $ref: '#/components/requestBodies/PasteRequest'
   /move:
     post:
       summary: ''
       operationId: post-move
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
+          $ref: '#/components/responses/SuccessMessage'
       description: Move list of files and folders defined in sources to destination folder
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                sources:
-                  type: array
-                  items:
-                    type: string
-                destination:
-                  type: string
-              required:
-                - sources
-                - destination
       tags:
         - clipboard
+      requestBody:
+        $ref: '#/components/requestBodies/PasteRequest'
   /access-token:
     get:
       summary: Your GET endpoint
@@ -511,7 +482,7 @@ components:
       type: apiKey
       in: query
   parameters:
-    LocationPath:
+    PathParam:
       name: path
       in: query
       schema:
@@ -598,6 +569,18 @@ components:
               - name
               - isDir
       description: ''
+    PasteRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              sources:
+                type: array
+                items:
+                  type: string
+              destination:
+                type: string
 tags:
   - name: auth
   - name: blob

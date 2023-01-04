@@ -58,8 +58,8 @@ type User struct {
 	Username string `json:"username"`
 }
 
-// LocationPath defines model for LocationPath.
-type LocationPath = string
+// PathParam defines model for PathParam.
+type PathParam = string
 
 // Error defines model for Error.
 type Error struct {
@@ -90,9 +90,15 @@ type NewFileRequest struct {
 	Name  string `json:"name"`
 }
 
+// PasteRequest defines model for PasteRequest.
+type PasteRequest struct {
+	Destination *string   `json:"destination,omitempty"`
+	Sources     *[]string `json:"sources,omitempty"`
+}
+
 // GetBlobParams defines parameters for GetBlob.
 type GetBlobParams struct {
-	Path LocationPath `form:"path" json:"path"`
+	Path PathParam `form:"path" json:"path"`
 }
 
 // PostBlobMultipartBody defines parameters for PostBlob.
@@ -102,23 +108,23 @@ type PostBlobMultipartBody struct {
 
 // PostBlobParams defines parameters for PostBlob.
 type PostBlobParams struct {
-	Path LocationPath `form:"path" json:"path"`
+	Path PathParam `form:"path" json:"path"`
 }
 
 // PostCopyJSONBody defines parameters for PostCopy.
 type PostCopyJSONBody struct {
-	Destination string   `json:"destination"`
-	Sources     []string `json:"sources"`
+	Destination *string   `json:"destination,omitempty"`
+	Sources     *[]string `json:"sources,omitempty"`
 }
 
 // DeleteFileParams defines parameters for DeleteFile.
 type DeleteFileParams struct {
-	Path LocationPath `form:"path" json:"path"`
+	Paths []string `form:"paths" json:"paths"`
 }
 
 // GetFileParams defines parameters for GetFile.
 type GetFileParams struct {
-	Path LocationPath `form:"path" json:"path"`
+	Path PathParam `form:"path" json:"path"`
 }
 
 // PatchFileJSONBody defines parameters for PatchFile.
@@ -128,7 +134,7 @@ type PatchFileJSONBody struct {
 
 // PatchFileParams defines parameters for PatchFile.
 type PatchFileParams struct {
-	Path LocationPath `form:"path" json:"path"`
+	Path PathParam `form:"path" json:"path"`
 }
 
 // PostFileJSONBody defines parameters for PostFile.
@@ -139,12 +145,12 @@ type PostFileJSONBody struct {
 
 // PostFileParams defines parameters for PostFile.
 type PostFileParams struct {
-	Path LocationPath `form:"path" json:"path"`
+	Path PathParam `form:"path" json:"path"`
 }
 
 // GetFolderParams defines parameters for GetFolder.
 type GetFolderParams struct {
-	Path LocationPath `form:"path" json:"path"`
+	Path PathParam `form:"path" json:"path"`
 }
 
 // PostLoginJSONBody defines parameters for PostLogin.
@@ -155,8 +161,8 @@ type PostLoginJSONBody struct {
 
 // PostMoveJSONBody defines parameters for PostMove.
 type PostMoveJSONBody struct {
-	Destination string   `json:"destination"`
-	Sources     []string `json:"sources"`
+	Destination *string   `json:"destination,omitempty"`
+	Sources     *[]string `json:"sources,omitempty"`
 }
 
 // GetSearchParams defines parameters for GetSearch.
@@ -328,11 +334,11 @@ func (w *ServerInterfaceWrapper) DeleteFile(ctx echo.Context) error {
 
 	// Parameter object where we will unmarshal all parameters from the context
 	var params DeleteFileParams
-	// ------------- Required query parameter "path" -------------
+	// ------------- Required query parameter "paths" -------------
 
-	err = runtime.BindQueryParameter("form", true, true, "path", ctx.QueryParams(), &params.Path)
+	err = runtime.BindQueryParameter("form", true, true, "paths", ctx.QueryParams(), &params.Paths)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paths: %s", err))
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
@@ -587,36 +593,37 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"PTlJBzO8WPwvAAD//089mGt+JwAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

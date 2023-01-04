@@ -113,13 +113,15 @@ func (s Server) PostFile(ctx echo.Context, params api.PostFileParams) error {
 
 // (DELETE /file)
 func (s Server) DeleteFile(ctx echo.Context, params api.DeleteFileParams) error {
-	fullPath := path.Join(base, params.Path)
-	err := os.RemoveAll(fullPath)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("delete file", err.Error()))
+
+	for _, relativePath := range params.Paths {
+		err := os.RemoveAll(path.Join(base, relativePath))
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("delete file", err.Error()))
+		}
 	}
 
 	return ctx.JSON(http.StatusOK, api.SuccessMessage{
-		Success: fmt.Sprintf("%s successfully deleted", fullPath),
+		Success: fmt.Sprintf("%d file(s) was successfully deleted", len(params.Paths)),
 	})
 }
