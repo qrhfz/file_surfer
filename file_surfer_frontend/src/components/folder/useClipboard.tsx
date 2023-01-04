@@ -3,11 +3,7 @@ import { ClipboardContext } from "../../clipboard";
 import { PopupContext } from "../../signals/popup_state";
 import { joinPaths } from "../../utils/path";
 import { FileOrFolder } from "./model";
-import {
-  PastePopupError,
-  PastePopupInProgress,
-  PastePopupSuccess,
-} from "./popups";
+import { PastePopupError, PastePopupInProgress, PastePopupSuccess } from "./popups";
 
 export const useClipboard = (
   loc: string | undefined,
@@ -41,11 +37,11 @@ export const useClipboard = (
     if (loc === undefined) {
       return;
     }
-    popup.show(PastePopupInProgress);
+    popup.show(<PastePopupInProgress />);
 
     markedFiles.paste(loc)
-      .then((_) => popup.show(PastePopupSuccess))
-      .catch((_) => popup.show(PastePopupError));
+      .then((_) => popup.show(<PastePopupSuccess />))
+      .catch((_) => popup.show(<PastePopupError />));
   };
 
   const handleKeyboardShortcut = (e: KeyboardEvent) => {

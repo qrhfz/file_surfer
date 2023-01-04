@@ -3,10 +3,10 @@
 /* eslint-disable */
 
 export type File = {
-    name?: string;
-    type?: string;
-    location?: string;
-    size?: number;
-    modified?: string;
+    name: string;
+    type: string;
+    location: string;
+    size: number;
+    modified: string;
 };
 

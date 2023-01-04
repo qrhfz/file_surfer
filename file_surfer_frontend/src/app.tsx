@@ -14,6 +14,7 @@ import { ModalContext, ModalState } from "./signals/modal_state";
 import { Modal } from "./components/modals/modal";
 import { EntriesContext, EntriesState } from "./signals/entries_state";
 import { ColumnResizerContext, createColumnResizer } from "./components/folder/folder_view";
+import { Popup } from "./components/popup";
 
 
 export function App() {
@@ -40,9 +41,9 @@ export function App() {
     ]}>
       <PopupContext.Consumer>
         {p => {
-          const Popup = p.component.value
-          if (Popup) {
-            return <Popup></Popup>;
+          const content = p.content.value
+          if (content) {
+            return <Popup>{content}</Popup>;
           }
         }}
       </PopupContext.Consumer>

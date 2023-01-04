@@ -5,31 +5,37 @@ type ContextMenuProp = {
   handleCut: () => void,
   handlePaste: () => void,
   handleDownload: () => void,
+  handleDelete: () => void,
   position: ContextMenuPosition
 }
 
 export const ContextMenu: preact.FunctionComponent<ContextMenuProp> = (prop) => {
-  const { position, handleCopy, handleCut, handlePaste, handleDownload } = prop
+  const { position } = prop
 
   return (
     <nav
       aria-label="Context Menu"
       style={{ left: position.x, top: position.y }}
       class="fixed w-24 flex flex-col space-y-1 bg-white">
-      <ContextMenuItem onClick={handleCopy}>
+      <ContextMenuItem onClick={prop.handleCopy}>
         Copy
       </ContextMenuItem>
 
-      <ContextMenuItem onClick={handleCut}>
+      <ContextMenuItem onClick={prop.handleCut}>
         Cut
       </ContextMenuItem>
 
-      <ContextMenuItem onClick={handlePaste}>
+      <ContextMenuItem onClick={prop.handlePaste}>
         Paste
       </ContextMenuItem>
 
-      <ContextMenuItem onClick={handleDownload}>
+      <ContextMenuItem onClick={prop.handleDownload}>
         Download
+      </ContextMenuItem>
+      <ContextMenuItem onClick={prop.handleDelete}>
+        <span className="text-red-400">
+          Delete
+        </span>
       </ContextMenuItem>
     </nav>
   )

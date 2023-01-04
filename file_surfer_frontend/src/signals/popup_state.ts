@@ -1,16 +1,16 @@
 import { signal } from "@preact/signals";
-import { Component, ComponentType, createContext } from "preact";
+import { Component, ComponentType, createContext, JSX } from "preact";
 
 export class PopupState {
-  component = signal<ComponentType | undefined>(undefined);
+  content = signal<JSX.Element | undefined>(undefined);
 
-  show(content: ComponentType) {
-    this.component.value = content;
+  show(content: JSX.Element) {
+    this.content.value = content;
     console.log("show popup");
   }
 
   close() {
-    this.component.value = undefined;
+    this.content.value = undefined;
   }
 }
 

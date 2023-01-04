@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo, useContext } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
 import { formatBytes } from "../../utils/formatBytes";
 import { formatDateString } from "../../utils/formatDateString";
-import { FolderService } from "../../generated-sources/openapi";
+import { FileService, FolderService } from "../../generated-sources/openapi";
 import { ContextMenu, ContextMenuPosition } from "./context_menu";
 import { FolderListViewCell, FolderListViewHeaderCell } from "./cell";
 import { useResize } from "./useResize";
@@ -13,6 +13,9 @@ import { useSelect } from "./useSelect";
 import { createContext, FunctionComponent } from "preact";
 import { memo } from "preact/compat";
 import { computed, signal } from "@preact/signals";
+import { joinPath } from "../../utils/path";
+import { PopupContext } from "../../signals/popup_state";
+import { Popup } from "../popup";
 
 type FolderView = preact.FunctionalComponent<{ items: FileOrFolder[], loc?: string }>
 
@@ -38,19 +41,32 @@ export const ColumnResizerContext = createContext(createColumnResizer([]))
 export const FolderView: FolderView = ({ loc, items }) => {
   const [contextMenuPosition, setContextMenuPosition] = useState<ContextMenuPosition>()
 
-  const resizer = useContext(ColumnResizerContext)
+  const closeContextMenu = () => setContextMenuPosition(undefined)
 
-  const {
-    handleItemClick,
-    handleRightClick,
-    selectedIndices,
-  } = useSelect(
+  const resizer = useContext(ColumnResizerContext)
+  const popup = useContext(PopupContext)
+
+  const select = useSelect(
     items,
     (x, y) => { setContextMenuPosition({ x, y }) },
     () => setContextMenuPosition(undefined),
   )
 
-  const { copy, cut, paste, } = useClipboard(loc, selectedIndices, items)
+  const { copy, cut, paste, } = useClipboard(loc, select.selectedIndices, items)
+
+  const del = async () => {
+    try {
+      for (const idx of select.selectedIndices) {
+        const { item } = items[idx]
+        const path = joinPath(item.name, item.location)
+        await FileService.deleteFile(path)
+      }
+      popup.show(<Popup>Delete Success</Popup>)
+    } catch (error) {
+      popup.show(<Popup>Delete Error</Popup>)
+    }
+
+  }
 
   return (
     <>
@@ -64,22 +80,23 @@ export const FolderView: FolderView = ({ loc, items }) => {
 
         <FolderListViewBody
           items={items}
-          selectedIndices={selectedIndices}
-          handleItemClick={handleItemClick}
-          handleRightClick={handleRightClick} />
+          selectedIndices={select.selectedIndices}
+          handleItemClick={select.handleItemClick}
+          handleRightClick={select.handleRightClick} />
 
       </table>
       {contextMenuPosition &&
         <ContextMenu
-          handleCopy={() => { copy(); setContextMenuPosition(undefined) }}
-          handleCut={() => { cut(); setContextMenuPosition(undefined) }}
-          handlePaste={() => { paste(); setContextMenuPosition(undefined) }}
+          position={contextMenuPosition}
+          handleCopy={() => { copy(); closeContextMenu() }}
+          handleCut={() => { cut(); closeContextMenu() }}
+          handlePaste={() => { paste(); closeContextMenu() }}
           handleDownload={() => {
             // TODO: download link
             window.open("download");
-            setContextMenuPosition(undefined)
+            closeContextMenu();
           }}
-          position={contextMenuPosition} />}
+          handleDelete={del} />}
 
     </>
   )

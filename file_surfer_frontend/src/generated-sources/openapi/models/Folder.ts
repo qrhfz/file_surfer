@@ -3,10 +3,10 @@
 /* eslint-disable */
 
 export type Folder = {
-    name?: string;
-    location?: string;
-    modified?: string;
+    name: string;
+    location: string;
+    modified: string;
     size?: number;
-    contentCount?: number;
+    contentCount: number;
 };
 
