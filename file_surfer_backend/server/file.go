@@ -19,7 +19,21 @@ func (s Server) GetFile(ctx echo.Context, params api.GetFileParams) error {
 
 // (PATCH /file)
 func (s Server) PatchFile(ctx echo.Context, params api.PatchFileParams) error {
-	panic("not implemented") // TODO: Implement
+	var body api.PatchFileJSONBody
+	err := ctx.Bind(&body)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, CreateErrorResponse("rename file", err.Error()))
+	}
+	oldPath := path.Join(base, params.Path)
+	newPath := path.Join(base, params.Path, "..", *body.Name)
+
+	os.Rename(oldPath, newPath)
+
+	success := fmt.Sprintf("success renaming %s to %s", oldPath, newPath)
+
+	return ctx.JSON(http.StatusOK, api.SuccessMessage{
+		Success: &success,
+	})
 }
 
 // (POST /file)
@@ -60,5 +74,14 @@ func (s Server) PostFile(ctx echo.Context, params api.PostFileParams) error {
 
 // (DELETE /file)
 func (s Server) DeleteFile(ctx echo.Context, params api.DeleteFileParams) error {
-	panic("not implemented") // TODO: Implement
+	fullPath := path.Join(base, params.Path)
+	err := os.RemoveAll(fullPath)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("delete file", err.Error()))
+	}
+	success := fmt.Sprintf("%s successfully deleted", fullPath)
+
+	return ctx.JSON(http.StatusOK, api.SuccessMessage{
+		Success: &success,
+	})
 }
