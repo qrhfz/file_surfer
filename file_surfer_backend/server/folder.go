@@ -49,11 +49,11 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 			contentCount := len(items)
 
 			folders = append(folders, api.Folder{
-				Name:         &name,
-				Size:         &size,
-				Modified:     &modified,
-				Location:     &relativePath,
-				ContentCount: &contentCount,
+				Name:         name,
+				Size:         size,
+				Modified:     modified,
+				Location:     relativePath,
+				ContentCount: contentCount,
 			})
 
 			continue
@@ -66,11 +66,11 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 			}
 
 			filelist = append(filelist, api.File{
-				Name:     &name,
-				Size:     &size,
-				Modified: &modified,
-				Location: &relativePath,
-				Type:     &fileType,
+				Name:     name,
+				Size:     size,
+				Modified: modified,
+				Location: relativePath,
+				Type:     fileType,
 			})
 		}
 

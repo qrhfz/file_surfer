@@ -476,6 +476,7 @@ components:
         - name
         - location
         - modified
+        - size
         - contentCount
     User:
       title: User

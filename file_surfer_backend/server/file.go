@@ -39,10 +39,10 @@ func (s Server) GetFile(ctx echo.Context, params api.GetFileParams) error {
 
 	body := api.GetFIleResponse{
 		Info: api.File{
-			Name:     &name,
-			Modified: &modified,
-			Size:     &size,
-			Type:     &fileType,
+			Name:     name,
+			Modified: modified,
+			Size:     size,
+			Type:     fileType,
 		},
 	}
 
