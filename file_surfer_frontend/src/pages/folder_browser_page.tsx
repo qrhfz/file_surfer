@@ -36,20 +36,23 @@ export const FolderBrowserPage: FolderBrowserPage = ({ loc, matches }) => {
     <FolderLayout
       Header={() => <Nav q={matches?.q} at={matches?.in} />}
       Aside={() => <Sidebar loc={path} />}
-      Main={() => {
-        if (status === "loading") {
-          return <LoadingCircle></LoadingCircle>
-        } else if (status === "ok") {
-          return (
-            <div class="overflow-x-auto">
-              <Breadcrumb path={path} />
-              <FolderView items={entries.entriesSignal.value} loc={path} />
+      Main={() => (
+        <>
+          <div class="overflow-x-auto">
+            <Breadcrumb path={path} />
+            <FolderView
+              loc={path}
+              items={status == "loading" ? [] : entries.entriesSignal.value} />
+          </div>
+          {status == "loading" &&
+            <div class="h-full grid items-center justify-center">
+              <div>
+                <LoadingCircle />
+              </div>
             </div>
-          )
-        } else {
-          return <>Error</>
-        }
-      }}
+          }
+        </>
+      )}
     />
   )
 }
