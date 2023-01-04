@@ -2,6 +2,7 @@ package server
 
 import (
 	"file_surfer_backend/api"
+	"file_surfer_backend/fileutils"
 	"io"
 	"net/http"
 	"os"
@@ -59,21 +60,10 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 		}
 
 		if (fileInfo.Mode() & os.ModeSymlink) != os.ModeSymlink {
-			f, err := os.Open(fileLocation)
-
-			if err != nil {
-				return ctx.JSON(http.StatusInternalServerError, err.Error())
-			}
-			defer f.Close()
-
-			buff := make([]byte, 512)
-
-			_, err = f.Read(buff)
-
+			fileType, err := fileutils.GetMimeType(fileLocation)
 			if err != nil && err != io.EOF {
 				return ctx.JSON(http.StatusInternalServerError, err.Error())
 			}
-			fileType := http.DetectContentType(buff)
 
 			filelist = append(filelist, api.File{
 				Name:     &name,

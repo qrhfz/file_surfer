@@ -6,15 +6,19 @@ import (
 	"os"
 )
 
-func GetMimeType(file *os.File) (string, error) {
-	buff := make([]byte, 512)
+func GetMimeType(path string) (string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
 
-	_, err := file.Read(buff)
+	reader := io.LimitReader(file, 512)
+	buf, err := io.ReadAll(reader)
 
 	if err != nil && err != io.EOF {
 		return "", err
 	}
-	fileType := http.DetectContentType(buff)
-
+	fileType := http.DetectContentType(buf)
 	return fileType, nil
 }

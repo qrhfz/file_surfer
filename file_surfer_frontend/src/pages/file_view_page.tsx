@@ -40,7 +40,7 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
           </div>
           <pre class="py-4 h-[66vh] overflow-y-auto">
 
-            {fileState.data.content}
+            {fileState.data.content ?? ""}
           </pre>
         </>}
       </div>

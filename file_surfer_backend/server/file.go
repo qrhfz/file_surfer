@@ -32,7 +32,7 @@ func (s Server) GetFile(ctx echo.Context, params api.GetFileParams) error {
 	name := info.Name()
 	modified := info.ModTime()
 	size := int(info.Size())
-	fileType, err := fileutils.GetMimeType(file)
+	fileType, err := fileutils.GetMimeType(fullPath)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("read file type", err.Error()))
 	}
@@ -46,7 +46,7 @@ func (s Server) GetFile(ctx echo.Context, params api.GetFileParams) error {
 		},
 	}
 
-	if strings.HasPrefix(fileType, "text/plain") {
+	if strings.HasPrefix(fileType, "text/") {
 		buf, err := io.ReadAll(file)
 		if err != nil {
 			return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("read file type", err.Error()))
