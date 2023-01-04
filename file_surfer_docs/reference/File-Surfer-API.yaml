@@ -447,6 +447,12 @@ components:
         modified:
           type: string
           format: date-time
+      required:
+        - name
+        - type
+        - location
+        - size
+        - modified
     Folder:
       title: Folder
       x-stoplight:
@@ -466,6 +472,11 @@ components:
         contentCount:
           type: integer
           minimum: 0
+      required:
+        - name
+        - location
+        - modified
+        - contentCount
     User:
       title: User
       x-stoplight:
