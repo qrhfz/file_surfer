@@ -490,6 +490,10 @@ components:
           type: string
         role:
           $ref: '#/components/schemas/Role'
+      required:
+        - id
+        - username
+        - role
     Role:
       title: Role
       x-stoplight:
