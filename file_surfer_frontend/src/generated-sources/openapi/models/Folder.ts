@@ -6,7 +6,7 @@ export type Folder = {
     name: string;
     location: string;
     modified: string;
-    size?: number;
+    size: number;
     contentCount: number;
 };
 

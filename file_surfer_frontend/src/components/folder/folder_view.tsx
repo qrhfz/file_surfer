@@ -56,11 +56,12 @@ export const FolderView: FolderView = ({ loc, items }) => {
 
   const del = async () => {
     try {
-      for (const idx of select.selectedIndices) {
-        const { item } = items[idx]
-        const path = joinPath(item.name, item.location)
-        await FileService.deleteFile(path)
-      }
+
+      const paths = select.selectedIndices.map(i => {
+        const { item } = items[i]
+        return joinPath(item.name, item.location)
+      })
+      await FileService.deleteFile(paths)
       popup.show(<Popup>Delete Success</Popup>)
     } catch (error) {
       popup.show(<Popup>Delete Error</Popup>)

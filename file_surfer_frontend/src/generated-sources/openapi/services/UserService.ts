@@ -44,7 +44,7 @@ export class UserService {
             role: Role;
         },
     ): CancelablePromise<{
-        success?: string;
+        success: string;
     }> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -72,7 +72,7 @@ export class UserService {
             role?: Role;
         },
     ): CancelablePromise<{
-        success?: string;
+        success: string;
     }> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -94,7 +94,7 @@ export class UserService {
     public static deleteUserId(
         id: string,
     ): CancelablePromise<{
-        success?: string;
+        success: string;
     }> {
         return __request(OpenAPI, {
             method: 'DELETE',

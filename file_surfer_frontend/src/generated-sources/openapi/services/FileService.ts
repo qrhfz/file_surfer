@@ -45,7 +45,7 @@ export class FileService {
             isDir: boolean;
         },
     ): CancelablePromise<{
-        success?: string;
+        success: string;
     }> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -60,20 +60,20 @@ export class FileService {
 
     /**
      * Delete file
-     * @param path
+     * @param paths
      * @returns any
      * @throws ApiError
      */
     public static deleteFile(
-        path: string,
+        paths: Array<string>,
     ): CancelablePromise<{
-        success?: string;
+        success: string;
     }> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/file',
             query: {
-                'path': path,
+                'paths': paths,
             },
         });
     }
@@ -91,7 +91,7 @@ export class FileService {
             name?: string;
         },
     ): CancelablePromise<{
-        success?: string;
+        success: string;
     }> {
         return __request(OpenAPI, {
             method: 'PATCH',

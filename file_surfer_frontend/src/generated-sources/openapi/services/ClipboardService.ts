@@ -10,15 +10,17 @@ export class ClipboardService {
     /**
      * Copy list of files and folders defined in sources to destination folder
      * @param requestBody
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static postCopy(
         requestBody?: {
-            sources: Array<string>;
-            destination: string;
+            sources?: Array<string>;
+            destination?: string;
         },
-    ): CancelablePromise<any> {
+    ): CancelablePromise<{
+        success: string;
+    }> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/copy',
@@ -30,15 +32,17 @@ export class ClipboardService {
     /**
      * Move list of files and folders defined in sources to destination folder
      * @param requestBody
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public static postMove(
         requestBody?: {
-            sources: Array<string>;
-            destination: string;
+            sources?: Array<string>;
+            destination?: string;
         },
-    ): CancelablePromise<any> {
+    ): CancelablePromise<{
+        success: string;
+    }> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/move',

@@ -39,7 +39,7 @@ export class BlobService {
             files: Array<string>;
         },
     ): CancelablePromise<{
-        success?: string;
+        success: string;
     }> {
         return __request(OpenAPI, {
             method: 'POST',

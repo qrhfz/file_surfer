@@ -22,8 +22,8 @@ export class SearchService {
         path: string,
         searchQuery: string,
     ): CancelablePromise<{
-        files?: Array<File>;
-        folders?: Array<Folder>;
+        files: Array<File>;
+        folders: Array<Folder>;
     }> {
         return __request(OpenAPI, {
             method: 'GET',
