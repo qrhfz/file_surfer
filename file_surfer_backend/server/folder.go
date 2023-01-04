@@ -2,6 +2,7 @@ package server
 
 import (
 	"file_surfer_backend/api"
+	"file_surfer_backend/config"
 	"file_surfer_backend/fileutils"
 	"io"
 	"net/http"
@@ -13,10 +14,12 @@ import (
 
 // Your GET endpoint
 // (GET /folder)
-func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
-
-	relativePath := params.Path
-	workingDir := path.Join(base, relativePath)
+func (s Server) GetFolder(ctx echo.Context, b64path api.Base64PathParam) error {
+	relativePath, err := fileutils.DecodePath(b64path)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	workingDir := path.Join(config.Base, relativePath)
 	files, err := os.ReadDir(workingDir)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, err.Error())

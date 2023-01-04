@@ -58,8 +58,8 @@ type User struct {
 	Username string `json:"username"`
 }
 
-// PathParam defines model for PathParam.
-type PathParam = string
+// Base64PathParam defines model for Base64PathParam.
+type Base64PathParam = string
 
 // Error defines model for Error.
 type Error struct {
@@ -96,45 +96,15 @@ type PasteRequest struct {
 	Sources     *[]string `json:"sources,omitempty"`
 }
 
-// GetBlobParams defines parameters for GetBlob.
-type GetBlobParams struct {
-	Path PathParam `form:"path" json:"path"`
-}
-
-// PostBlobMultipartBody defines parameters for PostBlob.
-type PostBlobMultipartBody struct {
-	Files [][]byte `json:"files"`
-}
-
-// PostBlobParams defines parameters for PostBlob.
-type PostBlobParams struct {
-	Path PathParam `form:"path" json:"path"`
-}
-
 // PostCopyJSONBody defines parameters for PostCopy.
 type PostCopyJSONBody struct {
 	Destination *string   `json:"destination,omitempty"`
 	Sources     *[]string `json:"sources,omitempty"`
 }
 
-// DeleteFileParams defines parameters for DeleteFile.
-type DeleteFileParams struct {
-	Paths []string `form:"paths" json:"paths"`
-}
-
-// GetFileParams defines parameters for GetFile.
-type GetFileParams struct {
-	Path PathParam `form:"path" json:"path"`
-}
-
 // PatchFileJSONBody defines parameters for PatchFile.
 type PatchFileJSONBody struct {
 	Name *string `json:"name,omitempty"`
-}
-
-// PatchFileParams defines parameters for PatchFile.
-type PatchFileParams struct {
-	Path PathParam `form:"path" json:"path"`
 }
 
 // PostFileJSONBody defines parameters for PostFile.
@@ -143,14 +113,9 @@ type PostFileJSONBody struct {
 	Name  string `json:"name"`
 }
 
-// PostFileParams defines parameters for PostFile.
-type PostFileParams struct {
-	Path PathParam `form:"path" json:"path"`
-}
-
-// GetFolderParams defines parameters for GetFolder.
-type GetFolderParams struct {
-	Path PathParam `form:"path" json:"path"`
+// PostBlobMultipartBody defines parameters for PostBlob.
+type PostBlobMultipartBody struct {
+	Files [][]byte `json:"files"`
 }
 
 // PostLoginJSONBody defines parameters for PostLogin.
@@ -185,9 +150,6 @@ type PostUserIdJSONBody struct {
 	Username string `json:"username"`
 }
 
-// PostBlobMultipartRequestBody defines body for PostBlob for multipart/form-data ContentType.
-type PostBlobMultipartRequestBody PostBlobMultipartBody
-
 // PostCopyJSONRequestBody defines body for PostCopy for application/json ContentType.
 type PostCopyJSONRequestBody PostCopyJSONBody
 
@@ -196,6 +158,9 @@ type PatchFileJSONRequestBody PatchFileJSONBody
 
 // PostFileJSONRequestBody defines body for PostFile for application/json ContentType.
 type PostFileJSONRequestBody PostFileJSONBody
+
+// PostBlobMultipartRequestBody defines body for PostBlob for multipart/form-data ContentType.
+type PostBlobMultipartRequestBody PostBlobMultipartBody
 
 // PostLoginJSONRequestBody defines body for PostLogin for application/json ContentType.
 type PostLoginJSONRequestBody PostLoginJSONBody
@@ -214,30 +179,30 @@ type ServerInterface interface {
 	// Your GET endpoint
 	// (GET /access-token)
 	GetAccessToken(ctx echo.Context) error
-	// Your GET endpoint
-	// (GET /blob)
-	GetBlob(ctx echo.Context, params GetBlobParams) error
-
-	// (POST /blob)
-	PostBlob(ctx echo.Context, params PostBlobParams) error
 
 	// (POST /copy)
 	PostCopy(ctx echo.Context) error
 
-	// (DELETE /file)
-	DeleteFile(ctx echo.Context, params DeleteFileParams) error
+	// (DELETE /file/{path})
+	DeleteFile(ctx echo.Context, path Base64PathParam) error
 	// Your GET endpoint
-	// (GET /file)
-	GetFile(ctx echo.Context, params GetFileParams) error
+	// (GET /file/{path})
+	GetFile(ctx echo.Context, path Base64PathParam) error
 
-	// (PATCH /file)
-	PatchFile(ctx echo.Context, params PatchFileParams) error
+	// (PATCH /file/{path})
+	PatchFile(ctx echo.Context, path Base64PathParam) error
 
-	// (POST /file)
-	PostFile(ctx echo.Context, params PostFileParams) error
+	// (POST /file/{path})
+	PostFile(ctx echo.Context, path Base64PathParam) error
 	// Your GET endpoint
-	// (GET /folder)
-	GetFolder(ctx echo.Context, params GetFolderParams) error
+	// (GET /file/{path}/blob)
+	GetBlob(ctx echo.Context, path string) error
+
+	// (POST /file/{path}/blob)
+	PostBlob(ctx echo.Context, path string) error
+	// Your GET endpoint
+	// (GET /folder/{path})
+	GetFolder(ctx echo.Context, path Base64PathParam) error
 
 	// (POST /login)
 	PostLogin(ctx echo.Context) error
@@ -277,46 +242,6 @@ func (w *ServerInterfaceWrapper) GetAccessToken(ctx echo.Context) error {
 	return err
 }
 
-// GetBlob converts echo context to params.
-func (w *ServerInterfaceWrapper) GetBlob(ctx echo.Context) error {
-	var err error
-
-	ctx.Set(AccessTokenScopes, []string{""})
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params GetBlobParams
-	// ------------- Required query parameter "path" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "path", ctx.QueryParams(), &params.Path)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.GetBlob(ctx, params)
-	return err
-}
-
-// PostBlob converts echo context to params.
-func (w *ServerInterfaceWrapper) PostBlob(ctx echo.Context) error {
-	var err error
-
-	ctx.Set(TokenScopes, []string{""})
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PostBlobParams
-	// ------------- Required query parameter "path" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "path", ctx.QueryParams(), &params.Path)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.PostBlob(ctx, params)
-	return err
-}
-
 // PostCopy converts echo context to params.
 func (w *ServerInterfaceWrapper) PostCopy(ctx echo.Context) error {
 	var err error
@@ -329,100 +254,126 @@ func (w *ServerInterfaceWrapper) PostCopy(ctx echo.Context) error {
 // DeleteFile converts echo context to params.
 func (w *ServerInterfaceWrapper) DeleteFile(ctx echo.Context) error {
 	var err error
+	// ------------- Path parameter "path" -------------
+	var path Base64PathParam
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "path", runtime.ParamLocationPath, ctx.Param("path"), &path)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
+	}
 
 	ctx.Set(TokenScopes, []string{""})
 
-	// Parameter object where we will unmarshal all parameters from the context
-	var params DeleteFileParams
-	// ------------- Required query parameter "paths" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "paths", ctx.QueryParams(), &params.Paths)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter paths: %s", err))
-	}
-
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.DeleteFile(ctx, params)
+	err = w.Handler.DeleteFile(ctx, path)
 	return err
 }
 
 // GetFile converts echo context to params.
 func (w *ServerInterfaceWrapper) GetFile(ctx echo.Context) error {
 	var err error
+	// ------------- Path parameter "path" -------------
+	var path Base64PathParam
 
-	ctx.Set(TokenScopes, []string{""})
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params GetFileParams
-	// ------------- Required query parameter "path" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "path", ctx.QueryParams(), &params.Path)
+	err = runtime.BindStyledParameterWithLocation("simple", false, "path", runtime.ParamLocationPath, ctx.Param("path"), &path)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
 	}
 
+	ctx.Set(TokenScopes, []string{""})
+
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.GetFile(ctx, params)
+	err = w.Handler.GetFile(ctx, path)
 	return err
 }
 
 // PatchFile converts echo context to params.
 func (w *ServerInterfaceWrapper) PatchFile(ctx echo.Context) error {
 	var err error
+	// ------------- Path parameter "path" -------------
+	var path Base64PathParam
 
-	ctx.Set(TokenScopes, []string{""})
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PatchFileParams
-	// ------------- Required query parameter "path" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "path", ctx.QueryParams(), &params.Path)
+	err = runtime.BindStyledParameterWithLocation("simple", false, "path", runtime.ParamLocationPath, ctx.Param("path"), &path)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
 	}
 
+	ctx.Set(TokenScopes, []string{""})
+
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.PatchFile(ctx, params)
+	err = w.Handler.PatchFile(ctx, path)
 	return err
 }
 
 // PostFile converts echo context to params.
 func (w *ServerInterfaceWrapper) PostFile(ctx echo.Context) error {
 	var err error
+	// ------------- Path parameter "path" -------------
+	var path Base64PathParam
 
-	ctx.Set(TokenScopes, []string{""})
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PostFileParams
-	// ------------- Required query parameter "path" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "path", ctx.QueryParams(), &params.Path)
+	err = runtime.BindStyledParameterWithLocation("simple", false, "path", runtime.ParamLocationPath, ctx.Param("path"), &path)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
 	}
 
+	ctx.Set(TokenScopes, []string{""})
+
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.PostFile(ctx, params)
+	err = w.Handler.PostFile(ctx, path)
+	return err
+}
+
+// GetBlob converts echo context to params.
+func (w *ServerInterfaceWrapper) GetBlob(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "path" -------------
+	var path string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "path", runtime.ParamLocationPath, ctx.Param("path"), &path)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
+	}
+
+	ctx.Set(AccessTokenScopes, []string{""})
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.GetBlob(ctx, path)
+	return err
+}
+
+// PostBlob converts echo context to params.
+func (w *ServerInterfaceWrapper) PostBlob(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "path" -------------
+	var path string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "path", runtime.ParamLocationPath, ctx.Param("path"), &path)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
+	}
+
+	ctx.Set(TokenScopes, []string{""})
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PostBlob(ctx, path)
 	return err
 }
 
 // GetFolder converts echo context to params.
 func (w *ServerInterfaceWrapper) GetFolder(ctx echo.Context) error {
 	var err error
+	// ------------- Path parameter "path" -------------
+	var path Base64PathParam
 
-	ctx.Set(TokenScopes, []string{""})
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params GetFolderParams
-	// ------------- Required query parameter "path" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "path", ctx.QueryParams(), &params.Path)
+	err = runtime.BindStyledParameterWithLocation("simple", false, "path", runtime.ParamLocationPath, ctx.Param("path"), &path)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter path: %s", err))
 	}
 
+	ctx.Set(TokenScopes, []string{""})
+
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.GetFolder(ctx, params)
+	err = w.Handler.GetFolder(ctx, path)
 	return err
 }
 
@@ -572,14 +523,14 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.GET(baseURL+"/access-token", wrapper.GetAccessToken)
-	router.GET(baseURL+"/blob", wrapper.GetBlob)
-	router.POST(baseURL+"/blob", wrapper.PostBlob)
 	router.POST(baseURL+"/copy", wrapper.PostCopy)
-	router.DELETE(baseURL+"/file", wrapper.DeleteFile)
-	router.GET(baseURL+"/file", wrapper.GetFile)
-	router.PATCH(baseURL+"/file", wrapper.PatchFile)
-	router.POST(baseURL+"/file", wrapper.PostFile)
-	router.GET(baseURL+"/folder", wrapper.GetFolder)
+	router.DELETE(baseURL+"/file/:path", wrapper.DeleteFile)
+	router.GET(baseURL+"/file/:path", wrapper.GetFile)
+	router.PATCH(baseURL+"/file/:path", wrapper.PatchFile)
+	router.POST(baseURL+"/file/:path", wrapper.PostFile)
+	router.GET(baseURL+"/file/:path/blob", wrapper.GetBlob)
+	router.POST(baseURL+"/file/:path/blob", wrapper.PostBlob)
+	router.GET(baseURL+"/folder/:path", wrapper.GetFolder)
 	router.POST(baseURL+"/login", wrapper.PostLogin)
 	router.POST(baseURL+"/move", wrapper.PostMove)
 	router.GET(baseURL+"/search", wrapper.GetSearch)
@@ -593,37 +544,37 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
-	"PTlJBzO8WPwvAAD//089mGt+JwAA",
+	"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",
+	"buX9/OwsHS3wev3/AAAA//+j4A/5tiYAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

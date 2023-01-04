@@ -12,7 +12,7 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  /folder:
+  '/folder/{path}':
     get:
       summary: Your GET endpoint
       responses:
@@ -26,14 +26,14 @@ paths:
           $ref: '#/components/responses/Error'
       operationId: get-folder
       description: Open a folder and returns list of files and folders inside
-      parameters:
-        - $ref: '#/components/parameters/PathParam'
+      parameters: []
       tags:
         - folder
       security:
         - token: []
-    parameters: []
-  /file:
+    parameters:
+      - $ref: '#/components/parameters/Base64PathParam'
+  '/file/{path}':
     get:
       summary: Your GET endpoint
       tags:
@@ -51,8 +51,7 @@ paths:
       description: returns file info. if type is text/* it will returns it content as content property
       security:
         - token: []
-      parameters:
-        - $ref: '#/components/parameters/PathParam'
+      parameters: []
     post:
       summary: ''
       operationId: post-file
@@ -66,13 +65,13 @@ paths:
       tags:
         - file
       description: create new empty file
-      parameters:
-        - $ref: '#/components/parameters/PathParam'
+      parameters: []
       security:
         - token: []
       requestBody:
         $ref: '#/components/requestBodies/NewFileRequest'
-    parameters: []
+    parameters:
+      - $ref: '#/components/parameters/Base64PathParam'
     delete:
       summary: ''
       operationId: delete-file
@@ -83,16 +82,8 @@ paths:
           $ref: '#/components/responses/Error'
         '403':
           $ref: '#/components/responses/Error'
-      description: Delete file
-      parameters:
-        - schema:
-            type: array
-            items:
-              type: string
-            minItems: 1
-          in: query
-          name: paths
-          required: true
+      description: Delete a file
+      parameters: []
       tags:
         - file
       security:
@@ -118,11 +109,10 @@ paths:
               properties:
                 name:
                   type: string
-      parameters:
-        - $ref: '#/components/parameters/PathParam'
+      parameters: []
       security:
         - token: []
-  /blob:
+  '/file/{path}/blob':
     get:
       tags:
         - blob
@@ -142,8 +132,7 @@ paths:
         '404':
           $ref: '#/components/responses/Error'
       operationId: get-blob
-      parameters:
-        - $ref: '#/components/parameters/PathParam'
+      parameters: []
       description: Download file at given path
       security:
         - accessToken: []
@@ -176,54 +165,62 @@ paths:
         - blob
       security:
         - token: []
-      parameters:
-        - $ref: '#/components/parameters/PathParam'
-    parameters: []
-  /login:
-    parameters: []
-    post:
-      summary: ''
-      operationId: post-login
+      parameters: []
+    parameters:
+      - schema:
+          type: string
+        name: path
+        in: path
+        required: true
+  /search:
+    get:
+      summary: Your GET endpoint
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-                required:
-                  - token
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    default: invalid username or password
-      description: Login
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  minLength: 1
-                password:
-                  type: string
-                  minLength: 1
-              required:
-                - username
-                - password
+          $ref: '#/components/responses/FolderContent'
+        '400':
+          $ref: '#/components/responses/Error'
+      operationId: get-search
+      description: Search file or folder in scoped folder
+      security:
+        - token: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: path
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: searchQuery
+          required: true
       tags:
-        - auth
+        - search
+  /copy:
+    post:
+      summary: ''
+      operationId: post-copy
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessMessage'
+      description: Copy list of files and folders defined in sources to destination folder
+      tags:
+        - clipboard
+      requestBody:
+        $ref: '#/components/requestBodies/PasteRequest'
+  /move:
+    post:
+      summary: ''
+      operationId: post-move
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessMessage'
+      description: Move list of files and folders defined in sources to destination folder
+      tags:
+        - clipboard
+      requestBody:
+        $ref: '#/components/requestBodies/PasteRequest'
   '/user/{id}':
     get:
       summary: Your GET endpoint
@@ -325,55 +322,51 @@ paths:
       description: delete user
       security:
         - token: []
-  /search:
-    get:
-      summary: Your GET endpoint
-      responses:
-        '200':
-          $ref: '#/components/responses/FolderContent'
-        '400':
-          $ref: '#/components/responses/Error'
-      operationId: get-search
-      description: Search file or folder in scoped folder
-      security:
-        - token: []
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: path
-          required: true
-        - schema:
-            type: string
-          in: query
-          name: searchQuery
-          required: true
-      tags:
-        - search
-  /copy:
+  /login:
+    parameters: []
     post:
       summary: ''
-      operationId: post-copy
+      operationId: post-login
       responses:
         '200':
-          $ref: '#/components/responses/SuccessMessage'
-      description: Copy list of files and folders defined in sources to destination folder
-      tags:
-        - clipboard
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                required:
+                  - token
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: invalid username or password
+      description: Login
       requestBody:
-        $ref: '#/components/requestBodies/PasteRequest'
-  /move:
-    post:
-      summary: ''
-      operationId: post-move
-      responses:
-        '200':
-          $ref: '#/components/responses/SuccessMessage'
-      description: Move list of files and folders defined in sources to destination folder
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  minLength: 1
+                password:
+                  type: string
+                  minLength: 1
+              required:
+                - username
+                - password
       tags:
-        - clipboard
-      requestBody:
-        $ref: '#/components/requestBodies/PasteRequest'
+        - auth
   /access-token:
     get:
       summary: Your GET endpoint
@@ -482,12 +475,14 @@ components:
       type: apiKey
       in: query
   parameters:
-    PathParam:
+    Base64PathParam:
       name: path
-      in: query
+      in: path
+      required: true
       schema:
         type: string
-      required: true
+        minLength: 4
+        pattern: ^\w+=*$
   responses:
     FolderContent:
       description: ''

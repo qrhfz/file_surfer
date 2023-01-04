@@ -2,7 +2,9 @@ package server
 
 import (
 	"file_surfer_backend/api"
+	"file_surfer_backend/config"
 	"file_surfer_backend/fileutils"
+
 	"fmt"
 	"io"
 	"net/http"
@@ -15,8 +17,12 @@ import (
 
 // Your GET endpoint
 // (GET /file)
-func (s Server) GetFile(ctx echo.Context, params api.GetFileParams) error {
-	fullPath := path.Join(base, params.Path)
+func (s Server) GetFile(ctx echo.Context, b64path api.Base64PathParam) error {
+	relativePath, err := fileutils.DecodePath(b64path)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	fullPath := path.Join(config.Base, relativePath)
 
 	file, err := os.Open(fullPath)
 	if err != nil {
@@ -59,14 +65,18 @@ func (s Server) GetFile(ctx echo.Context, params api.GetFileParams) error {
 }
 
 // (PATCH /file)
-func (s Server) PatchFile(ctx echo.Context, params api.PatchFileParams) error {
-	var body api.PatchFileJSONBody
-	err := ctx.Bind(&body)
+func (s Server) PatchFile(ctx echo.Context, b64path api.Base64PathParam) error {
+	relativePath, err := fileutils.DecodePath(b64path)
 	if err != nil {
-		return ctx.JSON(http.StatusBadRequest, CreateErrorResponse("rename file", err.Error()))
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	oldPath := path.Join(base, params.Path)
-	newPath := path.Join(base, params.Path, "..", *body.Name)
+	var body api.PatchFileJSONBody
+	err = ctx.Bind(&body)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	oldPath := path.Join(config.Base, relativePath)
+	newPath := path.Join(config.Base, relativePath, "..", *body.Name)
 
 	os.Rename(oldPath, newPath)
 
@@ -76,15 +86,18 @@ func (s Server) PatchFile(ctx echo.Context, params api.PatchFileParams) error {
 }
 
 // (POST /file)
-func (s Server) PostFile(ctx echo.Context, params api.PostFileParams) error {
-	var body api.NewFileRequest
-	err := ctx.Bind(&body)
+func (s Server) PostFile(ctx echo.Context, b64path api.Base64PathParam) error {
+	relativePath, err := fileutils.DecodePath(b64path)
 	if err != nil {
-		return ctx.JSON(http.StatusBadRequest, CreateErrorResponse("bad request", err.Error()))
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	fullPath := path.Join(base, params.Path, body.Name)
 
-	fmt.Print(body.Name)
+	var body api.NewFileRequest
+	err = ctx.Bind(&body)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	fullPath := path.Join(config.Base, relativePath, body.Name)
 
 	if body.IsDir {
 		err = os.Mkdir(fullPath, 0750)
@@ -112,16 +125,18 @@ func (s Server) PostFile(ctx echo.Context, params api.PostFileParams) error {
 }
 
 // (DELETE /file)
-func (s Server) DeleteFile(ctx echo.Context, params api.DeleteFileParams) error {
-
-	for _, relativePath := range params.Paths {
-		err := os.RemoveAll(path.Join(base, relativePath))
-		if err != nil {
-			return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("delete file", err.Error()))
-		}
+func (s Server) DeleteFile(ctx echo.Context, b64path api.Base64PathParam) error {
+	relativePath, err := fileutils.DecodePath(b64path)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-
-	return ctx.JSON(http.StatusOK, api.SuccessMessage{
-		Success: fmt.Sprintf("%d file(s) was successfully deleted", len(params.Paths)),
-	})
+	fullPath := path.Join(config.Base, relativePath)
+	err = fileutils.Delete(fullPath)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	return ctx.JSON(
+		http.StatusOK,
+		fmt.Sprintf("successfully deleted file at %s", fullPath),
+	)
 }
