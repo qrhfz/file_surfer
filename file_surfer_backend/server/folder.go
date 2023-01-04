@@ -19,7 +19,7 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 	workingDir := path.Join(base, relativePath)
 	files, err := os.ReadDir(workingDir)
 	if err != nil {
-		return err
+		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	response := api.FolderContent{
