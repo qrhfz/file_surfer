@@ -26,6 +26,17 @@ export const SmallPrimaryButton: FunctionComponent<ButtonProp> = ({ children, on
   )
 }
 
+export const SmallSecondaryButton: FunctionComponent<ButtonProp> = ({ children, onClick }) => {
+  return (
+    <button
+      class="btn btn-secondary btn-sm"
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  )
+}
+
 export const SecondaryButton: FunctionComponent<ButtonProp> = ({ children, onClick }) => {
   return (
     <button

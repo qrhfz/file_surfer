@@ -1,6 +1,6 @@
 import { FunctionComponent } from "preact"
 import { useContext } from "preact/hooks"
-import { ModalContext } from "../signals/modal_state"
+import { ModalContext } from "../../signals/modal_state"
 
 export const Modal: FunctionComponent = ({ children }) => {
   const modal = useContext(ModalContext);

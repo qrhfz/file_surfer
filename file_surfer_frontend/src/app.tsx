@@ -11,7 +11,7 @@ import { OpenAPI } from "./generated-sources/openapi";
 import { createTokenSignal, TokenContext } from "./auth/tokenSignal";
 import { ComponentChildren, JSX } from "preact";
 import { ModalContext, ModalState } from "./signals/modal_state";
-import { Modal } from "./components/modal";
+import { Modal } from "./components/modals/modal";
 import { EntriesContext, EntriesState } from "./signals/entries_state";
 import { ColumnResizerContext, createColumnResizer } from "./components/folder/folder_view";
 
