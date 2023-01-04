@@ -533,6 +533,9 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/Folder'
+            required:
+              - files
+              - folders
     Error:
       description: ''
       content:
@@ -544,6 +547,9 @@ components:
                 type: string
               message:
                 type: string
+            required:
+              - error
+              - message
           examples:
             Example 1:
               value:
@@ -558,6 +564,8 @@ components:
             properties:
               success:
                 type: string
+            required:
+              - success
           examples:
             Example 1:
               value:

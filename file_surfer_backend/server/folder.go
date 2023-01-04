@@ -22,11 +22,10 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 		return err
 	}
 
-	var response api.FolderContent
-	folders := make([]api.Folder, 0)
-	filelist := make([]api.File, 0)
-	response.Folders = &folders
-	response.Files = &filelist
+	response := api.FolderContent{
+		Folders: make([]api.Folder, 0),
+		Files:   make([]api.File, 0),
+	}
 
 	for _, f := range files {
 		fileInfo, err := f.Info()
@@ -48,7 +47,7 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 
 			contentCount := len(items)
 
-			folders = append(folders, api.Folder{
+			response.Folders = append(response.Folders, api.Folder{
 				Name:         name,
 				Size:         size,
 				Modified:     modified,
@@ -65,7 +64,7 @@ func (s Server) GetFolder(ctx echo.Context, params api.GetFolderParams) error {
 				return ctx.JSON(http.StatusInternalServerError, err.Error())
 			}
 
-			filelist = append(filelist, api.File{
+			response.Files = append(response.Files, api.File{
 				Name:     name,
 				Size:     size,
 				Modified: modified,

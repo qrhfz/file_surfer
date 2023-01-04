@@ -70,10 +70,8 @@ func (s Server) PatchFile(ctx echo.Context, params api.PatchFileParams) error {
 
 	os.Rename(oldPath, newPath)
 
-	success := fmt.Sprintf("success renaming %s to %s", oldPath, newPath)
-
 	return ctx.JSON(http.StatusOK, api.SuccessMessage{
-		Success: &success,
+		Success: fmt.Sprintf("success renaming %s to %s", oldPath, newPath),
 	})
 }
 
@@ -120,9 +118,8 @@ func (s Server) DeleteFile(ctx echo.Context, params api.DeleteFileParams) error 
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("delete file", err.Error()))
 	}
-	success := fmt.Sprintf("%s successfully deleted", fullPath)
 
 	return ctx.JSON(http.StatusOK, api.SuccessMessage{
-		Success: &success,
+		Success: fmt.Sprintf("%s successfully deleted", fullPath),
 	})
 }
