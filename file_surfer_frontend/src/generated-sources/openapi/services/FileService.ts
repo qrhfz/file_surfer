@@ -13,13 +13,13 @@ export class FileService {
      * Your GET endpoint
      * returns file info. if type is text* it will returns it content as content property
      * @param path
-     * @returns any OK
+     * @returns any Example response
      * @throws ApiError
      */
     public static getFile(
         path: string,
     ): CancelablePromise<{
-        info?: File;
+        info: File;
         content?: string;
     }> {
         return __request(OpenAPI, {

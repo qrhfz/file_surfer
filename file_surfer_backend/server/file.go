@@ -2,10 +2,13 @@ package server
 
 import (
 	"file_surfer_backend/api"
+	"file_surfer_backend/fileutils"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -13,8 +16,46 @@ import (
 // Your GET endpoint
 // (GET /file)
 func (s Server) GetFile(ctx echo.Context, params api.GetFileParams) error {
+	fullPath := path.Join(base, params.Path)
 
-	return ctx.JSON(http.StatusNotImplemented, CreateErrorResponse("not implemented", "GetFile not implemented"))
+	file, err := os.Open(fullPath)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("open file", err.Error()))
+	}
+	defer file.Close()
+
+	info, err := file.Stat()
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("open file", err.Error()))
+	}
+
+	name := info.Name()
+	modified := info.ModTime()
+	size := int(info.Size())
+	fileType, err := fileutils.GetMimeType(file)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("read file type", err.Error()))
+	}
+
+	body := api.GetFIleResponse{
+		Info: api.File{
+			Name:     &name,
+			Modified: &modified,
+			Size:     &size,
+			Type:     &fileType,
+		},
+	}
+
+	if strings.HasPrefix(fileType, "text/plain") {
+		buf, err := io.ReadAll(file)
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("read file type", err.Error()))
+		}
+		content := string(buf)
+		body.Content = &content
+	}
+
+	return ctx.JSON(http.StatusOK, body)
 }
 
 // (PATCH /file)

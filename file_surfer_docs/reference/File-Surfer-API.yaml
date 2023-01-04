@@ -40,16 +40,7 @@ paths:
         - file
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  info:
-                    $ref: '#/components/schemas/File'
-                  content:
-                    type: string
+          $ref: '#/components/responses/GetFIleResponse'
         '400':
           $ref: '#/components/responses/Error'
         '401':
@@ -555,6 +546,19 @@ components:
             Example 1:
               value:
                 success: File renamed successfully
+    GetFIleResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              info:
+                $ref: '#/components/schemas/File'
+              content:
+                type: string
+            required:
+              - info
   requestBodies:
     NewFileRequest:
       content:

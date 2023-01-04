@@ -1,28 +1,27 @@
 import { useEffect, useState } from "preact/hooks"
 import { PrimaryButton } from "../components/buttons"
 import { AuthService, FileService } from "../generated-sources/openapi"
+import { joinPath } from "../utils/path"
 import { useAsync } from "../utils/useAsync"
 
 type FilveViewPageType = preact.FunctionalComponent<{ loc?: string }>
 
 export const FileViewPage: FilveViewPageType = ({ loc }) => {
-  if (loc == undefined) {
-    return <>Error</>
-  }
+  const path = joinPath('/', loc ?? '.')
 
   const fileState = useAsync(
-    FileService.getFile(loc),
+    FileService.getFile(path),
     {
       ok: ok => ok,
       err: err => err,
-      key: loc
+      key: path
     }
   )
 
   return (
     <div class="w-screen h-screen bg-slate-300 pt-24">
 
-      <div class="w-5/12 mx-auto bg-white p-8">
+      <div class="w-8/12 mx-auto bg-white p-8  ">
         {fileState.tag == "error" && "loading"}
         {fileState.tag == "loading" && "loading"}
         {fileState.tag == "ok" && <>
@@ -39,10 +38,10 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
               Download
             </PrimaryButton>
           </div>
-          <div class="py-4 font-mono overflow-y-auto">
+          <pre class="py-4 h-[66vh] overflow-y-auto">
 
             {fileState.data.content}
-          </div>
+          </pre>
         </>}
       </div>
     </div>
