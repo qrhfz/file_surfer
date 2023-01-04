@@ -35,7 +35,7 @@ export const FolderBrowserPage: FolderBrowserPage = ({ loc, matches }) => {
   return (
     <FolderLayout
       Header={() => <Nav q={matches?.q} at={matches?.in} />}
-      Aside={() => <Sidebar loc={loc!} />}
+      Aside={() => <Sidebar loc={path} />}
       Main={() => {
         if (status === "loading") {
           return <LoadingCircle></LoadingCircle>

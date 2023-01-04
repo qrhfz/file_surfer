@@ -29,7 +29,9 @@ func (s Server) PostFile(ctx echo.Context, params api.PostFileParams) error {
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, CreateErrorResponse("bad request", err.Error()))
 	}
-	fullPath := path.Join(base, body.Name)
+	fullPath := path.Join(base, params.Path, body.Name)
+
+	fmt.Print(body.Name)
 
 	if body.IsDir {
 		err = os.Mkdir(fullPath, 0750)
