@@ -3,3 +3,6 @@ GET  http://localhost:3000/file/L2VtcHR5LWZpbGU=
 
 ### create new empty file
 POST http://localhost:3000/file/L2VtcHR5LWZpbGU=
+
+### create new empty file again
+POST http://localhost:3000/file/L2VtcHR5LWZpbGU=

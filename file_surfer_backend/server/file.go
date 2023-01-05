@@ -46,7 +46,6 @@ func GetFile(ctx echo.Context) error {
 // (POST /file)
 func PostFile(ctx echo.Context) error {
 	relativePath, err := fileutils.DecodePath(ctx.Param("b64path"))
-
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -56,7 +55,12 @@ func PostFile(ctx echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+
 	fullPath := path.Join(config.Base, relativePath, body.Name)
+
+	if fileutils.CheckFileExists(fullPath) {
+		return echo.NewHTTPError(http.StatusBadRequest, "item exist")
+	}
 
 	if body.IsDir {
 		err = os.Mkdir(fullPath, 0750)
