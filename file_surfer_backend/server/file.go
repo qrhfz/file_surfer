@@ -88,16 +88,18 @@ func PostFile(ctx echo.Context) error {
 }
 
 // (PATCH /file)
-func (s Server) PatchFile(ctx echo.Context, b64path api.Base64PathParam) error {
-	relativePath, err := fileutils.DecodePath(b64path)
+func PatchFile(ctx echo.Context) error {
+	relativePath, err := fileutils.DecodePath(ctx.Param("b64path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+
 	var body api.PatchFileJSONBody
 	err = ctx.Bind(&body)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+
 	oldPath := path.Join(config.Base, relativePath)
 	newPath := path.Join(config.Base, relativePath, "..", *body.Name)
 
@@ -109,8 +111,8 @@ func (s Server) PatchFile(ctx echo.Context, b64path api.Base64PathParam) error {
 }
 
 // (DELETE /file)
-func (s Server) DeleteFile(ctx echo.Context, b64path api.Base64PathParam) error {
-	relativePath, err := fileutils.DecodePath(b64path)
+func DeleteFile(ctx echo.Context) error {
+	relativePath, err := fileutils.DecodePath(ctx.Param("b64path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
