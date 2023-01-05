@@ -102,8 +102,5 @@ func DeleteFile(ctx echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return ctx.JSON(
-		http.StatusOK,
-		fmt.Sprintf("successfully deleted file at %s", fullPath),
-	)
+	return ctx.JSON(http.StatusNoContent, nil)
 }
