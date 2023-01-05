@@ -43,30 +43,10 @@ func GetFile(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, body)
 }
 
-// (PATCH /file)
-func (s Server) PatchFile(ctx echo.Context, b64path api.Base64PathParam) error {
-	relativePath, err := fileutils.DecodePath(b64path)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	var body api.PatchFileJSONBody
-	err = ctx.Bind(&body)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	oldPath := path.Join(config.Base, relativePath)
-	newPath := path.Join(config.Base, relativePath, "..", *body.Name)
-
-	os.Rename(oldPath, newPath)
-
-	return ctx.JSON(http.StatusOK, api.SuccessMessage{
-		Success: fmt.Sprintf("success renaming %s to %s", oldPath, newPath),
-	})
-}
-
 // (POST /file)
-func (s Server) PostFile(ctx echo.Context, b64path api.Base64PathParam) error {
-	relativePath, err := fileutils.DecodePath(b64path)
+func PostFile(ctx echo.Context) error {
+	relativePath, err := fileutils.DecodePath(ctx.Param("b64path"))
+
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -101,6 +81,27 @@ func (s Server) PostFile(ctx echo.Context, b64path api.Base64PathParam) error {
 		http.StatusCreated,
 		fmt.Sprintf("successfully created new file at %s", fullPath),
 	)
+}
+
+// (PATCH /file)
+func (s Server) PatchFile(ctx echo.Context, b64path api.Base64PathParam) error {
+	relativePath, err := fileutils.DecodePath(b64path)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	var body api.PatchFileJSONBody
+	err = ctx.Bind(&body)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	oldPath := path.Join(config.Base, relativePath)
+	newPath := path.Join(config.Base, relativePath, "..", *body.Name)
+
+	os.Rename(oldPath, newPath)
+
+	return ctx.JSON(http.StatusOK, api.SuccessMessage{
+		Success: fmt.Sprintf("success renaming %s to %s", oldPath, newPath),
+	})
 }
 
 // (DELETE /file)
