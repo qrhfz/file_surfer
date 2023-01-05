@@ -1,0 +1,4 @@
+GET http://localhost:3000/file/cat.jpg/blob
+
+###
+POST http://localhost:3000/blob/cat.jpg

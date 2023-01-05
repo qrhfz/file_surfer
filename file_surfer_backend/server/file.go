@@ -17,7 +17,7 @@ import (
 // Your GET endpoint
 // (GET /file)
 func GetFile(ctx echo.Context) error {
-	relativePath, err := fileutils.DecodePath(ctx.Param("b64path"))
+	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -45,7 +45,7 @@ func GetFile(ctx echo.Context) error {
 
 // (POST /file)
 func PostFile(ctx echo.Context) error {
-	relativePath, err := fileutils.DecodePath(ctx.Param("b64path"))
+	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -83,7 +83,7 @@ func PostFile(ctx echo.Context) error {
 
 // (PATCH /file)
 func PatchFile(ctx echo.Context) error {
-	relativePath, err := fileutils.DecodePath(ctx.Param("b64path"))
+	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -106,7 +106,7 @@ func PatchFile(ctx echo.Context) error {
 
 // (DELETE /file)
 func DeleteFile(ctx echo.Context) error {
-	relativePath, err := fileutils.DecodePath(ctx.Param("b64path"))
+	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

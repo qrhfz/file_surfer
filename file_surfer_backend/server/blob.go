@@ -1,7 +1,6 @@
 package server
 
 import (
-	"file_surfer_backend/api"
 	"file_surfer_backend/config"
 	"file_surfer_backend/fileutils"
 	"fmt"
@@ -14,8 +13,8 @@ import (
 
 // Your GET endpoint
 // (GET /blob)
-func GetBlob(ctx echo.Context, b64path api.Base64PathParam) error {
-	relativePath, err := fileutils.DecodePath(b64path)
+func GetBlob(ctx echo.Context) error {
+	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -44,6 +43,13 @@ func GetBlob(ctx echo.Context, b64path api.Base64PathParam) error {
 }
 
 // (POST /blob)
-func PostBlob(ctx echo.Context, pathParam api.Base64PathParam) error {
-	panic("not implemented") // TODO: Implement
+func PostBlob(ctx echo.Context) error {
+	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	_ = path.Join(config.Base, relativePath)
+
+	return echo.NewHTTPError(http.StatusNotImplemented)
 }
