@@ -143,36 +143,6 @@ paths:
       description: Download file at given path
       security:
         - accessToken: []
-    post:
-      summary: ""
-      operationId: post-blob
-      responses:
-        "201":
-          description: File uploaded successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/File"
-      description: Upload a file to folder defined in path
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              format: binary
-              properties:
-                files:
-                  type: array
-                  items:
-                    type: string
-                    format: byte
-              required:
-                - files
-      tags:
-        - blob
-      security:
-        - token: []
-      parameters: []
     parameters:
       - schema:
           type: string
@@ -226,6 +196,41 @@ paths:
         - clipboard
       requestBody:
         $ref: "#/components/requestBodies/PasteRequest"
+  /upload:
+    post:
+      summary: ""
+      operationId: upload
+      responses:
+        "201":
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/File"
+      description: Upload a file to folder defined in path
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+              required:
+                - path
+                - files
+      tags:
+        - blob
+      security:
+        - token: []
+      parameters: []
   /login:
     parameters: []
     post:

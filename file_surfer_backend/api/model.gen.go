@@ -5,6 +5,8 @@ package api
 
 import (
 	"time"
+
+	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 )
 
 const (
@@ -60,11 +62,6 @@ type PostFileJSONBody struct {
 	Name  string `json:"name"`
 }
 
-// PostBlobMultipartBody defines parameters for PostBlob.
-type PostBlobMultipartBody struct {
-	Files [][]byte `json:"files"`
-}
-
 // PostLoginJSONBody defines parameters for PostLogin.
 type PostLoginJSONBody struct {
 	Password string `json:"password"`
@@ -83,6 +80,12 @@ type GetSearchParams struct {
 	SearchQuery string `form:"searchQuery" json:"searchQuery"`
 }
 
+// UploadMultipartBody defines parameters for Upload.
+type UploadMultipartBody struct {
+	Files []openapi_types.File `json:"files"`
+	Path  string               `json:"path"`
+}
+
 // PostCopyJSONRequestBody defines body for PostCopy for application/json ContentType.
 type PostCopyJSONRequestBody PostCopyJSONBody
 
@@ -92,11 +95,11 @@ type PatchFileJSONRequestBody PatchFileJSONBody
 // PostFileJSONRequestBody defines body for PostFile for application/json ContentType.
 type PostFileJSONRequestBody PostFileJSONBody
 
-// PostBlobMultipartRequestBody defines body for PostBlob for multipart/form-data ContentType.
-type PostBlobMultipartRequestBody PostBlobMultipartBody
-
 // PostLoginJSONRequestBody defines body for PostLogin for application/json ContentType.
 type PostLoginJSONRequestBody PostLoginJSONBody
 
 // PostMoveJSONRequestBody defines body for PostMove for application/json ContentType.
 type PostMoveJSONRequestBody PostMoveJSONBody
+
+// UploadMultipartRequestBody defines body for Upload for multipart/form-data ContentType.
+type UploadMultipartRequestBody UploadMultipartBody

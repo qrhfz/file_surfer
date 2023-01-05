@@ -1,9 +1,11 @@
 package server
 
 import (
+	"file_surfer_backend/api"
 	"file_surfer_backend/config"
 	"file_surfer_backend/fileutils"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"path"
@@ -11,8 +13,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// Your GET endpoint
-// (GET /blob)
 func GetBlob(ctx echo.Context) error {
 	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
@@ -42,16 +42,40 @@ func GetBlob(ctx echo.Context) error {
 	return ctx.Stream(http.StatusOK, fileType, file)
 }
 
-// (POST /blob)
-func PostBlob(ctx echo.Context) error {
-	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
+func Upload(ctx echo.Context) error {
+
+	dir := ctx.FormValue("dir")
+	form, err := ctx.MultipartForm()
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return err
+	}
+	files := form.File["files"]
+
+	response := make([]api.File, 0)
+
+	for _, file := range files {
+		src, err := file.Open()
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		}
+		defer src.Close()
+
+		destPath := path.Join(config.Base, dir, file.Filename)
+
+		dest, err := os.Create(destPath)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		}
+		defer dest.Close()
+
+		size, err := io.Copy(dest, src)
+		if err != nil && size != file.Size {
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		}
+
+		fileInfo, _ := fileutils.GetFileInfo(destPath)
+		response = append(response, *fileInfo)
 	}
 
-	fullPath := path.Join(config.Base, relativePath)
-
-	ctx.Stream(http.StatusOK, "image/jpeg", ctx.Request().Body)
-
-	return echo.NewHTTPError(http.StatusNotImplemented, fullPath)
+	return echo.NewHTTPError(http.StatusCreated, response)
 }
