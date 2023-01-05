@@ -17,3 +17,6 @@ content-type: application/json
 
 ### Delete new-file
 DELETE http://localhost:3000/file/new-file
+
+###
+GET http://localhost:3000/file/cat.jpg/blob

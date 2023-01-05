@@ -12,6 +12,5 @@ func registerFileGroup(e *echo.Echo) {
 	fileGroup.POST("", server.PostFile)
 	fileGroup.PATCH("", server.PatchFile)
 	fileGroup.DELETE("", server.DeleteFile)
-
-	registerBlobGroup(fileGroup)
+	fileGroup.GET("/blob", server.GetBlob)
 }
