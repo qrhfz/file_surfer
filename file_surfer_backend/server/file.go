@@ -6,7 +6,6 @@ import (
 	"file_surfer_backend/fileutils"
 
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"path"
@@ -24,40 +23,20 @@ func (s Server) GetFile(ctx echo.Context, b64path api.Base64PathParam) error {
 	}
 	fullPath := path.Join(config.Base, relativePath)
 
-	file, err := os.Open(fullPath)
+	info, err := fileutils.GetFileInfo(fullPath)
 	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("open file", err.Error()))
-	}
-	defer file.Close()
-
-	info, err := file.Stat()
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("open file", err.Error()))
-	}
-
-	name := info.Name()
-	modified := info.ModTime()
-	size := int(info.Size())
-	fileType, err := fileutils.GetMimeType(fullPath)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("read file type", err.Error()))
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	body := api.GetFIleResponse{
-		Info: api.File{
-			Name:     name,
-			Modified: modified,
-			Size:     size,
-			Type:     fileType,
-		},
+		Info: *info,
 	}
 
-	if strings.HasPrefix(fileType, "text/") {
-		buf, err := io.ReadAll(file)
+	if strings.HasPrefix(info.Type, "text/") {
+		content, err := fileutils.ReadTextFile(fullPath)
 		if err != nil {
-			return ctx.JSON(http.StatusInternalServerError, CreateErrorResponse("read file type", err.Error()))
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
-		content := string(buf)
 		body.Content = &content
 	}
 
