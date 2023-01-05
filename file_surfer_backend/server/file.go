@@ -16,8 +16,8 @@ import (
 
 // Your GET endpoint
 // (GET /file)
-func (s Server) GetFile(ctx echo.Context, b64path api.Base64PathParam) error {
-	relativePath, err := fileutils.DecodePath(b64path)
+func GetFile(ctx echo.Context) error {
+	relativePath, err := fileutils.DecodePath(ctx.Param("b64path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

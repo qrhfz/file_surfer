@@ -3,6 +3,7 @@ package fileutils
 import (
 	"file_surfer_backend/api"
 	"os"
+	"path"
 )
 
 func GetFileInfo(pathName string) (*api.File, error) {
@@ -30,6 +31,7 @@ func GetFileInfo(pathName string) (*api.File, error) {
 		Modified: modified,
 		Size:     size,
 		Type:     fileType,
+		Location: path.Dir(pathName),
 	}
 
 	return &info, nil
