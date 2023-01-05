@@ -12,12 +12,6 @@ const (
 	TokenScopes       = "token.Scopes"
 )
 
-// Defines values for Role.
-const (
-	Admin   Role = "admin"
-	Regular Role = "regular"
-)
-
 // File defines model for File.
 type File struct {
 	Location string    `json:"location"`
@@ -36,40 +30,10 @@ type Folder struct {
 	Size         int       `json:"size"`
 }
 
-// Role defines model for Role.
-type Role string
-
-// User defines model for User.
-type User struct {
-	Id       string `json:"id"`
-	Role     Role   `json:"role"`
-	Username string `json:"username"`
-}
-
-// Base64PathParam defines model for Base64PathParam.
-type Base64PathParam = string
-
-// Error defines model for Error.
-type Error struct {
-	Error   string `json:"error"`
-	Message string `json:"message"`
-}
-
 // FolderContent defines model for FolderContent.
 type FolderContent struct {
 	Files   []File   `json:"files"`
 	Folders []Folder `json:"folders"`
-}
-
-// GetFIleResponse defines model for GetFIleResponse.
-type GetFIleResponse struct {
-	Content *string `json:"content,omitempty"`
-	Info    File    `json:"info"`
-}
-
-// SuccessMessage defines model for SuccessMessage.
-type SuccessMessage struct {
-	Success string `json:"success"`
 }
 
 // NewFileRequest defines model for NewFileRequest.
@@ -124,20 +88,6 @@ type GetSearchParams struct {
 	SearchQuery string `form:"searchQuery" json:"searchQuery"`
 }
 
-// PatchUserIdJSONBody defines parameters for PatchUserId.
-type PatchUserIdJSONBody struct {
-	Password *string `json:"password,omitempty"`
-	Role     *Role   `json:"role,omitempty"`
-	Username *string `json:"username,omitempty"`
-}
-
-// PostUserIdJSONBody defines parameters for PostUserId.
-type PostUserIdJSONBody struct {
-	Password string `json:"password"`
-	Role     Role   `json:"role"`
-	Username string `json:"username"`
-}
-
 // PostCopyJSONRequestBody defines body for PostCopy for application/json ContentType.
 type PostCopyJSONRequestBody PostCopyJSONBody
 
@@ -155,9 +105,3 @@ type PostLoginJSONRequestBody PostLoginJSONBody
 
 // PostMoveJSONRequestBody defines body for PostMove for application/json ContentType.
 type PostMoveJSONRequestBody PostMoveJSONBody
-
-// PatchUserIdJSONRequestBody defines body for PatchUserId for application/json ContentType.
-type PatchUserIdJSONRequestBody PatchUserIdJSONBody
-
-// PostUserIdJSONRequestBody defines body for PostUserId for application/json ContentType.
-type PostUserIdJSONRequestBody PostUserIdJSONBody

@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -28,19 +27,7 @@ func GetFile(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	body := api.GetFIleResponse{
-		Info: *info,
-	}
-
-	if strings.HasPrefix(info.Type, "text/") {
-		content, err := fileutils.ReadTextFile(fullPath)
-		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-		}
-		body.Content = &content
-	}
-
-	return ctx.JSON(http.StatusOK, body)
+	return ctx.JSON(http.StatusOK, info)
 }
 
 // (POST /file)
@@ -99,9 +86,9 @@ func PatchFile(ctx echo.Context) error {
 
 	os.Rename(oldPath, newPath)
 
-	return ctx.JSON(http.StatusOK, api.SuccessMessage{
-		Success: fmt.Sprintf("success renaming %s to %s", oldPath, newPath),
-	})
+	newFileInfo, _ := fileutils.GetFileInfo(newPath)
+
+	return ctx.JSON(http.StatusOK, newFileInfo)
 }
 
 // (DELETE /file)

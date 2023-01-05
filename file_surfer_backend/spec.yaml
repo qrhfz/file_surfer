@@ -12,25 +12,23 @@ servers:
 paths:
   "/folder/{path}":
     get:
-      summary: Your GET endpoint
+      operationId: get-folder
+      summary: List contents inside a directory
+      description: Open a folder and returns list of files and folders inside
       responses:
         "200":
           $ref: "#/components/responses/FolderContent"
-        "400":
-          $ref: "#/components/responses/Error"
-        "401":
-          $ref: "#/components/responses/Error"
-        "404":
-          $ref: "#/components/responses/Error"
-      operationId: get-folder
-      description: Open a folder and returns list of files and folders inside
       parameters: []
       tags:
         - folder
       security:
         - token: []
     parameters:
-      - $ref: "#/components/parameters/Base64PathParam"
+      - in: path
+        required: true
+        name: path
+        schema:
+          type: string
   "/file/{path}":
     get:
       summary: Your GET endpoint
@@ -38,13 +36,11 @@ paths:
         - file
       responses:
         "200":
-          $ref: "#/components/responses/GetFIleResponse"
-        "400":
-          $ref: "#/components/responses/Error"
-        "401":
-          $ref: "#/components/responses/Error"
-        "404":
-          $ref: "#/components/responses/Error"
+          description: Get File success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
       operationId: get-file
       description: returns file info. if type is text/* it will returns it content as content property
       security:
@@ -54,49 +50,37 @@ paths:
       summary: ""
       operationId: post-file
       responses:
-        "200":
-          $ref: "#/components/responses/SuccessMessage"
-        "400":
-          $ref: "#/components/responses/Error"
-        "403":
-          $ref: "#/components/responses/Error"
+        "201":
+          description: Creating new empty file success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
       tags:
         - file
-      description: create new empty file
+      description: Create a new empty file
       parameters: []
       security:
         - token: []
       requestBody:
         $ref: "#/components/requestBodies/NewFileRequest"
     parameters:
-      - $ref: "#/components/parameters/Base64PathParam"
-    delete:
-      summary: ""
-      operationId: delete-file
-      responses:
-        "200":
-          $ref: "#/components/responses/SuccessMessage"
-        "400":
-          $ref: "#/components/responses/Error"
-        "403":
-          $ref: "#/components/responses/Error"
-      description: Delete a file
-      parameters: []
-      tags:
-        - file
-      security:
-        - token: []
+      - in: path
+        required: true
+        name: path
+        schema:
+          type: string
     patch:
-      summary: ""
+      description: Rename a file
+      summary: "Rename a file"
       operationId: patch-file
       responses:
         "200":
-          $ref: "#/components/responses/SuccessMessage"
-        "400":
-          $ref: "#/components/responses/Error"
-        "403":
-          $ref: "#/components/responses/Error"
-      description: rename file name
+          description: "File renamed successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
       tags:
         - file
       requestBody:
@@ -108,6 +92,18 @@ paths:
                 name:
                   type: string
       parameters: []
+      security:
+        - token: []
+    delete:
+      summary: ""
+      operationId: delete-file
+      responses:
+        "204":
+          description: File deleted successfully
+      description: Delete a file
+      parameters: []
+      tags:
+        - file
       security:
         - token: []
   "/file/{path}/blob":
@@ -123,12 +119,6 @@ paths:
               schema:
                 type: string
                 format: binary
-        "400":
-          $ref: "#/components/responses/Error"
-        "403":
-          $ref: "#/components/responses/Error"
-        "404":
-          $ref: "#/components/responses/Error"
       operationId: get-blob
       parameters: []
       description: Download file at given path
@@ -139,11 +129,11 @@ paths:
       operationId: post-blob
       responses:
         "201":
-          $ref: "#/components/responses/SuccessMessage"
-        "400":
-          $ref: "#/components/responses/Error"
-        "403":
-          $ref: "#/components/responses/Error"
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
       description: Upload a file to folder defined in path
       requestBody:
         content:
@@ -176,8 +166,6 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/FolderContent"
-        "400":
-          $ref: "#/components/responses/Error"
       operationId: get-search
       description: Search file or folder in scoped folder
       security:
@@ -201,7 +189,7 @@ paths:
       operationId: post-copy
       responses:
         "200":
-          $ref: "#/components/responses/SuccessMessage"
+          description: "copy success"
       description: Copy list of files and folders defined in sources to destination folder
       tags:
         - clipboard
@@ -209,117 +197,16 @@ paths:
         $ref: "#/components/requestBodies/PasteRequest"
   /move:
     post:
+      description: Move list of files and folders defined in sources to destination folder
       summary: ""
       operationId: post-move
       responses:
         "200":
-          $ref: "#/components/responses/SuccessMessage"
-      description: Move list of files and folders defined in sources to destination folder
+          description: "move success"
       tags:
         - clipboard
       requestBody:
         $ref: "#/components/requestBodies/PasteRequest"
-  "/user/{id}":
-    get:
-      summary: Your GET endpoint
-      tags:
-        - user
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "400":
-          $ref: "#/components/responses/Error"
-        "403":
-          $ref: "#/components/responses/Error"
-        "404":
-          $ref: "#/components/responses/Error"
-      operationId: get-user
-      description: Get user info
-      security:
-        - token: []
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
-    post:
-      summary: ""
-      operationId: post-user-id
-      responses:
-        "201":
-          $ref: "#/components/responses/SuccessMessage"
-        "400":
-          $ref: "#/components/responses/Error"
-        "403":
-          $ref: "#/components/responses/Error"
-      description: create new user
-      tags:
-        - user
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
-                role:
-                  $ref: "#/components/schemas/Role"
-              required:
-                - username
-                - password
-                - role
-      security:
-        - token: []
-    patch:
-      summary: ""
-      operationId: patch-user-id
-      responses:
-        "200":
-          $ref: "#/components/responses/SuccessMessage"
-        "400":
-          $ref: "#/components/responses/Error"
-        "403":
-          $ref: "#/components/responses/Error"
-      description: rename or change password
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
-                role:
-                  $ref: "#/components/schemas/Role"
-      security:
-        - token: []
-      tags:
-        - user
-    delete:
-      summary: ""
-      operationId: delete-user-id
-      responses:
-        "200":
-          $ref: "#/components/responses/SuccessMessage"
-        "400":
-          $ref: "#/components/responses/Error"
-        "403":
-          $ref: "#/components/responses/Error"
-      tags:
-        - user
-      description: delete user
-      security:
-        - token: []
   /login:
     parameters: []
     post:
@@ -380,8 +267,6 @@ paths:
                 properties:
                   accessToken:
                     type: string
-        "403":
-          $ref: "#/components/responses/Error"
       operationId: get-access-token
       description: Ask for token to access file download etc
       security:
@@ -391,8 +276,6 @@ components:
   schemas:
     File:
       title: File
-      x-stoplight:
-        id: u03wzz8mvta0u
       type: object
       properties:
         name:
@@ -417,8 +300,6 @@ components:
         - modified
     Folder:
       title: Folder
-      x-stoplight:
-        id: 3leln1kmm2kki
       type: object
       properties:
         name:
@@ -442,8 +323,6 @@ components:
         - contentCount
     User:
       title: User
-      x-stoplight:
-        id: 4fjnlr1gx5ikq
       type: object
       properties:
         id:
@@ -458,8 +337,6 @@ components:
         - role
     Role:
       title: Role
-      x-stoplight:
-        id: xyqmr13no52bc
       type: string
       enum:
         - admin
@@ -472,15 +349,6 @@ components:
       name: accessToken
       type: apiKey
       in: query
-  parameters:
-    Base64PathParam:
-      name: path
-      in: path
-      required: true
-      schema:
-        type: string
-        minLength: 4
-        pattern: ^\w+=*$
   responses:
     FolderContent:
       description: ""
@@ -500,53 +368,6 @@ components:
             required:
               - files
               - folders
-    Error:
-      description: ""
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-              message:
-                type: string
-            required:
-              - error
-              - message
-          examples:
-            Example 1:
-              value:
-                error: string
-                message: string
-    SuccessMessage:
-      description: ""
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              success:
-                type: string
-            required:
-              - success
-          examples:
-            Example 1:
-              value:
-                success: File renamed successfully
-    GetFIleResponse:
-      description: Example response
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              info:
-                $ref: "#/components/schemas/File"
-              content:
-                type: string
-            required:
-              - info
   requestBodies:
     NewFileRequest:
       content:
