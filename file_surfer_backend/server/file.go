@@ -5,7 +5,6 @@ import (
 	"file_surfer_backend/config"
 	"file_surfer_backend/fileutils"
 
-	"fmt"
 	"net/http"
 	"os"
 	"path"
@@ -62,10 +61,9 @@ func PostFile(ctx echo.Context) error {
 		file.Close()
 	}
 
-	return ctx.JSON(
-		http.StatusCreated,
-		fmt.Sprintf("successfully created new file at %s", fullPath),
-	)
+	info, _ := fileutils.GetFileInfo(fullPath)
+
+	return ctx.JSON(http.StatusCreated, info)
 }
 
 // (PATCH /file)
