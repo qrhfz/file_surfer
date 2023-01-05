@@ -14,7 +14,7 @@ import (
 
 // Your GET endpoint
 // (GET /blob)
-func (s Server) GetBlob(ctx echo.Context, b64path api.Base64PathParam) error {
+func GetBlob(ctx echo.Context, b64path api.Base64PathParam) error {
 	relativePath, err := fileutils.DecodePath(b64path)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -44,6 +44,6 @@ func (s Server) GetBlob(ctx echo.Context, b64path api.Base64PathParam) error {
 }
 
 // (POST /blob)
-func (s Server) PostBlob(ctx echo.Context, pathParam api.Base64PathParam) error {
+func PostBlob(ctx echo.Context, pathParam api.Base64PathParam) error {
 	panic("not implemented") // TODO: Implement
 }

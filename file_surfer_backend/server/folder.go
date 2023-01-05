@@ -14,7 +14,7 @@ import (
 
 // Your GET endpoint
 // (GET /folder)
-func (s Server) GetFolder(ctx echo.Context, b64path api.Base64PathParam) error {
+func GetFolder(ctx echo.Context, b64path api.Base64PathParam) error {
 	relativePath, err := fileutils.DecodePath(b64path)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
