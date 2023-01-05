@@ -49,7 +49,9 @@ func PostBlob(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	_ = path.Join(config.Base, relativePath)
+	fullPath := path.Join(config.Base, relativePath)
 
-	return echo.NewHTTPError(http.StatusNotImplemented)
+	ctx.Stream(http.StatusOK, "image/jpeg", ctx.Request().Body)
+
+	return echo.NewHTTPError(http.StatusNotImplemented, fullPath)
 }

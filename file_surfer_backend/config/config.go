@@ -1,3 +1,3 @@
 package config
 
-const Base = "/home/q/file_surfer_root"
+const Base = "./test/home"
