@@ -36,19 +36,13 @@ func PostFile(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	var body api.PostFileJSONRequestBody
-	err = ctx.Bind(&body)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	fullPath := path.Join(config.Base, relativePath, body.Name)
+	fullPath := path.Join(config.Base, relativePath)
 
 	if fileutils.CheckFileExists(fullPath) {
 		return echo.NewHTTPError(http.StatusBadRequest, "item exist")
 	}
 
-	if body.IsDir {
+	if ctx.QueryParam("isDir") == "true" {
 		err = os.Mkdir(fullPath, 0750)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
@@ -61,7 +55,10 @@ func PostFile(ctx echo.Context) error {
 		file.Close()
 	}
 
-	info, _ := fileutils.GetFileInfo(fullPath)
+	info, err := fileutils.GetFileInfo(fullPath)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
 
 	return ctx.JSON(http.StatusCreated, info)
 }

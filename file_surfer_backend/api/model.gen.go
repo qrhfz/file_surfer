@@ -56,10 +56,9 @@ type PatchFileJSONBody struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// PostFileJSONBody defines parameters for PostFile.
-type PostFileJSONBody struct {
-	IsDir bool   `json:"isDir"`
-	Name  string `json:"name"`
+// PostFileParams defines parameters for PostFile.
+type PostFileParams struct {
+	IsDir bool `form:"isDir" json:"isDir"`
 }
 
 // PostLoginJSONBody defines parameters for PostLogin.
@@ -91,9 +90,6 @@ type PostCopyJSONRequestBody PostCopyJSONBody
 
 // PatchFileJSONRequestBody defines body for PatchFile for application/json ContentType.
 type PatchFileJSONRequestBody PatchFileJSONBody
-
-// PostFileJSONRequestBody defines body for PostFile for application/json ContentType.
-type PostFileJSONRequestBody PostFileJSONBody
 
 // PostLoginJSONRequestBody defines body for PostLogin for application/json ContentType.
 type PostLoginJSONRequestBody PostLoginJSONBody

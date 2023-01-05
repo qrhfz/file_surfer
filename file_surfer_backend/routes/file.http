@@ -20,3 +20,9 @@ DELETE http://localhost:3000/file/new-file
 
 ###
 GET http://localhost:3000/file/cat.jpg/blob
+
+### create a folder
+POST http://localhost:3000/file/a?isDir=true
+
+### delete the folder
+DELETE http://localhost:3000/file/a

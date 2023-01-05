@@ -67,22 +67,14 @@ paths:
       tags:
         - file
       description: Create a new empty file
-      parameters: []
+      parameters:
+        - name: isDir
+          in: query
+          schema:
+            type: boolean
+          required: true
       security:
         - token: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                isDir:
-                  type: boolean
-              required:
-                - name
-                - isDir
     parameters:
       - in: path
         required: true
