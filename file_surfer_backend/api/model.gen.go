@@ -19,6 +19,7 @@ type File struct {
 	Name     string    `json:"name"`
 	Size     int       `json:"size"`
 	Type     string    `json:"type"`
+	Url      string    `json:"url"`
 }
 
 // Folder defines model for Folder.
@@ -27,19 +28,13 @@ type Folder struct {
 	Location     string    `json:"location"`
 	Modified     time.Time `json:"modified"`
 	Name         string    `json:"name"`
-	Size         int       `json:"size"`
+	Url          string    `json:"url"`
 }
 
 // FolderContent defines model for FolderContent.
 type FolderContent struct {
 	Files   []File   `json:"files"`
 	Folders []Folder `json:"folders"`
-}
-
-// NewFileRequest defines model for NewFileRequest.
-type NewFileRequest struct {
-	IsDir bool   `json:"isDir"`
-	Name  string `json:"name"`
 }
 
 // PasteRequest defines model for PasteRequest.

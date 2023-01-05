@@ -36,7 +36,7 @@ func PostFile(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	var body api.NewFileRequest
+	var body api.PostFileJSONRequestBody
 	err = ctx.Bind(&body)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())

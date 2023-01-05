@@ -15,14 +15,13 @@ import (
 // Your GET endpoint
 // (GET /folder)
 func GetFolder(ctx echo.Context) error {
-	encodedPath := ctx.Param("path")
-
-	relativePath, err := fileutils.DecodePath(encodedPath)
+	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	workingDir := path.Join(config.Base, relativePath)
-	files, err := os.ReadDir(workingDir)
+
+	pathName := path.Join(config.Base, relativePath)
+	files, err := os.ReadDir(pathName)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -33,50 +32,24 @@ func GetFolder(ctx echo.Context) error {
 	}
 
 	for _, f := range files {
-		fileInfo, err := f.Info()
+		childPath := path.Join(pathName, f.Name())
 
-		if err != nil {
-			return ctx.JSON(http.StatusInternalServerError, err.Error())
-		}
-
-		name := f.Name()
-		size := int(fileInfo.Size())
-		modified := fileInfo.ModTime()
-		fileLocation := path.Join(workingDir, name)
-
-		if fileInfo.IsDir() {
-			var items, err = os.ReadDir(fileLocation)
+		if f.IsDir() {
+			folderInfo, err := fileutils.GetFolderInfo(childPath)
 			if err != nil {
 				return ctx.JSON(http.StatusInternalServerError, err.Error())
 			}
 
-			contentCount := len(items)
-
-			response.Folders = append(response.Folders, api.Folder{
-				Name:         name,
-				Size:         size,
-				Modified:     modified,
-				Location:     relativePath,
-				ContentCount: contentCount,
-			})
-
+			response.Folders = append(response.Folders, *folderInfo)
 			continue
 		}
 
-		if (fileInfo.Mode() & os.ModeSymlink) != os.ModeSymlink {
-			fileType, err := fileutils.GetMimeType(fileLocation)
-			if err != nil && err != io.EOF {
-				return ctx.JSON(http.StatusInternalServerError, err.Error())
-			}
-
-			response.Files = append(response.Files, api.File{
-				Name:     name,
-				Size:     size,
-				Modified: modified,
-				Location: relativePath,
-				Type:     fileType,
-			})
+		fileInfo, err := fileutils.GetFileInfo(childPath)
+		if err != nil && err != io.EOF {
+			return ctx.JSON(http.StatusInternalServerError, err.Error())
 		}
+
+		response.Files = append(response.Files, *fileInfo)
 
 	}
 

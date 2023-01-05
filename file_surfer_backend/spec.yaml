@@ -9,6 +9,14 @@ info:
     email: contact@qori.dev
 servers:
   - url: "http://localhost:3000"
+tags:
+  - name: auth
+  - name: blob
+  - name: clipboard
+  - name: file
+  - name: folder
+  - name: search
+  - name: user
 paths:
   "/folder/{path}":
     get:
@@ -63,7 +71,18 @@ paths:
       security:
         - token: []
       requestBody:
-        $ref: "#/components/requestBodies/NewFileRequest"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                isDir:
+                  type: boolean
+              required:
+                - name
+                - isDir
     parameters:
       - in: path
         required: true
@@ -292,12 +311,15 @@ components:
         modified:
           type: string
           format: date-time
+        url:
+          type: string
       required:
         - name
         - type
         - location
         - size
         - modified
+        - url
     Folder:
       title: Folder
       type: object
@@ -309,18 +331,18 @@ components:
         modified:
           type: string
           format: date-time
-        size:
-          type: integer
-          minimum: 0
         contentCount:
           type: integer
           minimum: 0
+        url:
+          type: string
       required:
         - name
         - location
         - modified
         - size
         - contentCount
+        - url
     User:
       title: User
       type: object
@@ -369,20 +391,6 @@ components:
               - files
               - folders
   requestBodies:
-    NewFileRequest:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-              isDir:
-                type: boolean
-            required:
-              - name
-              - isDir
-      description: ""
     PasteRequest:
       content:
         application/json:
@@ -395,11 +403,3 @@ components:
                   type: string
               destination:
                 type: string
-tags:
-  - name: auth
-  - name: blob
-  - name: clipboard
-  - name: file
-  - name: folder
-  - name: search
-  - name: user

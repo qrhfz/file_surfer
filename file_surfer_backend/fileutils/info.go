@@ -7,36 +7,45 @@ import (
 )
 
 func GetFileInfo(pathName string) (*api.File, error) {
-	file, err := os.Open(pathName)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	fsFileInfo, err := file.Stat()
+	var stat, err = os.Stat(pathName)
 	if err != nil {
 		return nil, err
 	}
 
-	name := fsFileInfo.Name()
-	modified := fsFileInfo.ModTime()
-	size := int(fsFileInfo.Size())
 	fileType, err := GetMimeType(pathName)
 	if err != nil {
 		return nil, err
 	}
 
 	info := api.File{
-		Name:     name,
-		Modified: modified,
-		Size:     size,
+		Name:     stat.Name(),
+		Modified: stat.ModTime(),
+		Size:     int(stat.Size()),
 		Type:     fileType,
 		Location: path.Dir(pathName),
+		Url:      path.Join("/file/", EncodePath(pathName)),
 	}
 
 	return &info, nil
 }
 
-func NewDir() {
+func GetFolderInfo(pathName string) (*api.Folder, error) {
+	var stat, err = os.Stat(pathName)
+	if err != nil {
+		return nil, err
+	}
 
+	items, err := os.ReadDir(pathName)
+	if err != nil {
+		return nil, err
+	}
+	info := api.Folder{
+		Name:         stat.Name(),
+		Modified:     stat.ModTime(),
+		Location:     path.Dir(pathName),
+		ContentCount: len(items),
+		Url:          path.Join("/file/", EncodePath(pathName)),
+	}
+
+	return &info, nil
 }
