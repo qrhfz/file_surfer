@@ -1,14 +1,14 @@
 ### create new empty file named empty-file
-POST http://localhost:3000/file/L2VtcHR5LWZpbGU=
+POST http://localhost:3000/file/empty-file
 
 ### open empty file
-GET  http://localhost:3000/file/L2VtcHR5LWZpbGU=
+GET  http://localhost:3000/file/empty-file
 
 ### create new empty file again
-POST http://localhost:3000/file/L2VtcHR5LWZpbGU=
+POST http://localhost:3000/file/empty-file
 
 ### rename empty-file to new-file
-PATCH  http://localhost:3000/file/L2VtcHR5LWZpbGU=
+PATCH  http://localhost:3000/file/empty-file
 content-type: application/json
 
 {
@@ -16,4 +16,4 @@ content-type: application/json
 }
 
 ### Delete new-file
-DELETE http://localhost:3000/file/L25ldy1maWxl
+DELETE http://localhost:3000/file/new-file

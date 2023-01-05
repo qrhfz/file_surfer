@@ -1,13 +1,15 @@
 package fileutils
 
-import b64 "encoding/base64"
+import (
+	"net/url"
+)
 
 func EncodePath(input string) string {
-	return b64.URLEncoding.EncodeToString([]byte(input))
+	return url.QueryEscape(input)
 }
 
 func DecodePath(input string) (string, error) {
-	bytes, err := b64.URLEncoding.DecodeString(input)
+	bytes, err := url.QueryUnescape(input)
 
 	return string(bytes), err
 }
