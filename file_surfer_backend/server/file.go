@@ -65,18 +65,12 @@ func PostFile(ctx echo.Context) error {
 	if body.IsDir {
 		err = os.Mkdir(fullPath, 0750)
 		if err != nil {
-			return ctx.JSON(
-				http.StatusInternalServerError,
-				CreateErrorResponse("internal server error", err.Error()),
-			)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 	} else {
 		var file, err = os.Create(fullPath)
 		if err != nil {
-			return ctx.JSON(
-				http.StatusInternalServerError,
-				CreateErrorResponse("internal server error", err.Error()),
-			)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 		file.Close()
 	}
