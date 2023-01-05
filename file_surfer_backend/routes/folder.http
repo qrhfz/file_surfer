@@ -1,1 +1,10 @@
+GET http://localhost:3000/folder
+
+### 
 GET http://localhost:3000/folder/
+
+### 
+GET http://localhost:3000/folder/parent-folder
+
+### 
+GET http://localhost:3000/folder/parent-folder/child-folder

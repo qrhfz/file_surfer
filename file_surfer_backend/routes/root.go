@@ -6,4 +6,5 @@ import (
 
 func RegisterRoute(e *echo.Echo) {
 	registerFileGroup(e)
+	registerFolderRoute(e)
 }
