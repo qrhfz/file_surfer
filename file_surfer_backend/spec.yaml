@@ -177,8 +177,21 @@ paths:
       summary: ""
       operationId: post-copy
       responses:
-        "200":
+        "201":
           description: "copy success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/File"
+                  folders:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Folder"
       description: Copy list of files and folders defined in sources to destination folder
       tags:
         - clipboard
@@ -192,6 +205,19 @@ paths:
       responses:
         "200":
           description: "move success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/File"
+                  folders:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Folder"
       tags:
         - clipboard
       requestBody:

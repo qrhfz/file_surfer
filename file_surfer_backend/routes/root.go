@@ -9,6 +9,6 @@ import (
 func RegisterRoute(e *echo.Echo) {
 	registerFileGroup(e)
 	registerFolderRoute(e)
-
 	e.POST("/upload", server.Upload)
+	registerClipboardRoutes(e)
 }
