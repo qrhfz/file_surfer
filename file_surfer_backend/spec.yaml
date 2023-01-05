@@ -1,29 +1,27 @@
-openapi: 3.1.0
-x-stoplight:
-  id: 8tzokrxv22c0w
+openapi: 3.0.2
 info:
   title: File Surfer API
-  version: '1.0'
+  version: "1.0"
   description: File Surfer API
   contact:
     name: Qori El-Hafizh
-    url: 'https://www.qori.dev'
+    url: "https://www.qori.dev"
     email: contact@qori.dev
 servers:
-  - url: 'http://localhost:3000'
+  - url: "http://localhost:3000"
 paths:
-  '/folder/{path}':
+  "/folder/{path}":
     get:
       summary: Your GET endpoint
       responses:
-        '200':
-          $ref: '#/components/responses/FolderContent'
-        '400':
-          $ref: '#/components/responses/Error'
-        '401':
-          $ref: '#/components/responses/Error'
-        '404':
-          $ref: '#/components/responses/Error'
+        "200":
+          $ref: "#/components/responses/FolderContent"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+        "404":
+          $ref: "#/components/responses/Error"
       operationId: get-folder
       description: Open a folder and returns list of files and folders inside
       parameters: []
@@ -32,36 +30,36 @@ paths:
       security:
         - token: []
     parameters:
-      - $ref: '#/components/parameters/Base64PathParam'
-  '/file/{path}':
+      - $ref: "#/components/parameters/Base64PathParam"
+  "/file/{path}":
     get:
       summary: Your GET endpoint
       tags:
         - file
       responses:
-        '200':
-          $ref: '#/components/responses/GetFIleResponse'
-        '400':
-          $ref: '#/components/responses/Error'
-        '401':
-          $ref: '#/components/responses/Error'
-        '404':
-          $ref: '#/components/responses/Error'
+        "200":
+          $ref: "#/components/responses/GetFIleResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+        "404":
+          $ref: "#/components/responses/Error"
       operationId: get-file
       description: returns file info. if type is text/* it will returns it content as content property
       security:
         - token: []
       parameters: []
     post:
-      summary: ''
+      summary: ""
       operationId: post-file
       responses:
-        '200':
-          $ref: '#/components/responses/SuccessMessage'
-        '400':
-          $ref: '#/components/responses/Error'
-        '403':
-          $ref: '#/components/responses/Error'
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/Error"
+        "403":
+          $ref: "#/components/responses/Error"
       tags:
         - file
       description: create new empty file
@@ -69,19 +67,19 @@ paths:
       security:
         - token: []
       requestBody:
-        $ref: '#/components/requestBodies/NewFileRequest'
+        $ref: "#/components/requestBodies/NewFileRequest"
     parameters:
-      - $ref: '#/components/parameters/Base64PathParam'
+      - $ref: "#/components/parameters/Base64PathParam"
     delete:
-      summary: ''
+      summary: ""
       operationId: delete-file
       responses:
-        '200':
-          $ref: '#/components/responses/SuccessMessage'
-        '400':
-          $ref: '#/components/responses/Error'
-        '403':
-          $ref: '#/components/responses/Error'
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/Error"
+        "403":
+          $ref: "#/components/responses/Error"
       description: Delete a file
       parameters: []
       tags:
@@ -89,15 +87,15 @@ paths:
       security:
         - token: []
     patch:
-      summary: ''
+      summary: ""
       operationId: patch-file
       responses:
-        '200':
-          $ref: '#/components/responses/SuccessMessage'
-        '400':
-          $ref: '#/components/responses/Error'
-        '403':
-          $ref: '#/components/responses/Error'
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/Error"
+        "403":
+          $ref: "#/components/responses/Error"
       description: rename file name
       tags:
         - file
@@ -112,40 +110,40 @@ paths:
       parameters: []
       security:
         - token: []
-  '/file/{path}/blob':
+  "/file/{path}/blob":
     get:
       tags:
         - blob
       summary: Your GET endpoint
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: string
                 format: binary
-        '400':
-          $ref: '#/components/responses/Error'
-        '403':
-          $ref: '#/components/responses/Error'
-        '404':
-          $ref: '#/components/responses/Error'
+        "400":
+          $ref: "#/components/responses/Error"
+        "403":
+          $ref: "#/components/responses/Error"
+        "404":
+          $ref: "#/components/responses/Error"
       operationId: get-blob
       parameters: []
       description: Download file at given path
       security:
         - accessToken: []
     post:
-      summary: ''
+      summary: ""
       operationId: post-blob
       responses:
-        '201':
-          $ref: '#/components/responses/SuccessMessage'
-        '400':
-          $ref: '#/components/responses/Error'
-        '403':
-          $ref: '#/components/responses/Error'
+        "201":
+          $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/Error"
+        "403":
+          $ref: "#/components/responses/Error"
       description: Upload a file to folder defined in path
       requestBody:
         content:
@@ -176,10 +174,10 @@ paths:
     get:
       summary: Your GET endpoint
       responses:
-        '200':
-          $ref: '#/components/responses/FolderContent'
-        '400':
-          $ref: '#/components/responses/Error'
+        "200":
+          $ref: "#/components/responses/FolderContent"
+        "400":
+          $ref: "#/components/responses/Error"
       operationId: get-search
       description: Search file or folder in scoped folder
       security:
@@ -199,46 +197,46 @@ paths:
         - search
   /copy:
     post:
-      summary: ''
+      summary: ""
       operationId: post-copy
       responses:
-        '200':
-          $ref: '#/components/responses/SuccessMessage'
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
       description: Copy list of files and folders defined in sources to destination folder
       tags:
         - clipboard
       requestBody:
-        $ref: '#/components/requestBodies/PasteRequest'
+        $ref: "#/components/requestBodies/PasteRequest"
   /move:
     post:
-      summary: ''
+      summary: ""
       operationId: post-move
       responses:
-        '200':
-          $ref: '#/components/responses/SuccessMessage'
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
       description: Move list of files and folders defined in sources to destination folder
       tags:
         - clipboard
       requestBody:
-        $ref: '#/components/requestBodies/PasteRequest'
-  '/user/{id}':
+        $ref: "#/components/requestBodies/PasteRequest"
+  "/user/{id}":
     get:
       summary: Your GET endpoint
       tags:
         - user
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          $ref: '#/components/responses/Error'
-        '403':
-          $ref: '#/components/responses/Error'
-        '404':
-          $ref: '#/components/responses/Error'
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/Error"
+        "403":
+          $ref: "#/components/responses/Error"
+        "404":
+          $ref: "#/components/responses/Error"
       operationId: get-user
       description: Get user info
       security:
@@ -250,15 +248,15 @@ paths:
         in: path
         required: true
     post:
-      summary: ''
+      summary: ""
       operationId: post-user-id
       responses:
-        '201':
-          $ref: '#/components/responses/SuccessMessage'
-        '400':
-          $ref: '#/components/responses/Error'
-        '403':
-          $ref: '#/components/responses/Error'
+        "201":
+          $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/Error"
+        "403":
+          $ref: "#/components/responses/Error"
       description: create new user
       tags:
         - user
@@ -273,7 +271,7 @@ paths:
                 password:
                   type: string
                 role:
-                  $ref: '#/components/schemas/Role'
+                  $ref: "#/components/schemas/Role"
               required:
                 - username
                 - password
@@ -281,15 +279,15 @@ paths:
       security:
         - token: []
     patch:
-      summary: ''
+      summary: ""
       operationId: patch-user-id
       responses:
-        '200':
-          $ref: '#/components/responses/SuccessMessage'
-        '400':
-          $ref: '#/components/responses/Error'
-        '403':
-          $ref: '#/components/responses/Error'
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/Error"
+        "403":
+          $ref: "#/components/responses/Error"
       description: rename or change password
       requestBody:
         content:
@@ -302,21 +300,21 @@ paths:
                 password:
                   type: string
                 role:
-                  $ref: '#/components/schemas/Role'
+                  $ref: "#/components/schemas/Role"
       security:
         - token: []
       tags:
         - user
     delete:
-      summary: ''
+      summary: ""
       operationId: delete-user-id
       responses:
-        '200':
-          $ref: '#/components/responses/SuccessMessage'
-        '400':
-          $ref: '#/components/responses/Error'
-        '403':
-          $ref: '#/components/responses/Error'
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
+        "400":
+          $ref: "#/components/responses/Error"
+        "403":
+          $ref: "#/components/responses/Error"
       tags:
         - user
       description: delete user
@@ -325,10 +323,10 @@ paths:
   /login:
     parameters: []
     post:
-      summary: ''
+      summary: ""
       operationId: post-login
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -339,7 +337,7 @@ paths:
                     type: string
                 required:
                   - token
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -373,7 +371,7 @@ paths:
       tags:
         - auth
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -382,8 +380,8 @@ paths:
                 properties:
                   accessToken:
                     type: string
-        '403':
-          $ref: '#/components/responses/Error'
+        "403":
+          $ref: "#/components/responses/Error"
       operationId: get-access-token
       description: Ask for token to access file download etc
       security:
@@ -453,7 +451,7 @@ components:
         username:
           type: string
         role:
-          $ref: '#/components/schemas/Role'
+          $ref: "#/components/schemas/Role"
       required:
         - id
         - username
@@ -485,7 +483,7 @@ components:
         pattern: ^\w+=*$
   responses:
     FolderContent:
-      description: ''
+      description: ""
       content:
         application/json:
           schema:
@@ -494,16 +492,16 @@ components:
               files:
                 type: array
                 items:
-                  $ref: '#/components/schemas/File'
+                  $ref: "#/components/schemas/File"
               folders:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Folder'
+                  $ref: "#/components/schemas/Folder"
             required:
               - files
               - folders
     Error:
-      description: ''
+      description: ""
       content:
         application/json:
           schema:
@@ -522,7 +520,7 @@ components:
                 error: string
                 message: string
     SuccessMessage:
-      description: ''
+      description: ""
       content:
         application/json:
           schema:
@@ -544,7 +542,7 @@ components:
             type: object
             properties:
               info:
-                $ref: '#/components/schemas/File'
+                $ref: "#/components/schemas/File"
               content:
                 type: string
             required:
@@ -563,7 +561,7 @@ components:
             required:
               - name
               - isDir
-      description: ''
+      description: ""
     PasteRequest:
       content:
         application/json:
