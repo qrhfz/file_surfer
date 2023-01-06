@@ -2,11 +2,15 @@ package server
 
 import (
 	"file_surfer_backend/api"
+	"file_surfer_backend/config"
 	"file_surfer_backend/fileutils"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -46,4 +50,32 @@ func GetFolder(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusOK, response)
+}
+
+func SearchFolder(pathName, search string) ([]api.File, error) {
+	pathName = filepath.Join(config.Base, pathName)
+	results := make([]api.File, 0)
+	err := filepath.Walk(pathName,
+		func(path string, info fs.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+
+			if strings.Contains(info.Name(), search) {
+				inf, err := fileutils.GetFileInfo(path)
+				if err != nil {
+					return err
+				}
+				results = append(results, *inf)
+			}
+
+			return nil
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }
