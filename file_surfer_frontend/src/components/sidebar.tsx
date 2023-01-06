@@ -1,14 +1,11 @@
 import { FunctionComponent } from "preact";
-import { route, useRouter } from "preact-router";
-import { useContext, useState } from "preact/hooks";
-import { BiFolder } from "react-icons/bi";
+import { useContext } from "preact/hooks";
 import { FileService } from "../generated-sources/openapi";
-import { EntriesContext } from "../signals/entries_state";
 import { ModalContext } from "../signals/modal_state";
 import { joinPath } from "../utils/path";
 import { PrimaryButton, SecondaryButton } from "./buttons";
 import { SingleInputForm } from "./forms/single_input_form";
-import { SimpleInput } from "./input/simple_input";
+
 
 export const Sidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
   const modal = useContext(ModalContext)
@@ -68,7 +65,7 @@ const NewFolderForm: FunctionComponent<{ path: string }> = ({ path }) => {
 
 const NewFileForm: FunctionComponent<{ path: string, isDir?: boolean }> = ({ path, isDir = false }) => {
   const modal = useContext(ModalContext)
-  const entries = useContext(EntriesContext)
+  // const entries = useContext(EntriesContext)
 
   return (
     <SingleInputForm
@@ -79,7 +76,7 @@ const NewFileForm: FunctionComponent<{ path: string, isDir?: boolean }> = ({ pat
 
       onDone={() => {
         modal.close();
-        entries.fetch();
+
       }} />
   )
 }

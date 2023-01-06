@@ -4,17 +4,14 @@ import { FileViewPage } from './pages/file_view_page';
 import { FolderPage } from './folder/folder_page';
 import { Clipboard, ClipboardContext } from "./clipboard";
 import { PopupContext, PopupState } from "./signals/popup_state";
-import { SearchPage } from "./pages/search_page";
 import { LoginPage } from "./pages/login_page";
-import { useEffect } from "preact/hooks";
-import { OpenAPI } from "./generated-sources/openapi";
 import { createTokenSignal, TokenContext } from "./auth/tokenSignal";
 import { ComponentChildren, JSX } from "preact";
 import { ModalContext, ModalState } from "./signals/modal_state";
 import { Modal } from "./components/modals/modal";
-import { EntriesContext, EntriesState } from "./signals/entries_state";
 import { ColumnResizerContext, createColumnResizer } from "./components/folder/folder_view";
 import { Popup } from "./components/popup";
+import { FolderContext, FolderState } from "./folder/folder_state";
 
 
 export function App() {
@@ -32,9 +29,9 @@ export function App() {
       children => <ModalContext.Provider value={new ModalState()}>
         {children}
       </ModalContext.Provider>,
-      children => <EntriesContext.Provider value={new EntriesState()}>
+      children => <FolderContext.Provider value={new FolderState()}>
         {children}
-      </EntriesContext.Provider>,
+      </FolderContext.Provider>,
       children => <ColumnResizerContext.Provider value={createColumnResizer()}>
         {children}
       </ColumnResizerContext.Provider>
@@ -55,7 +52,6 @@ export function App() {
       </ModalContext.Consumer>
       <Router>
         <LoginPage path="/login" />
-        <SearchPage path="/search" />
         <FolderPage path="/browse/:loc*" />
         <FileViewPage path="/view/:loc*" />
         <Redirect path="/" to="/browse/" />

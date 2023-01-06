@@ -1,15 +1,14 @@
-import { useContext, useEffect, useState } from "preact/hooks"
+import { useContext, useEffect } from "preact/hooks"
 import { useGuard } from "../auth/useGuard"
 import { Breadcrumb } from "../components/breadcrumb"
 import { FolderView } from "../components/folder/folder_view"
 import { LoadingCircle } from "../components/loading_circle"
 import { Nav } from "../components/nav"
 import { Sidebar } from "../components/sidebar"
-import { FolderService } from "../generated-sources/openapi"
 import { FolderLayout } from "../layout/folder_layout"
-import { EntriesContext } from "../signals/entries_state"
 
 import { joinPaths } from "../utils/path"
+import { FolderContext } from "./folder_state"
 
 
 type Prop = { loc?: string, matches?: { q: string | undefined, in: string | undefined } }
@@ -17,20 +16,12 @@ type FolderPage = preact.FunctionalComponent<Prop>
 
 export const FolderPage: FolderPage = ({ loc, matches }) => {
   useGuard()
-  const entries = useContext(EntriesContext)
-  const [status, setStatus] = useState<"loading" | "ok" | "error">("loading")
-
+  const folder = useContext(FolderContext)
   const path = joinPaths(loc ?? '.')
 
   useEffect(() => {
-    setStatus("loading")
-
-    entries.sourceFn = async () => {
-      const res = await FolderService.getFolder1(path)
-      return res
-    }
-
-    entries.fetch().then(_ => setStatus("ok")).catch(_ => setStatus("error"))
+    console.log("fetch")
+    folder.fetchFolder(path)
   }, [path])
 
   return (
@@ -43,9 +34,10 @@ export const FolderPage: FolderPage = ({ loc, matches }) => {
             <Breadcrumb path={path} />
             <FolderView
               loc={path}
-              items={status == "loading" ? [] : entries.entriesSignal.value} />
+              items={folder.files.value} />
           </div>
-          {status == "loading" &&
+
+          {folder.loading.value &&
             <div class="h-full grid items-center justify-center">
               <div>
                 <LoadingCircle />
