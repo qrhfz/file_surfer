@@ -2,8 +2,8 @@ package server
 
 import (
 	"file_surfer_backend/api"
-	"file_surfer_backend/config"
 	"file_surfer_backend/fileutils"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -15,42 +15,35 @@ import (
 // Your GET endpoint
 // (GET /folder)
 func GetFolder(ctx echo.Context) error {
-	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
+	pathParam, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	pathName := path.Join(config.Base, relativePath)
-	files, err := os.ReadDir(pathName)
+	if len(pathParam) == 0 {
+		pathParam = "."
+	}
+
+	fmt.Println("pathParam", pathParam)
+	files, err := os.ReadDir(pathParam)
 	if err != nil {
+		fmt.Println(err.Error())
 		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	response := api.FolderContent{
-		Folders: make([]api.Folder, 0),
-		Files:   make([]api.File, 0),
-	}
+	response := make([]api.File, 0, len(files))
 
 	for _, f := range files {
-		childPath := path.Join(pathName, f.Name())
-
-		if f.IsDir() {
-			folderInfo, err := fileutils.GetFolderInfo(childPath)
-			if err != nil {
-				return ctx.JSON(http.StatusInternalServerError, err.Error())
-			}
-
-			response.Folders = append(response.Folders, *folderInfo)
-			continue
-		}
+		fmt.Println(f.Name())
+		childPath := path.Join(pathParam, f.Name())
 
 		fileInfo, err := fileutils.GetFileInfo(childPath)
 		if err != nil && err != io.EOF {
-			return ctx.JSON(http.StatusInternalServerError, err.Error())
+			continue
+			// return ctx.JSON(http.StatusInternalServerError, err.Error())
 		}
 
-		response.Files = append(response.Files, *fileInfo)
-
+		response = append(response, *fileInfo)
 	}
 
 	return ctx.JSON(http.StatusOK, response)

@@ -16,27 +16,14 @@ const (
 
 // File defines model for File.
 type File struct {
-	Location string    `json:"location"`
-	Modified time.Time `json:"modified"`
-	Name     string    `json:"name"`
-	Size     int       `json:"size"`
-	Type     string    `json:"type"`
-	Url      string    `json:"url"`
-}
-
-// Folder defines model for Folder.
-type Folder struct {
-	ContentCount int       `json:"contentCount"`
+	ContentCount *int      `json:"contentCount,omitempty"`
+	IsDir        bool      `json:"isDir"`
 	Location     string    `json:"location"`
 	Modified     time.Time `json:"modified"`
 	Name         string    `json:"name"`
+	Size         int       `json:"size"`
+	Type         string    `json:"type"`
 	Url          string    `json:"url"`
-}
-
-// FolderContent defines model for FolderContent.
-type FolderContent struct {
-	Files   []File   `json:"files"`
-	Folders []Folder `json:"folders"`
 }
 
 // PasteRequest defines model for PasteRequest.

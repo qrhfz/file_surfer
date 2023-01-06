@@ -25,7 +25,13 @@ paths:
       description: Open a folder and returns list of files and folders inside
       responses:
         "200":
-          $ref: "#/components/responses/FolderContent"
+          description: "success"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/File"
       parameters: []
       tags:
         - folder
@@ -146,7 +152,13 @@ paths:
       summary: Your GET endpoint
       responses:
         "200":
-          $ref: "#/components/responses/FolderContent"
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/File"
       operationId: get-search
       description: Search file or folder in scoped folder
       security:
@@ -174,16 +186,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  files:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/File"
-                  folders:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Folder"
+                type: array
+                items:
+                  $ref: "#/components/schemas/File"
       description: Copy list of files and folders defined in sources to destination folder
       tags:
         - clipboard
@@ -200,16 +205,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  files:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/File"
-                  folders:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Folder"
+                type: array
+                items:
+                  $ref: "#/components/schemas/File"
       tags:
         - clipboard
       requestBody:
@@ -336,6 +334,11 @@ components:
           format: date-time
         url:
           type: string
+        isDir:
+          type: boolean
+        contentCount:
+          type: integer
+          minimum: 0
       required:
         - name
         - type
@@ -343,29 +346,7 @@ components:
         - size
         - modified
         - url
-    Folder:
-      title: Folder
-      type: object
-      properties:
-        name:
-          type: string
-        location:
-          type: string
-        modified:
-          type: string
-          format: date-time
-        contentCount:
-          type: integer
-          minimum: 0
-        url:
-          type: string
-      required:
-        - name
-        - location
-        - modified
-        - size
-        - contentCount
-        - url
+        - isDir
     User:
       title: User
       type: object
@@ -394,25 +375,6 @@ components:
       name: accessToken
       type: apiKey
       in: query
-  responses:
-    FolderContent:
-      description: ""
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              files:
-                type: array
-                items:
-                  $ref: "#/components/schemas/File"
-              folders:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Folder"
-            required:
-              - files
-              - folders
   requestBodies:
     PasteRequest:
       content:
