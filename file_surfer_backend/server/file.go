@@ -79,8 +79,10 @@ func PatchFile(ctx echo.Context) error {
 	oldPath := path.Join(config.Base, relativePath)
 	newPath := path.Join(config.Base, dir, *body.Name)
 
-	os.Rename(oldPath, newPath)
-
+	err = os.Rename(oldPath, newPath)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
 	newFileInfo, err := fileutils.GetFileInfo(path.Join(dir, *body.Name))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
