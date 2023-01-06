@@ -3,11 +3,12 @@ import { useContext } from "preact/hooks";
 import { FileService } from "../generated-sources/openapi";
 import { ModalContext } from "../signals/modal_state";
 import { joinPath } from "../utils/path";
-import { PrimaryButton, SecondaryButton } from "./buttons";
-import { SingleInputForm } from "./forms/single_input_form";
+import { PrimaryButton, SecondaryButton } from "../components/buttons";
+import { SingleInputForm } from "../components/forms/single_input_form";
+import { FolderContext } from "./folder_state";
 
 
-export const Sidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
+export const FolderSidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
   const modal = useContext(ModalContext)
 
   return (
@@ -65,7 +66,7 @@ const NewFolderForm: FunctionComponent<{ path: string }> = ({ path }) => {
 
 const NewFileForm: FunctionComponent<{ path: string, isDir?: boolean }> = ({ path, isDir = false }) => {
   const modal = useContext(ModalContext)
-  // const entries = useContext(EntriesContext)
+  const folder = useContext(FolderContext)
 
   return (
     <SingleInputForm
@@ -76,7 +77,8 @@ const NewFileForm: FunctionComponent<{ path: string, isDir?: boolean }> = ({ pat
 
       onDone={() => {
         modal.close();
-
-      }} />
+        folder.refresh()
+      }}
+    />
   )
 }

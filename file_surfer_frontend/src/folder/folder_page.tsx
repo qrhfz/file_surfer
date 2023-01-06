@@ -4,7 +4,7 @@ import { Breadcrumb } from "./breadcrumb"
 import { FolderView } from "../components/folder/folder_view"
 import { LoadingCircle } from "../components/loading_circle"
 import { Nav } from "../components/nav"
-import { Sidebar } from "../components/sidebar"
+import { FolderSidebar } from "./folder_sidebar"
 import { FolderLayout } from "../layout/folder_layout"
 
 import { joinPaths } from "../utils/path"
@@ -27,7 +27,7 @@ export const FolderPage: FolderPage = ({ location, matches }) => {
   return (
     <FolderLayout
       Header={() => <Nav q={matches?.q} at={matches?.in} />}
-      Aside={() => <Sidebar loc={path} />}
+      Aside={() => <FolderSidebar loc={path} />}
       Main={() => (
         <>
           <div class="overflow-x-auto">
