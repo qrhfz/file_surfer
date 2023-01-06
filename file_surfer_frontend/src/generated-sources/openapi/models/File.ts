@@ -8,5 +8,8 @@ export type File = {
     location: string;
     size: number;
     modified: string;
+    url: string;
+    isDir: boolean;
+    contentCount?: number;
 };
 

@@ -1,14 +1,14 @@
 import { useContext, useEffect } from "preact/hooks";
 import { ClipboardContext } from "../../clipboard";
+import { File } from "../../generated-sources/openapi";
 import { PopupContext } from "../../signals/popup_state";
 import { joinPaths } from "../../utils/path";
-import { FileOrFolder } from "./model";
 import { PastePopupError, PastePopupInProgress, PastePopupSuccess } from "./popups";
 
 export const useClipboard = (
   loc: string | undefined,
   selectedIndices: number[],
-  items: FileOrFolder[],
+  items: File[],
 ) => {
   const markedFiles = useContext(ClipboardContext);
   const popup = useContext(PopupContext);
@@ -61,8 +61,8 @@ export const useClipboard = (
   const selectedPaths = () => {
     return selectedIndices.map((i) => {
       return joinPaths(
-        items[i].item.location ?? ".",
-        items[i].item.name ?? ".",
+        items[i].location ?? ".",
+        items[i].name ?? ".",
       );
     });
   };

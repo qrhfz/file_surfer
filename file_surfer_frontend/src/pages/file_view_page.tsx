@@ -26,12 +26,12 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
         {fileState.tag == "loading" && "loading"}
         {fileState.tag == "ok" && <>
           <div className="flex flex-row justify-between pb-4 border-b-2 items-center">
-            <h1 class="text-lg font-bold">{fileState.data.info?.name}</h1>
+            <h1 class="text-lg font-bold">{fileState.data?.name}</h1>
             <PrimaryButton onClick={async () => {
               const result = await AuthService.getAccessToken();
 
               if (result.accessToken) {
-                window.open(`http://127.0.0.1:3100/blob?path=${fileState.data.info?.location}&accessToken=${result.accessToken}`)
+                window.open(`http://127.0.0.1:3100/blob?path=${fileState.data?.location}&accessToken=${result.accessToken}`)
               }
 
             }}>
@@ -40,7 +40,6 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
           </div>
           <pre class="py-4 h-[66vh] overflow-y-auto">
 
-            {fileState.data.content ?? ""}
           </pre>
         </>}
       </div>

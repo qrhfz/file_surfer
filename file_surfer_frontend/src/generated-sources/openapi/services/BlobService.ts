@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { File } from '../models/File';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -19,8 +21,8 @@ export class BlobService {
     ): CancelablePromise<Blob> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/blob',
-            query: {
+            url: '/file/{path}/blob',
+            path: {
                 'path': path,
             },
         });
@@ -28,25 +30,19 @@ export class BlobService {
 
     /**
      * Upload a file to folder defined in path
-     * @param path
      * @param formData
-     * @returns any
+     * @returns File File uploaded successfully
      * @throws ApiError
      */
-    public static postBlob(
-        path: string,
+    public static upload(
         formData?: {
-            files: Array<string>;
+            path: string;
+            files: Array<Blob>;
         },
-    ): CancelablePromise<{
-        success: string;
-    }> {
+    ): CancelablePromise<Array<File>> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/blob',
-            query: {
-                'path': path,
-            },
+            url: '/upload',
             formData: formData,
             mediaType: 'multipart/form-data',
         });

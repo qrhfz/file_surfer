@@ -1,10 +1,10 @@
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
-import { joinPath, joinPaths } from "../../utils/path";
-import { FileOrFolder } from "./model";
+import { File } from "../../generated-sources/openapi";
+import { joinPaths } from "../../utils/path";
 
 export const useSelect = (
-  items: FileOrFolder[],
+  items: File[],
   openContextMenu: (x: number, y: number) => void,
   closeContextMenu: () => void,
 ) => {
@@ -52,19 +52,19 @@ export const useSelect = (
   };
 
   const openItem = (i: number) => {
-    if (items[i].tag == "folder") {
+    if (items[i].isDir) {
       const newLoc = joinPaths(
         "/browse/",
-        items[i].item.location ?? ".",
-        items[i].item.name ?? ".",
+        items[i].location ?? ".",
+        items[i].name ?? ".",
       );
       console.log(newLoc);
       route(newLoc);
     } else {
       const newLoc = joinPaths(
         "/view/",
-        items[i].item.location ?? ".",
-        items[i].item.name ?? ".",
+        items[i].location ?? ".",
+        items[i].name ?? ".",
       );
       route(newLoc);
     }

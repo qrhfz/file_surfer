@@ -1,14 +1,14 @@
 import { signal } from "@preact/signals";
 import { createContext } from "preact";
-import { FileOrFolder } from "../components/folder/model";
+import { File } from "../generated-sources/openapi";
 
 /**
  * store entries for folder browser page and search page. an entry is FileOrFolder
  */
 export class EntriesState {
-  entriesSignal = signal<FileOrFolder[]>([]);
+  entriesSignal = signal<File[]>([]);
 
-  sourceFn: (() => Promise<FileOrFolder[]>) | undefined = undefined;
+  sourceFn: (() => Promise<File[]>) | undefined = undefined;
 
   async fetch() {
     const res = await this.sourceFn?.();

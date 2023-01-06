@@ -13,76 +13,50 @@ export class FileService {
      * Your GET endpoint
      * returns file info. if type is text* it will returns it content as content property
      * @param path
-     * @returns any Example response
+     * @returns File Get File success
      * @throws ApiError
      */
     public static getFile(
         path: string,
-    ): CancelablePromise<{
-        info: File;
-        content?: string;
-    }> {
+    ): CancelablePromise<File> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/file',
-            query: {
+            url: '/file/{path}',
+            path: {
                 'path': path,
             },
         });
     }
 
     /**
-     * create new empty file
+     * Create a new empty file
      * @param path
-     * @param requestBody
-     * @returns any
+     * @param isDir
+     * @returns File Creating new empty file success
      * @throws ApiError
      */
     public static postFile(
         path: string,
-        requestBody?: {
-            name: string;
-            isDir: boolean;
-        },
-    ): CancelablePromise<{
-        success: string;
-    }> {
+        isDir: boolean,
+    ): CancelablePromise<File> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/file',
-            query: {
+            url: '/file/{path}',
+            path: {
                 'path': path,
             },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
-    }
-
-    /**
-     * Delete file
-     * @param paths
-     * @returns any
-     * @throws ApiError
-     */
-    public static deleteFile(
-        paths: Array<string>,
-    ): CancelablePromise<{
-        success: string;
-    }> {
-        return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/file',
             query: {
-                'paths': paths,
+                'isDir': isDir,
             },
         });
     }
 
     /**
-     * rename file name
+     * Rename a file
+     * Rename a file
      * @param path
      * @param requestBody
-     * @returns any
+     * @returns File File renamed successfully
      * @throws ApiError
      */
     public static patchFile(
@@ -90,17 +64,33 @@ export class FileService {
         requestBody?: {
             name?: string;
         },
-    ): CancelablePromise<{
-        success: string;
-    }> {
+    ): CancelablePromise<File> {
         return __request(OpenAPI, {
             method: 'PATCH',
-            url: '/file',
-            query: {
+            url: '/file/{path}',
+            path: {
                 'path': path,
             },
             body: requestBody,
             mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * Delete a file
+     * @param path
+     * @returns void
+     * @throws ApiError
+     */
+    public static deleteFile(
+        path: string,
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/file/{path}',
+            path: {
+                'path': path,
+            },
         });
     }
 

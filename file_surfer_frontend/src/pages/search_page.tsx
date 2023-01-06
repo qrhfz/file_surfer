@@ -1,13 +1,9 @@
 import { FolderView } from "../components/folder/folder_view"
 import { Nav } from "../components/nav"
-import { SearchService } from "../generated-sources/openapi"
-import { useAsync } from "../utils/useAsync"
 import { LoadingCircle } from "../components/loading_circle"
 import { FolderLayout } from "../layout/folder_layout"
-import { mergeFilesAndFolders } from "../utils/mergeFilesAndFolders"
 import { useContext, useEffect, useState } from "preact/hooks"
 import { EntriesContext } from "../signals/entries_state"
-import { joinPaths } from "../utils/path"
 
 type Prop = { matches?: { q: string | undefined, in: string | undefined } }
 
@@ -24,14 +20,14 @@ export const SearchPage: SearchPage = ({ matches }) => {
   const entries = useContext(EntriesContext)
   const [status, setStatus] = useState<"loading" | "ok" | "error">("loading")
 
-  useEffect(() => {
-    setStatus("loading")
+  // useEffect(() => {
+  //   setStatus("loading")
 
-    entries.sourceFn = () => SearchService.getSearch(path, query)
-      .then(body => mergeFilesAndFolders(body.files ?? [], body.folders ?? []))
+  //   entries.sourceFn = () => SearchService.getSearch(path, query)
+  //     .then(body => mergeFilesAndFolders(body.files ?? [], body.folders ?? []))
 
-    entries.fetch().then(_ => setStatus("ok")).catch(_ => setStatus("error"))
-  }, [path, query])
+  //   entries.fetch().then(_ => setStatus("ok")).catch(_ => setStatus("error"))
+  // }, [path, query])
 
   return (
     <FolderLayout

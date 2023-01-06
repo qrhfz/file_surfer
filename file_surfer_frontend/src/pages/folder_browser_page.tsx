@@ -2,16 +2,15 @@ import { useContext, useEffect, useState } from "preact/hooks"
 import { useGuard } from "../auth/useGuard"
 import { Breadcrumb } from "../components/breadcrumb"
 import { FolderView } from "../components/folder/folder_view"
-import { FileOrFolder } from "../components/folder/model"
 import { LoadingCircle } from "../components/loading_circle"
 import { Nav } from "../components/nav"
 import { Sidebar } from "../components/sidebar"
 import { FolderService } from "../generated-sources/openapi"
 import { FolderLayout } from "../layout/folder_layout"
-import { EntriesContext, EntriesState } from "../signals/entries_state"
-import { mergeFilesAndFolders } from "../utils/mergeFilesAndFolders"
-import { joinPath, joinPaths } from "../utils/path"
-import { useAsync } from "../utils/useAsync"
+import { EntriesContext } from "../signals/entries_state"
+
+import { joinPaths } from "../utils/path"
+
 
 type Prop = { loc?: string, matches?: { q: string | undefined, in: string | undefined } }
 type FolderBrowserPage = preact.FunctionalComponent<Prop>
@@ -26,8 +25,10 @@ export const FolderBrowserPage: FolderBrowserPage = ({ loc, matches }) => {
   useEffect(() => {
     setStatus("loading")
 
-    entries.sourceFn = () => FolderService.getFolder(path)
-      .then(body => mergeFilesAndFolders(body.files ?? [], body.folders ?? []))
+    entries.sourceFn = async () => {
+      const res = await FolderService.getFolder1(path)
+      return res
+    }
 
     entries.fetch().then(_ => setStatus("ok")).catch(_ => setStatus("error"))
   }, [path])

@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "generate": "openapi -i ../file_surfer_docs/reference/File-Surfer-API.yaml -o src/generated-sources/openapi"
+    "generate": "openapi -i ../file_surfer_backend/spec.yaml -o src/generated-sources/openapi"
   },
   "dependencies": {
     "@preact/signals": "^1.1.3",

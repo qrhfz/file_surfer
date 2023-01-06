@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { File } from '../models/File';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -10,7 +12,7 @@ export class ClipboardService {
     /**
      * Copy list of files and folders defined in sources to destination folder
      * @param requestBody
-     * @returns any
+     * @returns File copy success
      * @throws ApiError
      */
     public static postCopy(
@@ -18,9 +20,7 @@ export class ClipboardService {
             sources?: Array<string>;
             destination?: string;
         },
-    ): CancelablePromise<{
-        success: string;
-    }> {
+    ): CancelablePromise<Array<File>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/copy',
@@ -32,7 +32,7 @@ export class ClipboardService {
     /**
      * Move list of files and folders defined in sources to destination folder
      * @param requestBody
-     * @returns any
+     * @returns File move success
      * @throws ApiError
      */
     public static postMove(
@@ -40,9 +40,7 @@ export class ClipboardService {
             sources?: Array<string>;
             destination?: string;
         },
-    ): CancelablePromise<{
-        success: string;
-    }> {
+    ): CancelablePromise<Array<File>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/move',

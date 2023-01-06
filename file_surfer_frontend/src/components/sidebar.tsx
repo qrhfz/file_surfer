@@ -5,6 +5,7 @@ import { BiFolder } from "react-icons/bi";
 import { FileService } from "../generated-sources/openapi";
 import { EntriesContext } from "../signals/entries_state";
 import { ModalContext } from "../signals/modal_state";
+import { joinPath } from "../utils/path";
 import { PrimaryButton, SecondaryButton } from "./buttons";
 import { SingleInputForm } from "./forms/single_input_form";
 import { SimpleInput } from "./input/simple_input";
@@ -73,7 +74,7 @@ const NewFileForm: FunctionComponent<{ path: string, isDir?: boolean }> = ({ pat
     <SingleInputForm
       placeholder={isDir ? "New Folder Name" : "New File Name"}
       onSubmit={async (name) => {
-        await FileService.postFile(path, { name, isDir: isDir })
+        await FileService.postFile(joinPath(path, name), isDir)
       }}
 
       onDone={() => {
