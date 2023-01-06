@@ -52,7 +52,7 @@ export function App() {
       </ModalContext.Consumer>
       <Router>
         <LoginPage path="/login" />
-        <FolderPage path="/browse/:loc*" />
+        <FolderPage path="/browse/:location*" />
         <FileViewPage path="/view/:loc*" />
         <Redirect path="/" to="/browse/" />
       </Router>

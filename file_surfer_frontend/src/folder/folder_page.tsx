@@ -11,13 +11,13 @@ import { joinPaths } from "../utils/path"
 import { FolderContext } from "./folder_state"
 
 
-type Prop = { loc?: string, matches?: { q: string | undefined, in: string | undefined } }
+type Prop = { location?: string, matches?: { q: string | undefined, in: string | undefined } }
 type FolderPage = preact.FunctionalComponent<Prop>
 
-export const FolderPage: FolderPage = ({ loc, matches }) => {
+export const FolderPage: FolderPage = ({ location, matches }) => {
   useGuard()
   const folder = useContext(FolderContext)
-  const path = joinPaths(loc ?? '.')
+  const path = joinPaths(location ?? '')
 
   useEffect(() => {
     console.log("fetch")

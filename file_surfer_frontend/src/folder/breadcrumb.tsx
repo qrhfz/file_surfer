@@ -11,6 +11,15 @@ export const Breadcrumb: FunctionComponent<BreadcrumbProp> = ({ path }) => {
       <ol
         role="list"
         class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600">
+        <Match key={path} path={path}>
+          {
+            (match: { url: string }) => {
+              return comparePath(match.url, "/browse")
+                ? <BreadcrumbItemActive path="/">/</BreadcrumbItemActive>
+                : <BreadcrumbItemNonActive path="/">/</BreadcrumbItemNonActive>;
+            }
+          }
+        </Match>
         {segments.map((s, i) => {
           const relativePath = buildPath(segments.slice(0, i + 1))
           const path = joinPath('/browse/', relativePath)
