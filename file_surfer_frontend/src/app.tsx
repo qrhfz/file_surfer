@@ -1,7 +1,7 @@
 import Router from "preact-router";
 import { Redirect } from './components/redirect';
 import { FileViewPage } from './pages/file_view_page';
-import { FolderBrowserPage } from './pages/folder_browser_page';
+import { FolderPage } from './folder/folder_page';
 import { Clipboard, ClipboardContext } from "./clipboard";
 import { PopupContext, PopupState } from "./signals/popup_state";
 import { SearchPage } from "./pages/search_page";
@@ -56,7 +56,7 @@ export function App() {
       <Router>
         <LoginPage path="/login" />
         <SearchPage path="/search" />
-        <FolderBrowserPage path="/browse/:loc*" />
+        <FolderPage path="/browse/:loc*" />
         <FileViewPage path="/view/:loc*" />
         <Redirect path="/" to="/browse/" />
       </Router>

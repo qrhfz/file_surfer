@@ -13,14 +13,14 @@ import { joinPaths } from "../utils/path"
 
 
 type Prop = { loc?: string, matches?: { q: string | undefined, in: string | undefined } }
-type FolderBrowserPage = preact.FunctionalComponent<Prop>
+type FolderPage = preact.FunctionalComponent<Prop>
 
-export const FolderBrowserPage: FolderBrowserPage = ({ loc, matches }) => {
+export const FolderPage: FolderPage = ({ loc, matches }) => {
   useGuard()
   const entries = useContext(EntriesContext)
   const [status, setStatus] = useState<"loading" | "ok" | "error">("loading")
 
-  const path = joinPaths("/", loc ?? '.')
+  const path = joinPaths(loc ?? '.')
 
   useEffect(() => {
     setStatus("loading")
