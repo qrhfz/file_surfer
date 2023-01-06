@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "preact/hooks"
 import { useGuard } from "../auth/useGuard"
-import { Breadcrumb } from "../components/breadcrumb"
+import { Breadcrumb } from "./breadcrumb"
 import { FolderView } from "../components/folder/folder_view"
 import { LoadingCircle } from "../components/loading_circle"
 import { Nav } from "../components/nav"
