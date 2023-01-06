@@ -3,7 +3,6 @@ package server
 import (
 	"file_surfer_backend/api"
 	"file_surfer_backend/fileutils"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -24,17 +23,17 @@ func GetFolder(ctx echo.Context) error {
 		pathParam = "."
 	}
 
-	fmt.Println("pathParam", pathParam)
+	// fmt.Println("pathParam", pathParam)
 	files, err := os.ReadDir(pathParam)
 	if err != nil {
-		fmt.Println(err.Error())
+		// fmt.Println(err.Error())
 		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	response := make([]api.File, 0, len(files))
 
 	for _, f := range files {
-		fmt.Println(f.Name())
+		// fmt.Println(f.Name())
 		childPath := path.Join(pathParam, f.Name())
 
 		fileInfo, err := fileutils.GetFileInfo(childPath)

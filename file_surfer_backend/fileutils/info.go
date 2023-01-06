@@ -9,7 +9,6 @@ import (
 
 // [pathName] relative to base
 func GetFileInfo(pathName string) (*api.File, error) {
-	fmt.Println(pathName)
 
 	var stat, err = os.Stat(pathName)
 	if err != nil {

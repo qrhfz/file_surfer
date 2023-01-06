@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -11,7 +10,6 @@ import (
 var Base = ""
 
 func init() {
-	fmt.Println("loading dot env")
 	err := godotenv.Load("local.env")
 	if err != nil {
 		log.Fatalf("Some error occured. Err: %s", err)
