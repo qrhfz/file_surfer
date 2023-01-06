@@ -1,4 +1,4 @@
-import { Popup } from "../popup"
+import { Popup } from "../components/popup"
 
 export const PastePopupSuccess: preact.FunctionalComponent = () => <Popup>Paste Success</Popup>
 export const PastePopupError: preact.FunctionalComponent = () => <Popup>Paste Error</Popup>

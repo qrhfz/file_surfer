@@ -1,9 +1,9 @@
 import { useContext, useEffect } from "preact/hooks";
-import { ClipboardContext } from "../../clipboard";
-import { File } from "../../generated-sources/openapi";
-import { PopupContext } from "../../signals/popup_state";
-import { joinPaths } from "../../utils/path";
+import { ClipboardContext } from "../clipboard";
+import { PopupContext } from "../signals/popup_state";
+import { joinPaths } from "../utils/path";
 import { PastePopupError, PastePopupInProgress, PastePopupSuccess } from "./popups";
+import { File } from "../generated-sources/openapi";
 
 export const useClipboard = (
   loc: string | undefined,

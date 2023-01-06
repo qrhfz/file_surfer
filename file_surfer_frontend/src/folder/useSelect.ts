@@ -1,7 +1,7 @@
 import { route } from "preact-router";
 import { useState } from "preact/hooks";
-import { File } from "../../generated-sources/openapi";
-import { joinPaths } from "../../utils/path";
+import { File } from "../generated-sources/openapi";
+import { joinPaths } from "../utils/path";
 
 export const useSelect = (
   items: File[],

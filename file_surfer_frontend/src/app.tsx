@@ -9,7 +9,7 @@ import { createTokenSignal, TokenContext } from "./auth/tokenSignal";
 import { ComponentChildren, JSX } from "preact";
 import { ModalContext, ModalState } from "./signals/modal_state";
 import { Modal } from "./components/modals/modal";
-import { ColumnResizerContext, createColumnResizer } from "./components/folder/folder_view";
+import { ColumnResizerContext, createColumnResizer } from "./folder/folder_view";
 import { Popup } from "./components/popup";
 import { FolderContext, FolderState } from "./folder/folder_state";
 

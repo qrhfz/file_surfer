@@ -1,19 +1,20 @@
 import "./folder_view.css";
 import { useState, useMemo, useContext } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
-import { formatBytes } from "../../utils/formatBytes";
-import { formatDateString } from "../../utils/formatDateString";
-import { File, FileService, FolderService } from "../../generated-sources/openapi";
-import { ContextMenu, ContextMenuPosition } from "./context_menu";
+
 import { FolderListViewCell, FolderListViewHeaderCell } from "./cell";
 import { useClipboard } from "./useClipboard";
 import { useSelect } from "./useSelect";
 import { createContext, FunctionComponent } from "preact";
 import { memo } from "preact/compat";
 import { computed, signal } from "@preact/signals";
-import { joinPath } from "../../utils/path";
-import { PopupContext } from "../../signals/popup_state";
-import { Popup } from "../popup";
+import { ContextMenu, ContextMenuPosition } from "./context_menu";
+import { PopupContext } from "../signals/popup_state";
+import { joinPath } from "../utils/path";
+import { File, FileService } from "./../generated-sources/openapi";
+import { Popup } from "../components/popup";
+import { formatDateString } from "../utils/formatDateString";
+import { formatBytes } from "../utils/formatBytes";
 
 type FolderView = preact.FunctionalComponent<{ items: File[], loc?: string }>
 
