@@ -11,4 +11,5 @@ func RegisterRoute(e *echo.Echo) {
 	registerFolderRoute(e)
 	e.POST("/upload", server.Upload)
 	registerClipboardRoutes(e)
+	registerSearchRoutes(e)
 }

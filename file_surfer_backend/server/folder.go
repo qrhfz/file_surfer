@@ -23,12 +23,8 @@ func GetFolder(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	if len(pathParam) == 0 {
-		pathParam = "."
-	}
-
 	// fmt.Println("pathParam", pathParam)
-	files, err := os.ReadDir(pathParam)
+	files, err := os.ReadDir(filepath.Join(config.Base, pathParam))
 	if err != nil {
 		// fmt.Println(err.Error())
 		return ctx.JSON(http.StatusInternalServerError, err.Error())

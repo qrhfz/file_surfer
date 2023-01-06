@@ -16,6 +16,24 @@ tags:
   - name: file
   - name: folder
 paths:
+  "/folder/":
+    get:
+      operationId: get-folder
+      summary: List contents inside a directory
+      description: Open a folder and returns list of files and folders inside
+      responses:
+        "200":
+          description: "success"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/File"
+      tags:
+        - folder
+      security:
+        - token: []
   "/folder/{path}":
     get:
       operationId: get-folder
@@ -145,9 +163,33 @@ paths:
         name: path
         in: path
         required: true
-  /folder/{path}/search:
+  /search/:
     get:
-      summary: Search folder content
+      summary: Search directory content in base directory
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/File"
+      operationId: get-search-base
+      description: Search file or folder in scoped folder
+      security:
+        - token: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: search
+          required: true
+      tags:
+        - folder
+  /search/{path}:
+    get:
+      summary: Search directory content
       responses:
         "200":
           description: ""
