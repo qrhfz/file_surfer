@@ -15,8 +15,6 @@ tags:
   - name: clipboard
   - name: file
   - name: folder
-  - name: search
-  - name: user
 paths:
   "/folder/{path}":
     get:
@@ -147,9 +145,9 @@ paths:
         name: path
         in: path
         required: true
-  /search:
+  /folder/{path}/search:
     get:
-      summary: Your GET endpoint
+      summary: Search folder content
       responses:
         "200":
           description: ""
@@ -166,16 +164,16 @@ paths:
       parameters:
         - schema:
             type: string
-          in: query
+          in: path
           name: path
           required: true
         - schema:
             type: string
           in: query
-          name: searchQuery
+          name: search
           required: true
       tags:
-        - search
+        - folder
   /copy:
     post:
       summary: ""
