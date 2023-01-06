@@ -3,7 +3,6 @@ package main
 import (
 	"file_surfer_backend/config"
 	"file_surfer_backend/routes"
-	"fmt"
 	"log"
 	"os"
 	"path"
@@ -21,11 +20,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	pwd, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	fmt.Println("pwd", pwd)
 
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
