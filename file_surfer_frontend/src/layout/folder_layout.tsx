@@ -8,9 +8,7 @@ export const FolderLayout: FunctionComponent<FolderLayout> = ({ Header, Main, As
         <div class="w-64 pr-4">
           <Aside />
         </div>
-        <div>
-          <Main />
-        </div>
+        <Main />
       </div>
     </div>
   )

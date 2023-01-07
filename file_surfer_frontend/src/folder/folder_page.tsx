@@ -30,7 +30,7 @@ export const FolderPage: FolderPage = ({ location, matches }) => {
       Aside={() => <FolderSidebar loc={path} />}
       Main={() => (
         <>
-          <div class="overflow-x-auto">
+          <div class="overflow-x-auto flex flex-col">
             <Breadcrumb path={path} />
             <FolderView />
           </div>

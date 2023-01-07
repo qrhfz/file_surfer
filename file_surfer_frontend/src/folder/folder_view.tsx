@@ -11,6 +11,8 @@ import { File } from "./../generated-sources/openapi";
 import { formatDateString } from "../utils/formatDateString";
 import { formatBytes } from "../utils/formatBytes";
 import { FolderContext } from "./folder_state";
+import { route } from "preact-router";
+import { joinPaths } from "../utils/path";
 
 type FolderView = preact.FunctionalComponent
 
@@ -25,6 +27,7 @@ export const FolderView: FolderView = () => {
 
   return (
     <div
+      class="h-full"
       onContextMenu={e => {
         e.preventDefault()
 
@@ -39,7 +42,8 @@ export const FolderView: FolderView = () => {
 
       onClick={e => {
         closeContextMenu()
-      }}>
+      }}
+    >
       <table
         class="folder-list-view"
         style={{
@@ -88,7 +92,7 @@ const FolderListViewBody: FunctionComponent = memo(() => {
         <FolderListRow
           key={f.location! + f.name}
           index={i}
-          entry={f}
+          file={f}
           selected={folder.isSelected(f.name).value}
         />
       ))}
@@ -98,11 +102,11 @@ const FolderListViewBody: FunctionComponent = memo(() => {
 
 const FolderListRow: FunctionComponent<{
   index: number,
-  entry: File,
+  file: File,
   selected: boolean,
-}> = ({ index, entry, selected }) => {
+}> = ({ index, file, selected }) => {
   const folder = useContext(FolderContext)
-  const formattedDate = useMemo(() => formatDateString(entry.modified), [entry.modified])
+  const formattedDate = useMemo(() => formatDateString(file.modified), [file.modified])
   return (
     <tr
       onClick={e => {
@@ -112,22 +116,25 @@ const FolderListRow: FunctionComponent<{
         } else {
           folder.selectSingleFile(index)
         }
+        if (e.detail === 2) {
+          route(joinPaths("/browse/", file.location, file.name))
+        }
       }}
-      key={entry.location + entry.name}>
+      key={file.location + file.name}>
 
       <FolderListViewCell selected={selected}>
         <div class="w-4 h-4 inline-block align-middle mr-1">
-          {entry.isDir ? <BiFolder /> : <BiFile />}
+          {file.isDir ? <BiFolder /> : <BiFile />}
         </div>
-        <span>{entry.name}</span>
+        <span>{file.name}</span>
       </FolderListViewCell>
 
       <FolderListViewCell selected={selected}>
-        {entry.isDir ? `${entry.contentCount} items` : formatBytes(entry.size ?? 0)}
+        {file.isDir ? `${file.contentCount} items` : formatBytes(file.size ?? 0)}
       </FolderListViewCell>
 
       <FolderListViewCell selected={selected}>
-        {entry.isDir ? "Folder" : entry.type?.split(';')[0]}
+        {file.isDir ? "Folder" : file.type?.split(';')[0]}
       </FolderListViewCell>
 
       <FolderListViewCell selected={selected}>
