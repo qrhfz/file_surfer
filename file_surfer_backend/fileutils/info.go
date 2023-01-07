@@ -2,9 +2,11 @@ package fileutils
 
 import (
 	"file_surfer_backend/api"
+	"file_surfer_backend/config"
 	"fmt"
 	"os"
 	pathpkg "path"
+	"strings"
 )
 
 // [pathName] relative to base
@@ -31,7 +33,12 @@ func GetFileInfo(pathName string) (*api.File, error) {
 			return nil, err
 		}
 	}
+
+	if strings.HasPrefix(pathName, config.Base) {
+		pathName = strings.Replace(pathName, config.Base, "", 1)
+	}
 	location := pathpkg.Dir(pathName)
+	url := fmt.Sprintf("/file/%s", EncodePath(pathName))
 	info := api.File{
 		IsDir:        stat.IsDir(),
 		Name:         stat.Name(),
@@ -40,7 +47,7 @@ func GetFileInfo(pathName string) (*api.File, error) {
 		Type:         fileType,
 		Location:     location,
 		ContentCount: &contentCount,
-		Url:          fmt.Sprintf("/file/%s", pathpkg.Join(location, stat.Name())),
+		Url:          url,
 	}
 
 	return &info, nil

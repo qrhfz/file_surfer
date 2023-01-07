@@ -51,13 +51,16 @@ func GetFolder(ctx echo.Context) error {
 func SearchFolder(pathName, search string) ([]api.File, error) {
 	pathName = filepath.Join(config.Base, pathName)
 	results := make([]api.File, 0)
+
+	search = strings.ToLower(search)
+
 	err := filepath.Walk(pathName,
 		func(path string, info fs.FileInfo, err error) error {
 			if err != nil {
 				return err
 			}
-
-			if strings.Contains(info.Name(), search) {
+			name := strings.ToLower(info.Name())
+			if strings.Contains(name, search) {
 				inf, err := fileutils.GetFileInfo(path)
 				if err != nil {
 					return err
