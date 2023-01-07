@@ -1,6 +1,6 @@
 import { Context } from "preact"
 
-export function createProvider<T>(context: Context<T>, value: T): ContextItem<T> {
+export function registerProvider<T>(context: Context<T>, value: T): ContextItem<T> {
   return {
     Context: context,
     value: value
@@ -11,11 +11,18 @@ interface ContextItem<T> {
   Context: Context<T>
   value: T
 }
+
 type MultiProviderProp = {
   contexts: ContextItem<any>[]
 }
+
 type MultiProvider = preact.FunctionalComponent<MultiProviderProp>
+
 export const MultiProvider: MultiProvider = ({ children, contexts }) => {
+  if (contexts.length === 0) {
+    return <>{children}</>
+  }
+
   const { Context, value } = contexts.shift()!
 
   return (
