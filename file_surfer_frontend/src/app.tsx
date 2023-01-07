@@ -1,6 +1,6 @@
 import Router from "preact-router";
 import { Redirect } from './components/redirect';
-import { FileViewPage } from './pages/file_view_page';
+import { FileViewPage } from './file/file_view_page';
 import { FolderPage } from './folder/folder_page';
 import { PopupContext, PopupState } from "./components/popup/popup_state";
 import { LoginPage } from "./pages/login_page";
