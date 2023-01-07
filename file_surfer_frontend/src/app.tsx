@@ -18,7 +18,7 @@ import { registerProvider, MultiProvider } from "./multiprovider";
 export function App() {
   return (
     <MultiProvider
-      contexts={[
+      items={[
         registerProvider(PopupContext, new PopupState()),
         registerProvider(ModalContext, new ModalState()),
         registerProvider(FolderContext, new FolderState()),

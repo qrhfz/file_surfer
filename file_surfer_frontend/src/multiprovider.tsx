@@ -13,12 +13,12 @@ interface ContextItem<T> {
 }
 
 type MultiProviderProp = {
-  contexts: ContextItem<any>[]
+  items: ContextItem<any>[]
 }
 
 type MultiProvider = preact.FunctionalComponent<MultiProviderProp>
 
-export const MultiProvider: MultiProvider = ({ children, contexts }) => {
+export const MultiProvider: MultiProvider = ({ children, items: contexts }) => {
   if (contexts.length === 0) {
     return <>{children}</>
   }
