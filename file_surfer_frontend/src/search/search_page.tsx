@@ -1,6 +1,7 @@
 import { FunctionComponent } from "preact"
 import { useEffect, useRef } from "preact/hooks"
 import { SmallPrimaryButton } from "../components/buttons"
+import { LoadingCircle } from "../components/loading_circle"
 import { formatBytes } from "../utils/formatBytes"
 import { formatDateString } from "../utils/formatDateString"
 import { joinPath, joinPaths } from "../utils/path"
@@ -39,21 +40,29 @@ export const SearchPage: FunctionComponent = () => {
         <div>Type</div>
         <div>Size</div>
         <div>Modified</div>
-        {state.files.value.map(f => {
-          return (
-            <a
-              href={joinPaths(f.isDir ? "/browse/" : "/view/", f.location, f.name)}
-              class="contents"
-              key={JSON.stringify(f)}
-            >
-              <div>{f.name}</div>
-              <div class="whitespace-nowrap text-ellipsis overflow-hidden">{f.location}</div>
-              <div>{f.type}</div>
-              <div>{formatBytes(f.size)}</div>
-              <div>{formatDateString(f.modified)}</div>
-            </a>
-          )
-        })}
+        {state.files.value.status == "ok"
+          && state.files.value.data.map(f => {
+            return (
+              <a
+                href={joinPaths(f.isDir ? "/browse/" : "/view/", f.location, f.name)}
+                class="contents"
+                key={JSON.stringify(f)}
+              >
+                <div>{f.name}</div>
+                <div class="whitespace-nowrap text-ellipsis overflow-hidden">{f.location}</div>
+                <div>{f.type}</div>
+                <div>{formatBytes(f.size)}</div>
+                <div>{formatDateString(f.modified)}</div>
+              </a>
+            )
+          })}
+
+        {state.files.value.status == "loading" && <LoadingCircle />}
+        {state.files.value.status == "error" &&
+          <pre class="text-red-400">
+            {state.files.value.error}
+          </pre>
+        }
       </div>
     </div>
   )
