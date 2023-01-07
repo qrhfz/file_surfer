@@ -2,6 +2,7 @@ import { computed, signal } from "@preact/signals";
 import { createContext } from "preact";
 import { FolderService, File, ClipboardService, FileService } from "../generated-sources/openapi";
 import { joinPath } from "../utils/path";
+import { AsyncState } from "../utils/useAsync";
 
 export class FolderState {
   files = signal<File[]>([]);
@@ -14,6 +15,8 @@ export class FolderState {
 
   clipboard: string[] = [];
   #mode: "copy" | "cut" | undefined;
+
+  fileOpStatus = signal<AsyncState<boolean, string> | undefined>(undefined)
 
   async fetchFolder(path: string = this.folderPath) {
     try {
@@ -47,24 +50,36 @@ export class FolderState {
     const sources = this.selectedPaths.value
     const input = { sources, destination: this.folderPath }
 
-    if (this.#mode == "copy") {
-      await ClipboardService.postCopy(input);
-    } else if (this.#mode == "cut") {
-      await ClipboardService.postMove(input);
+    try {
+      if (this.#mode == "copy") {
+        await ClipboardService.postCopy(input);
+      } else if (this.#mode == "cut") {
+        await ClipboardService.postMove(input);
+      }
+      this.fileOpStatus.value = { tag: "ok", data: true }
+    } catch (error) {
+      this.fileOpStatus.value = { tag: "error", error: JSON.stringify(error) }
+    } finally {
+      this.#mode = undefined;
+      await this.refresh()
     }
-
-    this.#mode = undefined;
-
-    await this.refresh()
   }
 
   async delete() {
-    for (const path of this.selectedPaths.value) {
-      await FileService.deleteFile(path)
-    }
+    this.fileOpStatus.value = { tag: "loading" }
+    try {
+      for (const path of this.selectedPaths.value) {
+        await FileService.deleteFile(path)
+      }
+      console.log("delete success")
+      this.fileOpStatus.value = { tag: "ok", data: true };
 
-    this.selectedPaths.value = []
-    await this.refresh()
+    } catch (error) {
+      this.fileOpStatus.value = { tag: "error", error: JSON.stringify(error) }
+    } finally {
+      this.selectedPaths.value = []
+      await this.refresh()
+    }
   }
 
   selectSingleFile(index: number) {

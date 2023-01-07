@@ -5,7 +5,7 @@ import { createContext, FunctionComponent } from "preact";
 import { memo } from "preact/compat";
 import { computed, signal } from "@preact/signals";
 import { ContextMenu, ContextMenuPosition } from "./context_menu";
-import { PopupContext } from "../signals/popup_state";
+import { PopupContext } from "../components/popup/popup_state";
 import { File } from "./../generated-sources/openapi";
 
 import { formatDateString } from "../utils/formatDateString";

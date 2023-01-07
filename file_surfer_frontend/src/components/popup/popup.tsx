@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "preact/hooks"
-import { PopupContext } from "../signals/popup_state"
+import { PopupContext } from "./popup_state"
 
 export const Popup: preact.FunctionalComponent = ({ children }) => {
   const popup = useContext(PopupContext)

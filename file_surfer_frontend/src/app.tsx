@@ -2,14 +2,14 @@ import Router from "preact-router";
 import { Redirect } from './components/redirect';
 import { FileViewPage } from './pages/file_view_page';
 import { FolderPage } from './folder/folder_page';
-import { PopupContext, PopupState } from "./signals/popup_state";
+import { PopupContext, PopupState } from "./components/popup/popup_state";
 import { LoginPage } from "./pages/login_page";
 import { createTokenSignal, TokenContext } from "./auth/tokenSignal";
 import { ComponentChildren, JSX } from "preact";
 import { ModalContext, ModalState } from "./signals/modal_state";
 import { Modal } from "./components/modals/modal";
 import { ColumnResizerContext, createColumnResizer } from "./folder/folder_view";
-import { Popup } from "./components/popup";
+import { Popup } from "./components/popup/popup";
 import { FolderContext, FolderState } from "./folder/folder_state";
 
 

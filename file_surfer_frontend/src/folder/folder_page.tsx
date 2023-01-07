@@ -9,6 +9,7 @@ import { FolderLayout } from "../layout/folder_layout"
 
 import { joinPaths } from "../utils/path"
 import { FolderContext } from "./folder_state"
+import { PopupContext } from "../components/popup/popup_state"
 
 
 type Prop = { location?: string, matches?: { q: string | undefined, in: string | undefined } }
@@ -17,12 +18,29 @@ type FolderPage = preact.FunctionalComponent<Prop>
 export const FolderPage: FolderPage = ({ location, matches }) => {
   useGuard()
   const folder = useContext(FolderContext)
+  const popup = useContext(PopupContext)
   const path = joinPaths(location ?? '')
 
   useEffect(() => {
     console.log("fetch")
     folder.fetchFolder(path)
   }, [path])
+
+  useEffect(() => {
+    const unsub = folder.fileOpStatus.subscribe(status => {
+      if (status?.tag === "loading") {
+        popup.show(<>Loading</>)
+      } if (status?.tag === "ok") {
+        popup.show(<>Ok</>)
+
+      } if (status?.tag === "error") {
+        popup.show(<div class="text-red-600 text-2x">
+          ERROR
+        </div>)
+      }
+    })
+    return unsub
+  }, [])
 
   return (
     <FolderLayout
