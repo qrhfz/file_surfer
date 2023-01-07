@@ -117,7 +117,12 @@ const FolderListRow: FunctionComponent<{
           folder.selectSingleFile(index)
         }
         if (e.detail === 2) {
-          route(joinPaths("/browse/", file.location, file.name))
+          if (file.isDir) {
+            route(joinPaths("/browse/", file.location, file.name))
+          } else {
+            route(joinPaths("/view/", file.location, file.name))
+
+          }
         }
       }}
       key={file.location + file.name}>

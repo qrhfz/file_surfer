@@ -7,14 +7,14 @@ import { useAsync } from "../utils/useAsync"
 type FilveViewPageType = preact.FunctionalComponent<{ loc?: string }>
 
 export const FileViewPage: FilveViewPageType = ({ loc }) => {
-  const path = joinPath('/', loc ?? '.')
+
 
   const fileState = useAsync(
-    FileService.getFile(path),
+    FileService.getFile(loc!),
     {
       ok: ok => ok,
       err: err => err,
-      key: path
+      key: loc
     }
   )
 
@@ -22,7 +22,7 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
     <div class="w-screen h-screen bg-slate-300 pt-24">
 
       <div class="w-8/12 mx-auto bg-white p-8  ">
-        {fileState.status == "error" && "loading"}
+        {fileState.status == "error" && JSON.stringify(fileState.error)}
         {fileState.status == "loading" && "loading"}
         {fileState.status == "ok" && <>
           <div className="flex flex-row justify-between pb-4 border-b-2 items-center">
