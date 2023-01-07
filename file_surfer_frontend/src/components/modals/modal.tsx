@@ -8,6 +8,9 @@ export const Modal: FunctionComponent = ({ children }) => {
   return (
     <div
       onClick={e => {
+        if (e.target !== e.currentTarget) {
+          return
+        }
         e.preventDefault()
         if (e.currentTarget === e.target) {
           modal.close()
