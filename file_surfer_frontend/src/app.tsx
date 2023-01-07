@@ -5,24 +5,27 @@ import { FolderPage } from './folder/folder_page';
 import { PopupContext, PopupState } from "./components/popup/popup_state";
 import { LoginPage } from "./pages/login_page";
 import { createTokenSignal, TokenContext } from "./auth/tokenSignal";
-import { ComponentChildren, JSX } from "preact";
+import { ComponentChildren, Context, JSX, Provider } from "preact";
 import { ModalContext, ModalState } from "./signals/modal_state";
 import { Modal } from "./components/modals/modal";
 import { ColumnResizerContext, createColumnResizer } from "./folder/folder_view";
 import { Popup } from "./components/popup/popup";
 import { FolderContext, FolderState } from "./folder/folder_state";
 import { SearchPage } from "./search/search_page";
+import { createContextItem, MultiProvider } from "./multiprovider";
 
 
 export function App() {
   return (
-    <MultiProvider providers={[
-      c => <PopupContext.Provider value={new PopupState()}>{c}</PopupContext.Provider>,
-      c => <ModalContext.Provider value={new ModalState()}>{c}</ModalContext.Provider>,
-      c => <FolderContext.Provider value={new FolderState()}>{c}</FolderContext.Provider>,
-      c => <TokenContext.Provider value={createTokenSignal()}>{c}</TokenContext.Provider>,
-      c => <ColumnResizerContext.Provider value={createColumnResizer()}>{c}</ColumnResizerContext.Provider>
-    ]}>
+    <MultiProvider
+      contexts={[
+        createContextItem(PopupContext, new PopupState()),
+        createContextItem(ModalContext, new ModalState()),
+        createContextItem(FolderContext, new FolderState()),
+        createContextItem(TokenContext, createTokenSignal()),
+        createContextItem(ColumnResizerContext, createColumnResizer()),
+      ]}
+    >
       <PopupContext.Consumer>
         {p => {
           const content = p.content.value
@@ -49,19 +52,5 @@ export function App() {
   )
 }
 
-type MultiProviderProp = {
-  providers: ((children: ComponentChildren) => JSX.Element)[]
-}
-type MultiProvider = preact.FunctionalComponent<MultiProviderProp>
-const MultiProvider: MultiProvider = (
-  { children, providers }
-) => {
-  const first = providers.shift()
-  return (
-    <>
-      {providers.reduce((prev, next) => {
-        return next(prev)
-      }, first!(children))}
-    </>
-  )
-}
+
+
