@@ -15,8 +15,8 @@ export const Breadcrumb: FunctionComponent<BreadcrumbProp> = ({ path }) => {
           {
             (match: { url: string }) => {
               return comparePath(match.url, "/browse")
-                ? <BreadcrumbItemActive path="/">/</BreadcrumbItemActive>
-                : <BreadcrumbItemNonActive path="/">/</BreadcrumbItemNonActive>;
+                ? <BreadcrumbItemActive path="/browse/">/</BreadcrumbItemActive>
+                : <BreadcrumbItemNonActive path="/browse/">/</BreadcrumbItemNonActive>;
             }
           }
         </Match>
