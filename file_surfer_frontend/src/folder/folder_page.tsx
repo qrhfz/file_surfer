@@ -32,8 +32,7 @@ export const FolderPage: FolderPage = ({ location, matches }) => {
         popup.show(<>Loading</>)
       } if (status?.tag === "ok") {
         popup.show(<>Ok</>)
-
-      } if (status?.tag === "error") {
+      } else if (status?.tag === "error") {
         popup.show(<div class="text-red-600 text-2x">
           ERROR
         </div>)
