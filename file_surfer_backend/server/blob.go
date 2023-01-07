@@ -44,7 +44,7 @@ func GetBlob(ctx echo.Context) error {
 
 func Upload(ctx echo.Context) error {
 
-	dir := ctx.FormValue("dir")
+	dir := ctx.FormValue("path")
 	form, err := ctx.MultipartForm()
 	if err != nil {
 		return err
