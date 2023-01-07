@@ -11,6 +11,7 @@ import { Modal } from "./components/modals/modal";
 import { ColumnResizerContext, createColumnResizer } from "./folder/folder_view";
 import { Popup } from "./components/popup/popup";
 import { FolderContext, FolderState } from "./folder/folder_state";
+import { SearchPage } from "./search/search_page";
 
 
 export function App() {
@@ -47,6 +48,7 @@ export function App() {
         }}
       </ModalContext.Consumer>
       <Router>
+        <SearchPage path="/search" />
         <LoginPage path="/login" />
         <FolderPage path="/browse/:location*" />
         <FileViewPage path="/view/:loc*" />

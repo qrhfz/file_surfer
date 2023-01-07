@@ -14,6 +14,6 @@ export const SimpleInput: SimpleInput = (prop) => {
       placeholder={placeholder}
       value={value}
       disabled={disabled}
-      onChange={e => handleChange((e.target as HTMLInputElement).value)} />
+      onChange={e => handleChange(e.currentTarget.value)} />
   )
 }
