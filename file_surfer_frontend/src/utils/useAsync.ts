@@ -1,10 +1,10 @@
 import { useEffect, useState } from "preact/hooks";
 
-type Loading = { tag: "loading" };
-type Ok<T> = { tag: "ok"; data: T };
-type Error<E> = { tag: "error"; error: E };
+type Loading = { status: "loading" };
+type Ok<T> = { status: "ok"; data: T };
+type Error<E> = { status: "error"; error: E };
 
-const loading: Loading = { tag: "loading" };
+const loading: Loading = { status: "loading" };
 
 export type AsyncState<T, E> =
   | Loading
@@ -24,8 +24,8 @@ export const useAsync = <K, R, T, E>(
   useEffect(() => {
     setState(loading);
     task
-      .then((t) => setState({ tag: "ok", data: ok(t) }))
-      .catch((e) => setState({ tag: "error", error: err(e) }));
+      .then((t) => setState({ status: "ok", data: ok(t) }))
+      .catch((e) => setState({ status: "error", error: err(e) }));
   }, [key]);
 
   return state;

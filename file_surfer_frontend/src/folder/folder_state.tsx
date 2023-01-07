@@ -16,7 +16,7 @@ export class FolderState {
   clipboard: string[] = [];
   #mode: "copy" | "cut" | undefined;
 
-  fileOpStatus = signal<AsyncState<boolean, string> | undefined>(undefined)
+  fileOp = signal<AsyncState<boolean, string> | undefined>(undefined)
 
   async fetchFolder(path: string = this.folderPath) {
     try {
@@ -56,9 +56,9 @@ export class FolderState {
       } else if (this.#mode == "cut") {
         await ClipboardService.postMove(input);
       }
-      this.fileOpStatus.value = { tag: "ok", data: true }
+      this.fileOp.value = { status: "ok", data: true }
     } catch (error) {
-      this.fileOpStatus.value = { tag: "error", error: JSON.stringify(error) }
+      this.fileOp.value = { status: "error", error: JSON.stringify(error) }
     } finally {
       this.#mode = undefined;
       await this.refresh()
@@ -66,16 +66,16 @@ export class FolderState {
   }
 
   async delete() {
-    this.fileOpStatus.value = { tag: "loading" }
+    this.fileOp.value = { status: "loading" }
     try {
       for (const path of this.selectedPaths.value) {
         await FileService.deleteFile(path)
       }
       console.log("delete success")
-      this.fileOpStatus.value = { tag: "ok", data: true };
+      this.fileOp.value = { status: "ok", data: true };
 
     } catch (error) {
-      this.fileOpStatus.value = { tag: "error", error: JSON.stringify(error) }
+      this.fileOp.value = { status: "error", error: JSON.stringify(error) }
     } finally {
       this.selectedPaths.value = []
       await this.refresh()

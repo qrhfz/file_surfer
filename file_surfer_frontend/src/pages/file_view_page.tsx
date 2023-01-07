@@ -22,9 +22,9 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
     <div class="w-screen h-screen bg-slate-300 pt-24">
 
       <div class="w-8/12 mx-auto bg-white p-8  ">
-        {fileState.tag == "error" && "loading"}
-        {fileState.tag == "loading" && "loading"}
-        {fileState.tag == "ok" && <>
+        {fileState.status == "error" && "loading"}
+        {fileState.status == "loading" && "loading"}
+        {fileState.status == "ok" && <>
           <div className="flex flex-row justify-between pb-4 border-b-2 items-center">
             <h1 class="text-lg font-bold">{fileState.data?.name}</h1>
             <PrimaryButton onClick={async () => {

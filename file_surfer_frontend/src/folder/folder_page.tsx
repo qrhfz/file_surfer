@@ -27,12 +27,12 @@ export const FolderPage: FolderPage = ({ location, matches }) => {
   }, [path])
 
   useEffect(() => {
-    const unsub = folder.fileOpStatus.subscribe(status => {
-      if (status?.tag === "loading") {
+    const unsub = folder.fileOp.subscribe(status => {
+      if (status?.status === "loading") {
         popup.show(<>Loading</>)
-      } else if (status?.tag === "ok") {
+      } else if (status?.status === "ok") {
         popup.show(<>Ok</>)
-      } else if (status?.tag === "error") {
+      } else if (status?.status === "error") {
         popup.show(<div class="text-red-600 text-2x">
           ERROR
         </div>)
