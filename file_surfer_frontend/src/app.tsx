@@ -17,21 +17,11 @@ import { SearchPage } from "./search/search_page";
 export function App() {
   return (
     <MultiProvider providers={[
-      children => <TokenContext.Provider value={createTokenSignal()}>
-        {children}
-      </TokenContext.Provider>,
-      children => <PopupContext.Provider value={new PopupState()}>
-        {children}
-      </PopupContext.Provider>,
-      children => <ModalContext.Provider value={new ModalState()}>
-        {children}
-      </ModalContext.Provider>,
-      children => <FolderContext.Provider value={new FolderState()}>
-        {children}
-      </FolderContext.Provider>,
-      children => <ColumnResizerContext.Provider value={createColumnResizer()}>
-        {children}
-      </ColumnResizerContext.Provider>
+      c => <PopupContext.Provider value={new PopupState()}>{c}</PopupContext.Provider>,
+      c => <ModalContext.Provider value={new ModalState()}>{c}</ModalContext.Provider>,
+      c => <FolderContext.Provider value={new FolderState()}>{c}</FolderContext.Provider>,
+      c => <TokenContext.Provider value={createTokenSignal()}>{c}</TokenContext.Provider>,
+      c => <ColumnResizerContext.Provider value={createColumnResizer()}>{c}</ColumnResizerContext.Provider>
     ]}>
       <PopupContext.Consumer>
         {p => {
