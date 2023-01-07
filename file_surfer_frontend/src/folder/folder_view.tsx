@@ -1,57 +1,45 @@
 import "./folder_view.css";
 import { useState, useMemo, useContext } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
-
-import { useSelect } from "./useSelect";
 import { createContext, FunctionComponent } from "preact";
 import { memo } from "preact/compat";
 import { computed, signal } from "@preact/signals";
 import { ContextMenu, ContextMenuPosition } from "./context_menu";
 import { PopupContext } from "../signals/popup_state";
-import { joinPath } from "../utils/path";
-import { File, FileService } from "./../generated-sources/openapi";
-import { Popup } from "../components/popup";
+import { File } from "./../generated-sources/openapi";
+
 import { formatDateString } from "../utils/formatDateString";
 import { formatBytes } from "../utils/formatBytes";
 import { FolderContext } from "./folder_state";
 
-type FolderView = preact.FunctionalComponent<{ items: File[], loc?: string }>
+type FolderView = preact.FunctionalComponent
 
-export const FolderView: FolderView = ({ loc, items }) => {
-  const [contextMenuPosition, setContextMenuPosition] = useState<ContextMenuPosition>()
+export const FolderView: FolderView = () => {
+  const [ctxMenuPos, setCtxMenuPos] = useState<ContextMenuPosition>()
 
-  const closeContextMenu = () => setContextMenuPosition(undefined)
+  const closeContextMenu = () => setCtxMenuPos(undefined)
 
   const resizer = useContext(ColumnResizerContext)
   const popup = useContext(PopupContext)
   const folder = useContext(FolderContext)
 
-  // const select = useSelect(
-  //   items,
-  //   (x, y) => { setContextMenuPosition({ x, y }) },
-  //   () => setContextMenuPosition(undefined),
-  // )
-
-  // const del = async () => {
-  //   try {
-
-  //     const paths = select.selectedIndices.map(i => {
-  //       const item = items[i]
-  //       return joinPath(item.name, item.location)
-  //     })
-
-  //     for (const p of paths) {
-  //       await FileService.deleteFile(p)
-  //     }
-  //     popup.show(<Popup>Delete Success</Popup>)
-  //   } catch (error) {
-  //     popup.show(<Popup>Delete Error</Popup>)
-  //   }
-
-  // }
-
   return (
-    <>
+    <div
+      onContextMenu={e => {
+        e.preventDefault()
+
+        if (ctxMenuPos !== undefined) {
+          closeContextMenu()
+          return
+        }
+
+        const { x, y } = e
+        setCtxMenuPos({ x, y })
+      }}
+
+      onClick={e => {
+        closeContextMenu()
+      }}>
       <table
         class="folder-list-view"
         style={{
@@ -59,23 +47,22 @@ export const FolderView: FolderView = ({ loc, items }) => {
         }}
       >
         <FolderListViewHead columns={resizer.columns} />
-
         <FolderListViewBody />
 
       </table>
-      {contextMenuPosition &&
+      {ctxMenuPos &&
         <ContextMenu
-          position={contextMenuPosition}
-          handleCopy={() => { }}
-          handleCut={() => { }}
-          handlePaste={() => { }}
+          position={ctxMenuPos}
+          handleCopy={() => folder.copy()}
+          handleCut={() => folder.cut()}
+          handlePaste={() => folder.paste()}
           handleDownload={() => {
             // TODO: download link
             window.open("download");
             closeContextMenu();
           }}
-          handleDelete={() => { }} />}
-    </>
+          handleDelete={() => folder.delete()} />}
+    </div>
   )
 }
 

@@ -12,6 +12,7 @@ export class FolderState {
   selectedPaths = signal<string[]>([]);
   lastSelectedIndex = signal<number | undefined>(undefined)
 
+  clipboard: string[] = [];
   #mode: "copy" | "cut" | undefined;
 
   async fetchFolder(path: string = this.folderPath) {
@@ -30,16 +31,40 @@ export class FolderState {
     await this.fetchFolder()
   }
 
-  copy(items: string[]) {
-    console.log("copy");
+  copy() {
+    this.clipboard = this.selectedPaths.value
     this.#mode = "copy";
-    this.selectedPaths.value = items;
+    this.selectedPaths.value = []
   }
 
-  cut(items: string[]) {
-    console.log("cut");
+  cut() {
+    this.clipboard = this.selectedPaths.value
     this.#mode = "cut";
-    this.selectedPaths.value = items;
+    this.selectedPaths.value = []
+  }
+
+  async paste() {
+    const sources = this.selectedPaths.value
+    const input = { sources, destination: this.folderPath }
+
+    if (this.#mode == "copy") {
+      await ClipboardService.postCopy(input);
+    } else if (this.#mode == "cut") {
+      await ClipboardService.postMove(input);
+    }
+
+    this.#mode = undefined;
+
+    await this.refresh()
+  }
+
+  async delete() {
+    for (const path of this.selectedPaths.value) {
+      await FileService.deleteFile(path)
+    }
+
+    this.selectedPaths.value = []
+    await this.refresh()
   }
 
   selectSingleFile(index: number) {
@@ -70,29 +95,6 @@ export class FolderState {
       const path = joinPath(this.folderPath, fileName)
       return this.selectedPaths.value.includes(path);
     })
-  }
-
-  async paste(destination: string) {
-    console.log("paste");
-
-    const sources = this.selectedPaths.value
-    const input = { sources, destination }
-
-    if (this.#mode == "copy") {
-      await ClipboardService.postCopy(input);
-    } else if (this.#mode == "cut") {
-      await ClipboardService.postMove(input);
-    }
-
-    this.#mode = undefined;
-  }
-
-  async delete() {
-    for (const path of this.selectedPaths.value) {
-      await FileService.deleteFile(path)
-    }
-
-    this.selectedPaths.value = []
   }
 }
 

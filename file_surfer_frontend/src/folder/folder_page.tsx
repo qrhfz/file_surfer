@@ -32,9 +32,7 @@ export const FolderPage: FolderPage = ({ location, matches }) => {
         <>
           <div class="overflow-x-auto">
             <Breadcrumb path={path} />
-            <FolderView
-              loc={path}
-              items={folder.files.value} />
+            <FolderView />
           </div>
 
           {folder.loading.value &&
