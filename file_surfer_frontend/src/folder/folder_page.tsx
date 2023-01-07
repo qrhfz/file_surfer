@@ -28,22 +28,29 @@ export const FolderPage: FolderPage = ({ location, matches }) => {
     <FolderLayout
       Header={() => <Nav q={matches?.q} at={matches?.in} />}
       Aside={() => <FolderSidebar loc={path} />}
-      Main={() => (
-        <>
-          <div class="overflow-x-auto flex flex-col">
-            <Breadcrumb path={path} />
-            <FolderView />
-          </div>
+      Main={() => {
 
-          {folder.loading.value &&
-            <div class="h-full grid items-center justify-center">
-              <div>
-                <LoadingCircle />
-              </div>
+        if (folder.err.value) {
+          return (
+            <pre>{folder.err.value}</pre>
+          )
+        }
+
+        return (
+          <>
+            <div class="flex flex-col h-full p-4">
+              <Breadcrumb path={path} />
+              <FolderView />
             </div>
-          }
-        </>
-      )}
+            {folder.loading.value &&
+              <div class="h-full grid items-center justify-center">
+                <div>
+                  <LoadingCircle />
+                </div>
+              </div>}
+          </>
+        )
+      }}
     />
   )
 }
