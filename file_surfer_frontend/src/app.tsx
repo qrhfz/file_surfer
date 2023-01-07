@@ -12,18 +12,18 @@ import { ColumnResizerContext, createColumnResizer } from "./folder/folder_view"
 import { Popup } from "./components/popup/popup";
 import { FolderContext, FolderState } from "./folder/folder_state";
 import { SearchPage } from "./search/search_page";
-import { createContextItem, MultiProvider } from "./multiprovider";
+import { createProvider, MultiProvider } from "./multiprovider";
 
 
 export function App() {
   return (
     <MultiProvider
       contexts={[
-        createContextItem(PopupContext, new PopupState()),
-        createContextItem(ModalContext, new ModalState()),
-        createContextItem(FolderContext, new FolderState()),
-        createContextItem(TokenContext, createTokenSignal()),
-        createContextItem(ColumnResizerContext, createColumnResizer()),
+        createProvider(PopupContext, new PopupState()),
+        createProvider(ModalContext, new ModalState()),
+        createProvider(FolderContext, new FolderState()),
+        createProvider(TokenContext, createTokenSignal()),
+        createProvider(ColumnResizerContext, createColumnResizer()),
       ]}
     >
       <PopupContext.Consumer>

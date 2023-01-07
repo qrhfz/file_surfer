@@ -1,6 +1,6 @@
 import { Context } from "preact"
 
-export function createContextItem<T>(context: Context<T>, value: T): ContextItem<T> {
+export function createProvider<T>(context: Context<T>, value: T): ContextItem<T> {
   return {
     Context: context,
     value: value
