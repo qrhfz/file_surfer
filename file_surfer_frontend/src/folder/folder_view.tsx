@@ -14,6 +14,25 @@ import { FolderContext } from "./folder_state";
 import { route } from "preact-router";
 import { joinPaths } from "../utils/path";
 
+const createColumnResizer = (columns: string[] = ["Name", "Size", "Type", "Modified"]) => {
+
+  const widths = signal(columns.map(_ => 200))
+
+  const template = computed(() => widths.value.map((n) => `max(${n}px, 10ch)`).join(" "))
+
+  const resize = (index: number, amount: number) => {
+    const l = [...widths.value];
+    l[index] += amount
+    widths.value = l
+  }
+
+  return {
+    widths, template, resize, columns
+  }
+}
+
+const ColumnResizerContext = createContext(createColumnResizer())
+
 type FolderView = preact.FunctionalComponent
 
 export const FolderView: FolderView = () => {
@@ -22,8 +41,9 @@ export const FolderView: FolderView = () => {
   const closeContextMenu = () => setCtxMenuPos(undefined)
 
   const resizer = useContext(ColumnResizerContext)
-  const popup = useContext(PopupContext)
   const folder = useContext(FolderContext)
+
+  console.log("resizer", resizer.template.value)
 
   return (
     <div
@@ -196,21 +216,3 @@ export const FolderListViewHeaderCell: FunctionComponent<{ index: number, name: 
   )
 }
 
-export const createColumnResizer = (columns: string[] = ["Name", "Size", "Type", "Modified"]) => {
-
-  const widths = signal(columns.map(_ => 200))
-
-  const template = computed(() => widths.value.map((n) => `max(${n}px, 10ch)`).join(" "))
-
-  const resize = (index: number, amount: number) => {
-    const l = [...widths.value];
-    l[index] += amount
-    widths.value = l
-  }
-
-  return {
-    widths, template, resize, columns
-  }
-}
-
-export const ColumnResizerContext = createContext(createColumnResizer([]))
