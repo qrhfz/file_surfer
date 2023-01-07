@@ -47,7 +47,7 @@ export class FolderState {
   }
 
   async paste() {
-    const sources = this.selectedPaths.value
+    const sources = this.clipboard
     const input = { sources, destination: this.folderPath }
 
     try {
@@ -88,6 +88,8 @@ export class FolderState {
     const path = joinPath(file.location, file.name)
     this.selectedPaths.value = [path]
     this.lastSelectedIndex.value = index
+    console.log(this.selectedPaths.value)
+
   }
 
   selectMultiFiles(index: number) {
@@ -103,6 +105,8 @@ export class FolderState {
     const paths = files.map(f => joinPath(f.location, f.name))
     this.selectedPaths.value = paths
     this.lastSelectedIndex.value = index
+
+    console.log(this.selectedPaths.value)
   }
 
   isSelected(fileName: string) {
