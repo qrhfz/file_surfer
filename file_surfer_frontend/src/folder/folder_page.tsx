@@ -30,7 +30,7 @@ export const FolderPage: FolderPage = ({ location, matches }) => {
     const unsub = folder.fileOpStatus.subscribe(status => {
       if (status?.tag === "loading") {
         popup.show(<>Loading</>)
-      } if (status?.tag === "ok") {
+      } else if (status?.tag === "ok") {
         popup.show(<>Ok</>)
       } else if (status?.tag === "error") {
         popup.show(<div class="text-red-600 text-2x">
