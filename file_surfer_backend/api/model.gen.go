@@ -60,10 +60,14 @@ type PostMoveJSONBody struct {
 	Sources     *[]string `json:"sources,omitempty"`
 }
 
+// GetSearchBaseParams defines parameters for GetSearchBase.
+type GetSearchBaseParams struct {
+	Search string `form:"search" json:"search"`
+}
+
 // GetSearchParams defines parameters for GetSearch.
 type GetSearchParams struct {
-	Path        string `form:"path" json:"path"`
-	SearchQuery string `form:"searchQuery" json:"searchQuery"`
+	Search string `form:"search" json:"search"`
 }
 
 // UploadMultipartBody defines parameters for Upload.
