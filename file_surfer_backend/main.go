@@ -2,6 +2,7 @@ package main
 
 import (
 	"file_surfer_backend/config"
+	"file_surfer_backend/db"
 	"file_surfer_backend/routes"
 	"log"
 	"os"
@@ -12,7 +13,7 @@ import (
 )
 
 func main() {
-
+	defer db.DB.Close()
 	if !path.IsAbs(config.Base) {
 		log.Fatal("base path is not absolute", config.Base)
 	}
@@ -30,4 +31,5 @@ func main() {
 	routes.RegisterRoute(e)
 
 	e.Logger.Fatal(e.Start(":3000"))
+
 }

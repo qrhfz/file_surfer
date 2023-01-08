@@ -2,3 +2,4 @@ tmp
 .vscode
 test/home
 *.env
+*.db
