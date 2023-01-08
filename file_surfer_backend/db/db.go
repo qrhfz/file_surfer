@@ -24,4 +24,6 @@ func init() {
 			role TEXT NOT NULL CHECK(role IN ('admin','basic'))
 		);`,
 	)
+
+	DB.Exec(`CREATE TABLE IF NOT EXISTS session_store(token TEXT NOT NULL UNIQUE, content TEXT);`)
 }
