@@ -66,7 +66,7 @@ export const buildPath = memoize((segments: string[]): string => {
 
   if (newSegments.length > 0 && newSegments[0] === "/") {
     newSegments.shift();
-    return "/" + newSegments.join("/");
+    return `/${  newSegments.join("/")}`;
   }
 
   return newSegments.join("/");

@@ -1,17 +1,16 @@
 import { FunctionComponent } from "preact"
-import { useContext, useState } from "preact/hooks"
-import { ModalContext } from "../../signals/modal_state"
-import { PrimaryButton, SmallPrimaryButton } from "../buttons"
+import { useState } from "preact/hooks"
+import { SmallPrimaryButton } from "../buttons"
 import { SimpleInput } from "../input/simple_input"
 
 type SingleInputFormProp = {
   placeholder: string,
-  onSubmit: (v: string) => Promise<void>,
+  onSubmit: (_v: string) => Promise<void>,
   onDone: () => void
 }
-type SingleInputForm = FunctionComponent<SingleInputFormProp>
+type SingleInputFormType = FunctionComponent<SingleInputFormProp>
 
-export const SingleInputForm: SingleInputForm = ({ onSubmit, placeholder, onDone }) => {
+export const SingleInputForm: SingleInputFormType = ({ onSubmit, placeholder, onDone }) => {
   const [name, setName] = useState("")
   const [loading, setLoading] = useState(false)
 

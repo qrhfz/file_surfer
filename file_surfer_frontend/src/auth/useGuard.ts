@@ -8,5 +8,5 @@ export const useGuard = () => {
     if (tokenSignal.token === null) {
       route("/login");
     }
-  }, []);
+  }, [tokenSignal.token]);
 };

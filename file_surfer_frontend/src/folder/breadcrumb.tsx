@@ -45,8 +45,7 @@ const BreadcrumbItemActive: FunctionComponent<{ path: string }> = ({ children, p
     <li class="relative flex items-center">
       <span
         class="absolute inset-y-0 -left-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)]"
-      >
-      </span>
+       />
       <a
         href={path}
         class="active | flex h-10 items-center bg-white pl-8 pr-4 text-xs font-medium transition hover:text-gray-900"

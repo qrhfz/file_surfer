@@ -5,7 +5,7 @@ import { joinPaths } from "../utils/path";
 
 export const useSelect = (
   items: File[],
-  openContextMenu: (x: number, y: number) => void,
+  openContextMenu: (_x: number, _y: number) => void,
   closeContextMenu: () => void,
 ) => {
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
@@ -17,12 +17,10 @@ export const useSelect = (
       if (e.type !== "click") return;
       if (e.shiftKey) {
         selectManyItems(i);
+      } else if (selectedIndices.length <= 1) {
+        selectedIndices.includes(i) ? openItem(i) : selectSingleItem(i);
       } else {
-        if (selectedIndices.length <= 1) {
-          selectedIndices.includes(i) ? openItem(i) : selectSingleItem(i);
-        } else {
-          selectSingleItem(i);
-        }
+        selectSingleItem(i);
       }
     };
 

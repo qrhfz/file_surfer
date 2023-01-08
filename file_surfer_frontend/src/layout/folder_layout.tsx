@@ -1,6 +1,10 @@
 import { ComponentType, FunctionComponent } from "preact";
-type FolderLayout = { Header: ComponentType, Aside: ComponentType, Main: ComponentType }
-export const FolderLayout: FunctionComponent<FolderLayout> = ({ Header, Main, Aside }) => {
+type FolderLayoutType = FunctionComponent<{
+  Header: ComponentType,
+  Aside: ComponentType,
+  Main: ComponentType
+}>
+export const FolderLayout: FolderLayoutType = ({ Header, Main, Aside }) => {
   return (
     <div class="flex flex-col h-screen">
       <Header />

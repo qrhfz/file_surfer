@@ -1,11 +1,10 @@
 import "./folder_view.css";
 import { useState, useMemo, useContext } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
-import { createContext, FunctionComponent } from "preact";
+import { createContext, FunctionalComponent, FunctionComponent } from "preact";
 import { memo } from "preact/compat";
 import { computed, signal } from "@preact/signals";
 import { ContextMenu, ContextMenuPosition } from "./context_menu";
-import { PopupContext } from "../components/popup/popup_state";
 import { File } from "./../generated-sources/openapi";
 
 import { formatDateString } from "../utils/formatDateString";
@@ -33,9 +32,9 @@ const createColumnResizer = (columns: string[] = ["Name", "Size", "Type", "Modif
 
 const ColumnResizerContext = createContext(createColumnResizer())
 
-type FolderView = preact.FunctionalComponent
+type FolderViewType = FunctionalComponent
 
-export const FolderView: FolderView = () => {
+export const FolderView: FolderViewType = () => {
   const [ctxMenuPos, setCtxMenuPos] = useState<ContextMenuPosition>()
 
   const closeContextMenu = () => setCtxMenuPos(undefined)
@@ -60,7 +59,7 @@ export const FolderView: FolderView = () => {
         setCtxMenuPos({ x, y })
       }}
 
-      onClick={e => {
+      onClick={_ => {
         closeContextMenu()
       }}
     >
@@ -169,7 +168,7 @@ const FolderListRow: FunctionComponent<{
   )
 }
 
-type CellType = preact.FunctionalComponent<{ selected: boolean }>
+type CellType = FunctionalComponent<{ selected: boolean }>
 
 export const FolderListViewCell: CellType = ({ selected, children }) => {
 
@@ -211,7 +210,7 @@ export const FolderListViewHeaderCell: FunctionComponent<{ index: number, name: 
             window.onmouseup = null
           }
         }}
-      ></span>
+      />
     </th>
   )
 }

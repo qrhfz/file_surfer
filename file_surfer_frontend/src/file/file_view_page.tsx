@@ -1,9 +1,9 @@
 import { FunctionComponent } from "preact"
-import { PrimaryButton, SmallPrimaryButton } from "../components/buttons"
-import { AuthService, BlobService, File, FileService } from "../generated-sources/openapi"
+import { SmallPrimaryButton } from "../components/buttons"
+import { BlobService, File, FileService } from "../generated-sources/openapi"
 import { useAsync } from "../utils/useAsync"
 
-type FilveViewPageType = preact.FunctionalComponent<{ loc?: string }>
+type FilveViewPageType = FunctionComponent<{ loc?: string }>
 
 export const FileViewPage: FilveViewPageType = ({ loc }) => {
   const fileState = useAsync(

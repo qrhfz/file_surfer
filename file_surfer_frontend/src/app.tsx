@@ -8,7 +8,6 @@ import { ModalContext } from "./signals/modal_state";
 import { Modal } from "./components/modals/modal";
 import { Popup } from "./components/popup/popup";
 import { SearchPage } from "./search/search_page";
-import { MultiProvider } from "./multiprovider";
 import { useContext } from "preact/hooks";
 
 

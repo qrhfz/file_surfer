@@ -1,4 +1,4 @@
-type Func<Args extends Array<any>, Result> = (...args: Args) => Result;
+type Func<Args extends Array<any>, Result> = (..._args: Args) => Result;
 
 export const memoize = <Args extends Array<any>, Result>(
   fn: Func<Args, Result>,

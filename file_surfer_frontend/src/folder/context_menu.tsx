@@ -1,3 +1,5 @@
+import { FunctionComponent } from "preact";
+
 export type ContextMenuPosition = { x: number, y: number }
 
 type ContextMenuProp = {
@@ -9,7 +11,7 @@ type ContextMenuProp = {
   position: ContextMenuPosition
 }
 
-export const ContextMenu: preact.FunctionComponent<ContextMenuProp> = (prop) => {
+export const ContextMenu: FunctionComponent<ContextMenuProp> = (prop) => {
   const { position } = prop
 
   return (
@@ -41,7 +43,7 @@ export const ContextMenu: preact.FunctionComponent<ContextMenuProp> = (prop) => 
   )
 }
 
-const ContextMenuItem: preact.FunctionComponent<{ onClick: () => void }> = ({ onClick, children }) => {
+const ContextMenuItem: FunctionComponent<{ onClick: () => void }> = ({ onClick, children }) => {
   return (
     <div
       class="block px-4 py-2 text-sm font-medium 

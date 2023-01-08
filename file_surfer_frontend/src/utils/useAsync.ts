@@ -11,8 +11,8 @@ export type AsyncState<T, E> =
   | Ok<T>
   | Error<E>;
 
-type OkCb<R, T> = (ok: R) => T;
-type ErrCb<E> = (err: any) => E;
+type OkCb<R, T> = (_ok: R) => T;
+type ErrCb<E> = (_err: any) => E;
 type Config<K, R, T, E> = { ok: OkCb<R, T>; err: ErrCb<E>; key: K };
 
 export const useAsync = <K, R, T, E>(

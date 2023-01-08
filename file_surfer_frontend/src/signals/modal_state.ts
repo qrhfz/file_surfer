@@ -1,5 +1,5 @@
 import { signal } from "@preact/signals";
-import { Component, ComponentType, createContext, JSX } from "preact";
+import { createContext, JSX } from "preact";
 
 export class ModalState {
   component = signal<JSX.Element | undefined>(undefined);

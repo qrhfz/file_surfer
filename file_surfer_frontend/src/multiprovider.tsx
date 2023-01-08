@@ -1,9 +1,9 @@
-import { Context } from "preact"
+import { Context, FunctionComponent } from "preact"
 
 export function registerProvider<T>(context: Context<T>, value: T): ContextItem<T> {
   return {
     Context: context,
-    value: value
+    value
   }
 }
 
@@ -16,9 +16,9 @@ type MultiProviderProp = {
   items: ContextItem<any>[]
 }
 
-type MultiProvider = preact.FunctionalComponent<MultiProviderProp>
+type MultiProviderType = FunctionComponent<MultiProviderProp>
 
-export const MultiProvider: MultiProvider = ({ children, items: contexts }) => {
+export const MultiProvider: MultiProviderType = ({ children, items: contexts }) => {
   if (contexts.length === 0) {
     return <>{children}</>
   }

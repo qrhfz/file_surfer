@@ -4,7 +4,7 @@ import { SmallPrimaryButton } from "../components/buttons"
 import { LoadingCircle } from "../components/loading_circle"
 import { formatBytes } from "../utils/formatBytes"
 import { formatDateString } from "../utils/formatDateString"
-import { joinPath, joinPaths } from "../utils/path"
+import { joinPaths } from "../utils/path"
 import { createSearchState } from "./search_state"
 const state = createSearchState()
 

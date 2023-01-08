@@ -1,6 +1,6 @@
 import { FunctionComponent } from "preact";
-import { useContext, useRef, useState } from "preact/hooks";
-import { BlobService, FileService, FolderService } from "../generated-sources/openapi";
+import { useContext, useState } from "preact/hooks";
+import { BlobService, FileService } from "../generated-sources/openapi";
 import { ModalContext } from "../signals/modal_state";
 import { joinPath } from "../utils/path";
 import { PrimaryButton, SecondaryButton } from "../components/buttons";

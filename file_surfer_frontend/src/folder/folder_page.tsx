@@ -10,12 +10,13 @@ import { FolderLayout } from "../layout/folder_layout"
 import { joinPaths } from "../utils/path"
 import { FolderContext } from "./folder_state"
 import { PopupContext } from "../components/popup/popup_state"
+import { FunctionalComponent } from "preact";
 
 
 type Prop = { location?: string, matches?: { q: string | undefined, in: string | undefined } }
-type FolderPage = preact.FunctionalComponent<Prop>
+type FolderPageType = FunctionalComponent<Prop>
 
-export const FolderPage: FolderPage = ({ location, matches }) => {
+export const FolderPage: FolderPageType = ({ location, matches }) => {
   useGuard()
   const folder = useContext(FolderContext)
   const popup = useContext(PopupContext)

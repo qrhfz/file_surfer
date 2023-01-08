@@ -8,7 +8,7 @@ type Prop = {
   onCancel: () => void
 }
 
-const ConfirmationModal: FunctionComponent<Prop> = prop => {
+export const ConfirmationModal: FunctionComponent<Prop> = prop => {
   return (
     <>
       <div class="text-center">

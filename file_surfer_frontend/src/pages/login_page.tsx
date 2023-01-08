@@ -2,8 +2,9 @@ import { route } from "preact-router"
 import { useState } from "preact/hooks"
 import { BiHide, BiShow, BiUserCircle } from "react-icons/bi"
 import { AuthService } from "../generated-sources/openapi"
+import { FunctionalComponent } from "preact";
 
-export const LoginPage: preact.FunctionalComponent = () => {
+export const LoginPage: FunctionalComponent = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [hidden, setHidden] = useState(true)
