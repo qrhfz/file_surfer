@@ -1,16 +1,20 @@
 package fileutils
 
 import (
+	"errors"
 	"file_surfer_backend/api"
 	"file_surfer_backend/config"
 	"fmt"
 	"os"
 	pathpkg "path"
-	"strings"
+	"path/filepath"
 )
 
-// [pathName] relative to base
+// [pathName] must be absolute
 func GetFileInfo(pathName string) (*api.File, error) {
+	if !filepath.IsAbs(pathName) {
+		return nil, errors.New("not absolute path")
+	}
 
 	var stat, err = os.Stat(pathName)
 	if err != nil {
@@ -18,14 +22,14 @@ func GetFileInfo(pathName string) (*api.File, error) {
 	}
 
 	fileType := ""
-	contentCount := 0
+	var contentCount *int = nil
 
 	if stat.IsDir() {
 		i, err := os.ReadDir(pathName)
 		if err != nil {
 			return nil, err
 		}
-		contentCount = len(i)
+		*contentCount = len(i)
 		fileType = "directory"
 	} else { // its a file
 		fileType, err = GetMimeType(pathName)
@@ -34,10 +38,12 @@ func GetFileInfo(pathName string) (*api.File, error) {
 		}
 	}
 
-	if strings.HasPrefix(pathName, config.Base) {
-		pathName = strings.Replace(pathName, config.Base, "", 1)
+	rel, err := filepath.Rel(config.Base, pathName)
+	if err != nil {
+		return nil, err
 	}
-	location := pathpkg.Dir(pathName)
+
+	location := pathpkg.Dir(rel)
 	url := fmt.Sprintf("/file/%s", EncodePath(pathName))
 	info := api.File{
 		IsDir:        stat.IsDir(),
@@ -46,7 +52,7 @@ func GetFileInfo(pathName string) (*api.File, error) {
 		Size:         int(stat.Size()),
 		Type:         fileType,
 		Location:     location,
-		ContentCount: &contentCount,
+		ContentCount: contentCount,
 		Url:          url,
 	}
 

@@ -1,7 +1,6 @@
 package config
 
 import (
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -10,9 +9,9 @@ import (
 var Base = ""
 
 func init() {
-	err := godotenv.Load("local.env")
-	if err != nil {
-		log.Fatalf("Some error occured. Err: %s", err)
-	}
+	_ = godotenv.Load("local.env")
+	// if err != nil {
+	// 	log.Fatalf("Some error occured. Err: %s", err)
+	// }
 	Base = os.Getenv("BASE")
 }
