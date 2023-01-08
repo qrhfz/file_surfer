@@ -6,10 +6,12 @@ import { joinPath } from "../utils/path";
 import { PrimaryButton, SecondaryButton } from "../components/buttons";
 import { SingleInputForm } from "../components/forms/single_input_form";
 import { FolderContext } from "./folder_state";
+import { TokenContext } from "../auth/tokenSignal";
 
 
 export const FolderSidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
   const modal = useContext(ModalContext)
+  const token = useContext(TokenContext)
 
   return (
     <aside class="w-64 p-4">
@@ -47,13 +49,11 @@ export const FolderSidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
         </ul>
 
         <div class="py-2">
-          <form action="/logout">
-            <button
-              type="submit"
-              class="block w-full rounded-lg px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-              Logout
-            </button>
-          </form>
+          <button
+            onClick={() => token.value = null}
+            class="block w-full rounded-lg px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+            Logout
+          </button>
         </div>
       </nav>
 

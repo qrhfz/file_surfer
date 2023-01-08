@@ -5,8 +5,8 @@ import { TokenContext } from "./tokenSignal";
 export const useGuard = () => {
   const tokenSignal = useContext(TokenContext);
   useEffect(() => {
-    if (tokenSignal.token === null) {
+    if (tokenSignal.value === null) {
       route("/login");
     }
-  }, [tokenSignal.token]);
+  }, [tokenSignal.value]);
 };

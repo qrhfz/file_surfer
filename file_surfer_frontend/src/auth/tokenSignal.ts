@@ -1,24 +1,17 @@
-import { signal } from "@preact/signals";
+import { effect, signal } from "@preact/signals";
 import { createContext } from "preact";
 import { OpenAPI } from "../generated-sources/openapi";
 
-export const createTokenSignal = () => {
-  const token = localStorage.getItem("token");
-  const tokenSignal = signal(token);
+const tokenSignal = signal(localStorage.getItem("token"));
 
-  tokenSignal.subscribe((token) => {
-    if (token) {
-      OpenAPI.TOKEN = token;
-      localStorage.setItem("token", token);
-    }
-  });
+effect(() => {
+  if (tokenSignal.value !== null) {
+    OpenAPI.TOKEN = tokenSignal.value;
+    localStorage.setItem("token", tokenSignal.value);
+  } else {
+    localStorage.removeItem("token");
+    OpenAPI.TOKEN = "";
+  }
+});
 
-  return {
-    token: tokenSignal.value,
-    setToken: (token: string): void => {
-      tokenSignal.value = token;
-    },
-  };
-};
-
-export const TokenContext = createContext(createTokenSignal());
+export const TokenContext = createContext(tokenSignal);
