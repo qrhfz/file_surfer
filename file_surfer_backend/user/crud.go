@@ -45,8 +45,32 @@ func (us *UserService) GetUser(id int) (*User, error) {
 	return &u, nil
 }
 
+func (us *UserService) GetUserByUsername(username string) (*User, error) {
+	row := us.db.QueryRow(`SELECT id, username, role FROM user WHERE username=?;`, username)
+
+	u := User{}
+
+	err := row.Scan(&u.Id, &u.Username, &u.Role)
+	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
+}
+
 func (us *UserService) GetPassword(id int) (string, error) {
 	row := us.db.QueryRow(`SELECT password FROM user WHERE id=?;`, id)
+
+	password := ""
+	err := row.Scan(&password)
+	if err != nil {
+		return "", err
+	}
+	return password, nil
+}
+
+func (us *UserService) GetPasswordByUsername(username string) (string, error) {
+	row := us.db.QueryRow(`SELECT password FROM user WHERE username=?;`, username)
 
 	password := ""
 	err := row.Scan(&password)

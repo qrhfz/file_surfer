@@ -11,7 +11,8 @@ const CreateUserTableStmt = `
 
 const CreateSessionStoreTableStmt = `
 	CREATE TABLE IF NOT EXISTS session_store(
-		token TEXT NOT NULL UNIQUE, 
-		content TEXT
+		token TEXT PRIMARY KEY, 
+		content TEXT,
+		expired INTEGER,
 	);
 `

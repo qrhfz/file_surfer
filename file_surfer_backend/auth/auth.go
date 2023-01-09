@@ -1,31 +1,47 @@
 package auth
 
 import (
-	"database/sql"
-	"file_surfer_backend/db"
+	"encoding/json"
+	"file_surfer_backend/session"
+	"file_surfer_backend/user"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
-var Auth = AuthT{
-	db: db.DB,
+type AuthService struct {
+	userService  user.UserService
+	sessionStore session.SessionStore
 }
 
-type AuthT struct {
-	db *sql.DB
-}
-
-func (a *AuthT) Login(username, password string) (*string, error) {
-	row := a.db.QueryRow("SELECT password FROM user WHERE username=?;", username)
-
-	var hashedPassword string
-	row.Scan(&hashedPassword)
-
-	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+func (a *AuthService) Login(username, plainPassword string) (string, error) {
+	hashedPassword, err := a.userService.GetPasswordByUsername(username)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	token := ""
-	return &token, nil
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(plainPassword))
+	if err != nil {
+		return "", err
+	}
+
+	u, err := a.userService.GetUserByUsername(username)
+	if err != nil {
+		return "", err
+	}
+
+	content, err := json.Marshal(u)
+	if err != nil {
+		return "", err
+	}
+
+	token, err := a.sessionStore.SetSession(string(content))
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
+}
+
+func (a *AuthService) Logout(token string) error {
+	return a.sessionStore.RemoveSession(token)
 }
