@@ -17,6 +17,8 @@ export function App() {
 
   return (
     <>
+      {modal.component.value && <Modal>{modal.component.value}</Modal>}
+      {popup.content.value && <Popup>{popup.content.value}</Popup>}
       <Router>
         <SearchPage path="/search" />
         <LoginPage path="/login" />
@@ -24,8 +26,7 @@ export function App() {
         <FileViewPage path="/view/:loc*" />
         <Redirect path="/" to="/browse/" />
       </Router>
-      {modal.component.value && <Modal>{modal.component.value}</Modal>}
-      {popup.content.value && <Popup>{popup.content.value}</Popup>}
+
     </>
   )
 }
