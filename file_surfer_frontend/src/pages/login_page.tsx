@@ -1,20 +1,30 @@
 import { route } from "preact-router"
-import { useState } from "preact/hooks"
+import { useContext, useState } from "preact/hooks"
 import { BiHide, BiShow, BiUserCircle } from "react-icons/bi"
 import { AuthService } from "../generated-sources/openapi"
 import { FunctionalComponent } from "preact";
+import { effect } from "@preact/signals";
+import { TokenContext } from "../auth/tokenSignal";
 
 export const LoginPage: FunctionalComponent = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [hidden, setHidden] = useState(true)
 
+  const token = useContext(TokenContext)
+
+  effect(() => {
+    if (token.value !== null) {
+      route("/browse/")
+    }
+  })
+
   const submit = async (e: Event) => {
     e.preventDefault()
     const result = await AuthService.postLogin({ username, password })
     if (result?.token !== undefined) {
-      localStorage.setItem("token", result.token);
-      route("/browse/")
+      token.value = result.token
+
     }
   }
 
