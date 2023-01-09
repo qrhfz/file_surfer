@@ -88,6 +88,7 @@ func TestGetUser(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
+	assert.Equal(t, 1, actualU.Id)
 	assert.Equal(t, u.Username, actualU.Username)
 	assert.Equal(t, u.Role, actualU.Role)
 }
@@ -107,4 +108,24 @@ func TestGetPassword(t *testing.T) {
 	}
 
 	assert.Equal(t, "123", pass)
+}
+
+func TestUpdateUser(t *testing.T) {
+	userService, tearDown := setUp(t)
+	defer tearDown()
+
+	userService.CreateNewUser("a", "a", "basic")
+
+	newUsername := "a"
+
+	u, err := userService.UpdateUser(user.UserUpdateParam{
+		ID:       1,
+		Username: &newUsername,
+	})
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	assert.Equal(t, "a", u.Username)
+
+	t.Log(u)
 }

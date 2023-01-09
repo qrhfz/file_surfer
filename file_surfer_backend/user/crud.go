@@ -1,15 +1,12 @@
 package user
 
 func (us *UserService) CreateNewUser(name, password, role string) (int, error) {
-	stmt := `INSERT into user(username, password, role) values(?,?,?);`
-	_, err := us.db.Exec(stmt, name, password, role)
+	var id int
+	stmt := `INSERT INTO user(username, password, role) values(?,?,?) RETURNING id;`
+	err := us.db.QueryRow(stmt, name, password, role).Scan(&id)
 	if err != nil {
 		return 0, err
 	}
-
-	var id int
-	us.db.QueryRow(`SELECT last_insert_rowid();`).Scan(&id)
-
 	return id, nil
 }
 
@@ -57,4 +54,32 @@ func (us *UserService) GetPassword(id int) (string, error) {
 		return "", err
 	}
 	return password, nil
+}
+
+type UserUpdateParam struct {
+	ID       int
+	Username *string
+	Password *string
+	Role     *string
+}
+
+func (us *UserService) UpdateUser(param UserUpdateParam) (*User, error) {
+	stmt := `
+		UPDATE user 
+		SET 
+			username=coalesce(?,username),
+			password=coalesce(?,password),
+			role=coalesce(?,role)
+		WHERE id=?
+		RETURNING id, username, role;
+	`
+
+	row := us.db.QueryRow(stmt, param.Username, param.Password, param.Role, param.ID)
+	u := User{}
+
+	if err := row.Scan(&u.Id, &u.Username, &u.Role); err != nil {
+		return nil, err
+	}
+
+	return &u, nil
 }
