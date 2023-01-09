@@ -1,9 +1,10 @@
 package session
 
 import (
-	"crypto/rand"
 	"database/sql"
 	"errors"
+	"fmt"
+	"math/rand"
 	"time"
 )
 
@@ -23,16 +24,11 @@ func (s *SessionStore) SetSession(content string) (string, error) {
 	var ttl int64 = 24 * 60 * 60 * 1000
 	expired := time.Now().UTC().UnixMilli() + ttl
 
-	buf := make([]byte, 120)
-	_, err := rand.Read(buf)
-	if err != nil {
-		return "", err
-	}
-	token := string(buf)
-	_, err = s.db.Exec(`
+	token := randomString(32)
+	_, err := s.db.Exec(`
 		INSERT 
 		INTO session_store(token, content, expired)
-		VALUES (?,?,?,?);
+		VALUES (?,?,?);
 	`, token, content, expired)
 
 	if err != nil {
@@ -63,4 +59,11 @@ func (s *SessionStore) RemoveSession(token string) error {
 	_, err := s.db.Exec(`DELETE FROM session_store WHERE token=?;`, token)
 
 	return err
+}
+
+func randomString(length int) string {
+	rand.Seed(time.Now().UnixNano())
+	b := make([]byte, length)
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)[:length]
 }

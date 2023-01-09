@@ -5,6 +5,7 @@ import (
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var DB *sql.DB
@@ -16,7 +17,21 @@ func init() {
 		log.Fatal(err)
 	}
 
-	DB.Exec(CreateSessionStoreTableStmt)
+	_, err = DB.Exec(CreateSessionStoreTableStmt)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
-	DB.Exec(CreateUserTableStmt)
+	_, err = DB.Exec(CreateUserTableStmt)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	hash, _ := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
+
+	insertAdminStmt := `INSERT OR IGNORE INTO user(username, password, role) VALUES('admin',?,'admin');`
+	_, err = DB.Exec(insertAdminStmt, string(hash))
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 }

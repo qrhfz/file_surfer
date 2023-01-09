@@ -13,6 +13,6 @@ const CreateSessionStoreTableStmt = `
 	CREATE TABLE IF NOT EXISTS session_store(
 		token TEXT PRIMARY KEY, 
 		content TEXT,
-		expired INTEGER,
+		expired INTEGER
 	);
 `
