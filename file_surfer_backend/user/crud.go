@@ -83,3 +83,14 @@ func (us *UserService) UpdateUser(param UserUpdateParam) (*User, error) {
 
 	return &u, nil
 }
+
+func (us *UserService) DeleteUser(id int) error {
+	stmt := `DELETE FROM user WHERE id=?;`
+
+	_, err := us.db.Exec(stmt, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -129,3 +129,14 @@ func TestUpdateUser(t *testing.T) {
 
 	t.Log(u)
 }
+
+func TestDeleteUser(t *testing.T) {
+	userService, tearDown := setUp(t)
+	defer tearDown()
+
+	userService.CreateNewUser("a", "a", "basic")
+	err := userService.DeleteUser(1)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+}
