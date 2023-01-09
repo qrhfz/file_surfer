@@ -9,8 +9,15 @@ import (
 )
 
 type AuthService struct {
-	userService  user.UserService
-	sessionStore session.SessionStore
+	userService  *user.UserService
+	sessionStore *session.SessionStore
+}
+
+func NewAuthService(us *user.UserService, ss *session.SessionStore) AuthService {
+	return AuthService{
+		userService:  us,
+		sessionStore: ss,
+	}
 }
 
 func (a *AuthService) Login(username, plainPassword string) (string, error) {
