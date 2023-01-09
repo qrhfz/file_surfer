@@ -15,3 +15,10 @@ func NewUserService(db *sql.DB) *UserService {
 
 	return &service
 }
+
+type User struct {
+	Id       string
+	Username string
+	Password string
+	Role     string
+}

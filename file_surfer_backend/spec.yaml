@@ -287,6 +287,64 @@ paths:
       security:
         - token: []
       parameters: []
+  /user/:
+    get:
+      tags:
+        - user
+      operationId: get-users
+      summary: "get list of user"
+      responses:
+        "200":
+          description: "list of users"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+  /user/{id}:
+    parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+    get:
+      operationId: get-user
+      tags:
+        - user
+      responses:
+        "200":
+          description: "single user"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    post:
+      operationId: post-user
+      tags:
+        - user
+      description: "create new user"
+      responses:
+        201:
+          description: "created user"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewUser"
+    patch:
+      operationId: patch-user
+      tags:
+        - user
+      description: "edit user"
+      responses:
+        201:
+          description: "edited user"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
   /login:
     parameters: []
     post:
@@ -387,20 +445,41 @@ components:
         - modified
         - url
         - isDir
-    User:
-      title: User
+    BaseUser:
       type: object
       properties:
-        id:
-          type: string
         username:
           type: string
         role:
           $ref: "#/components/schemas/Role"
-      required:
-        - id
-        - username
-        - role
+    User:
+      allOf:
+        - properties:
+            id:
+              type: string
+          required:
+            - id
+            - username
+            - role
+        - $ref: "#/components/schemas/BaseUser"
+    NewUser:
+      allOf:
+        - $ref: "#/components/schemas/BaseUser"
+        - type: object
+          properties:
+            password:
+              type: string
+          required:
+            - username
+            - role
+            - password
+    UpdateUser:
+      allOf:
+        - $ref: "#/components/schemas/BaseUser"
+        - type: object
+          properties:
+            password:
+              type: string
     Role:
       title: Role
       type: string

@@ -14,6 +14,18 @@ const (
 	TokenScopes       = "token.Scopes"
 )
 
+// Defines values for Role.
+const (
+	Admin Role = "admin"
+	Basic Role = "basic"
+)
+
+// BaseUser defines model for BaseUser.
+type BaseUser struct {
+	Role     *Role   `json:"role,omitempty"`
+	Username *string `json:"username,omitempty"`
+}
+
 // File defines model for File.
 type File struct {
 	ContentCount *int      `json:"contentCount,omitempty"`
@@ -24,6 +36,23 @@ type File struct {
 	Size         int       `json:"size"`
 	Type         string    `json:"type"`
 	Url          string    `json:"url"`
+}
+
+// NewUser defines model for NewUser.
+type NewUser struct {
+	Password string `json:"password"`
+	Role     Role   `json:"role"`
+	Username string `json:"username"`
+}
+
+// Role defines model for Role.
+type Role string
+
+// User defines model for User.
+type User struct {
+	Id       string `json:"id"`
+	Role     Role   `json:"role"`
+	Username string `json:"username"`
 }
 
 // PasteRequest defines model for PasteRequest.
