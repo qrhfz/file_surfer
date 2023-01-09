@@ -4,6 +4,14 @@ import (
 	"database/sql"
 )
 
-type UserServiceT struct {
-	db sql.DB
+type UserService struct {
+	db *sql.DB
+}
+
+func NewUserService(db *sql.DB) *UserService {
+	service := UserService{
+		db: db,
+	}
+
+	return &service
 }
