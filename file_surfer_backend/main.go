@@ -28,7 +28,7 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 	}))
 
-	routes.RegisterRoute(e)
+	routes.RegisterRoute(e, config.AppAuthService)
 
 	e.Logger.Fatal(e.Start(":3000"))
 

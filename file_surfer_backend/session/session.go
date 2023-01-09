@@ -38,12 +38,13 @@ func (s *SessionStore) SetSession(content string) (string, error) {
 	return token, nil
 }
 
+// raise if token not found or token is expired
 func (s *SessionStore) GetSession(token string) error {
 	row := s.db.QueryRow(`SELECT content, expired FROM session_store WHERE token=?;`, token)
 	var content string
 	var expired int64
 
-	if err := row.Scan(&content, expired); err != nil {
+	if err := row.Scan(&content, &expired); err != nil {
 		return err
 	}
 
