@@ -16,14 +16,7 @@ func init() {
 		log.Fatal(err)
 	}
 
-	DB.Exec(
-		`CREATE TABLE IF NOT EXISTS user(
-			id INTEGER NOT NULL PRIMARY KEY, 
-			username TEXT NOT NULL UNIQUE, 
-			password TEXT NOT NULL, 
-			role TEXT NOT NULL CHECK(role IN ('admin','basic'))
-		);`,
-	)
+	DB.Exec(CreateSessionStoreTableStmt)
 
-	DB.Exec(`CREATE TABLE IF NOT EXISTS session_store(token TEXT NOT NULL UNIQUE, content TEXT);`)
+	DB.Exec(CreateUserTableStmt)
 }

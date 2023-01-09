@@ -2,6 +2,7 @@ package user_test
 
 import (
 	"database/sql"
+	appDB "file_surfer_backend/db"
 	"file_surfer_backend/user"
 	"testing"
 
@@ -15,21 +16,7 @@ func setUp(t *testing.T) (*user.UserService, func()) {
 		t.Fatal(err.Error())
 	}
 
-	db.Exec(`
-		CREATE TABLE IF NOT EXISTS user(
-			id INTEGER NOT NULL PRIMARY KEY, 
-			username TEXT NOT NULL UNIQUE, 
-			password TEXT NOT NULL, 
-			role TEXT NOT NULL CHECK(role IN ('admin','basic'))
-		);
-	`)
-
-	db.Exec(`
-		CREATE TABLE IF NOT EXISTS session_store(
-			token TEXT NOT NULL UNIQUE, 
-			content TEXT
-		);
-	`)
+	db.Exec(appDB.CreateUserTableStmt)
 
 	userService := user.NewUserService(db)
 
