@@ -6,7 +6,6 @@ export class PopupState {
 
   show(content: JSX.Element) {
     this.content.value = content;
-    console.log("show popup");
   }
 
   close() {

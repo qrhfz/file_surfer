@@ -23,7 +23,6 @@ export const FolderPage: FolderPageType = ({ location, matches }) => {
   const path = joinPaths(location ?? '')
 
   useEffect(() => {
-    console.log("fetch")
     folder.fetchFolder(path)
   }, [path])
 

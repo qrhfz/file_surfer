@@ -42,7 +42,7 @@ export const FolderView: FolderViewType = () => {
   const resizer = useContext(ColumnResizerContext)
   const folder = useContext(FolderContext)
 
-  console.log("resizer", resizer.template.value)
+
 
   return (
     <div
@@ -187,7 +187,7 @@ export const FolderListViewHeaderCell: FunctionComponent<{ index: number, name: 
   const mouseMoveHandler = (e: MouseEvent) => {
     e.preventDefault()
     const distance = e.clientX - lastPos
-    console.log('distance', distance)
+
     resizer.resize(index, distance)
     lastPos = e.clientX
   }

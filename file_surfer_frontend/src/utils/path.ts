@@ -27,13 +27,10 @@ export const parsePath = memoize((path: string): string[] => {
 
 export const comparePath = memoize(
   (a: string, b: string) => {
-    console.log("a", a, "b", b);
-
     const segmentsA = parsePath(a);
     const segmentsB = parsePath(b);
 
     if (segmentsA.length !== segmentsB.length) {
-      console.log("false");
       return false;
     }
 
@@ -66,7 +63,7 @@ export const buildPath = memoize((segments: string[]): string => {
 
   if (newSegments.length > 0 && newSegments[0] === "/") {
     newSegments.shift();
-    return `/${  newSegments.join("/")}`;
+    return `/${newSegments.join("/")}`;
   }
 
   return newSegments.join("/");

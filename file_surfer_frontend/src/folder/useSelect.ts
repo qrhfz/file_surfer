@@ -56,7 +56,7 @@ export const useSelect = (
         items[i].location ?? ".",
         items[i].name ?? ".",
       );
-      console.log(newLoc);
+
       route(newLoc);
     } else {
       const newLoc = joinPaths(

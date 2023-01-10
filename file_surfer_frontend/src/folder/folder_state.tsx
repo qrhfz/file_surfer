@@ -71,7 +71,7 @@ export class FolderState {
       for (const path of this.selectedPaths.value) {
         await FileService.deleteFile(path)
       }
-      console.log("delete success")
+
       this.fileOp.value = { status: "ok", data: true };
 
     } catch (error) {
@@ -83,12 +83,12 @@ export class FolderState {
   }
 
   selectSingleFile(index: number) {
-    console.log("select single")
+
     const file = this.files.value[index]
     const path = joinPath(file.location, file.name)
     this.selectedPaths.value = [path]
     this.lastSelectedIndex.value = index
-    console.log(this.selectedPaths.value)
+
 
   }
 
@@ -106,7 +106,7 @@ export class FolderState {
     this.selectedPaths.value = paths
     this.lastSelectedIndex.value = index
 
-    console.log(this.selectedPaths.value)
+
   }
 
   isSelected(fileName: string) {
