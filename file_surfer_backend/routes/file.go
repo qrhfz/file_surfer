@@ -8,10 +8,10 @@ import (
 )
 
 func registerFileGroup(e *echo.Echo, auths auth.AuthService) {
-	fileGroup := e.Group("/file/:path", AllowLoggedInOnly(auths))
-	fileGroup.GET("", server.GetFile)
-	fileGroup.POST("", server.PostFile)
-	fileGroup.PATCH("", server.PatchFile)
-	fileGroup.DELETE("", server.DeleteFile)
+	fileGroup := e.Group("/file/:path")
+	fileGroup.GET("", server.GetFile, AllowLoggedInOnly(auths))
+	fileGroup.POST("", server.PostFile, AllowLoggedInOnly(auths))
+	fileGroup.PATCH("", server.PatchFile, AllowLoggedInOnly(auths))
+	fileGroup.DELETE("", server.DeleteFile, AllowLoggedInOnly(auths))
 	fileGroup.GET("/blob", server.GetBlob)
 }

@@ -14,12 +14,12 @@ import (
 )
 
 func GetBlob(ctx echo.Context) error {
-	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
+	pathParam, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	fullPath := path.Join(config.Base, relativePath)
+	fullPath := path.Join(config.Base, pathParam)
 
 	file, err := os.Open(fullPath)
 	if err != nil {

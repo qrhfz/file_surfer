@@ -4,6 +4,7 @@ import (
 	"file_surfer_backend/api"
 	"file_surfer_backend/config"
 	"file_surfer_backend/fileutils"
+	"path/filepath"
 
 	"net/http"
 	"os"
@@ -15,12 +16,13 @@ import (
 // Your GET endpoint
 // (GET /file)
 func GetFile(ctx echo.Context) error {
-	pathName, err := fileutils.DecodePath(ctx.Param("path"))
+	pathParam, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+	fullPath := filepath.Join(config.Base, pathParam)
 
-	info, err := fileutils.GetFileInfo(pathName)
+	info, err := fileutils.GetFileInfo(fullPath)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
@@ -30,12 +32,11 @@ func GetFile(ctx echo.Context) error {
 
 // (POST /file)
 func PostFile(ctx echo.Context) error {
-	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
+	pathParam, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-
-	fullPath := path.Join(config.Base, relativePath)
+	fullPath := path.Join(config.Base, pathParam)
 
 	if fileutils.CheckFileExists(fullPath) {
 		return echo.NewHTTPError(http.StatusBadRequest, "item exist")
@@ -54,7 +55,7 @@ func PostFile(ctx echo.Context) error {
 		file.Close()
 	}
 
-	info, err := fileutils.GetFileInfo(relativePath)
+	info, err := fileutils.GetFileInfo(fullPath)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
@@ -64,7 +65,7 @@ func PostFile(ctx echo.Context) error {
 
 // (PATCH /file)
 func PatchFile(ctx echo.Context) error {
-	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
+	pathParam, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -75,15 +76,15 @@ func PatchFile(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	dir := path.Dir(relativePath)
-	oldPath := path.Join(config.Base, relativePath)
+	dir := path.Dir(pathParam)
+	oldPath := path.Join(config.Base, pathParam)
 	newPath := path.Join(config.Base, dir, *body.Name)
 
 	err = os.Rename(oldPath, newPath)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	newFileInfo, err := fileutils.GetFileInfo(path.Join(dir, *body.Name))
+	newFileInfo, err := fileutils.GetFileInfo(newPath)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
@@ -91,13 +92,12 @@ func PatchFile(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, newFileInfo)
 }
 
-// (DELETE /file)
 func DeleteFile(ctx echo.Context) error {
-	relativePath, err := fileutils.DecodePath(ctx.Param("path"))
+	pathParam, err := fileutils.DecodePath(ctx.Param("path"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	fullPath := path.Join(config.Base, relativePath)
+	fullPath := path.Join(config.Base, pathParam)
 	err = fileutils.Delete(fullPath)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
