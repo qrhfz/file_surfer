@@ -33,7 +33,7 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
           <div className="flex flex-row justify-between pb-4 border-b-2 items-center">
             <h1 class="text-lg font-bold">{fileState.data?.name}</h1>
             <SmallPrimaryButton onClick={async () => {
-              window.open(`http://localhost:3000/file/${loc}/blob?accessToken=${accessToken}`)
+              window.open(`http://localhost:3000/file/${loc}/blob?accessToken=${accessToken.value}`)
             }}>
               Download
             </SmallPrimaryButton>
