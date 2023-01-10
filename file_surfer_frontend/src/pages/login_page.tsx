@@ -53,7 +53,7 @@ export const LoginPage: FunctionalComponent = () => {
               />
 
               <span class="absolute inset-y-0 right-4 inline-flex items-center">
-                <BiUserCircle size="1.25rem" />
+                <BiUserCircle size="24px" />
               </span>
             </div>
           </div>
@@ -74,7 +74,7 @@ export const LoginPage: FunctionalComponent = () => {
               <span
                 onClick={_ => setHidden(!hidden)}
                 class="absolute inset-y-0 right-4 inline-flex items-center">
-                {hidden ? <BiHide size="1.25rem" /> : <BiShow size="1.25rem" />}
+                {hidden ? <BiHide size="24px" /> : <BiShow size="24px" />}
               </span>
             </div>
           </div>
