@@ -78,7 +78,7 @@ const NewFileForm: FunctionComponent<{ path: string, isDir?: boolean }> = ({ pat
     <SingleInputForm
       placeholder={isDir ? "New Folder Name" : "New File Name"}
       onSubmit={async (name) => {
-        await FileService.postFile(joinPath(path, name), isDir)
+        await FileService.postFile(encodeURIComponent(joinPath(path, name)), isDir)
       }}
 
       onDone={() => {
@@ -110,7 +110,7 @@ const UploadFileForm: FunctionComponent<{ path: string }> = ({ path }) => {
           }
         }
         modal.close()
-        await BlobService.upload({ path, files: blobs })
+        await BlobService.upload({ path: encodeURIComponent(path), files: blobs })
         folder.refresh()
       }}>
         <input
