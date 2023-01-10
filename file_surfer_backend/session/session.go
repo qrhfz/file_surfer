@@ -74,3 +74,9 @@ func randomString(length int) string {
 	rand.Read(b)
 	return fmt.Sprintf("%x", b)[:length]
 }
+
+func (s *SessionStore) Clean() error {
+	now := time.Now().UnixMilli()
+	_, err := s.db.Exec(`DELETE FROM session_store WHERE expired<?;`, now)
+	return err
+}
