@@ -69,7 +69,7 @@ export class FolderState {
     this.fileOp.value = { status: "loading" }
     try {
       for (const path of this.selectedPaths.value) {
-        await FileService.deleteFile(path)
+        await FileService.deleteFile(encodeURIComponent(path))
       }
 
       this.fileOp.value = { status: "ok", data: true };
