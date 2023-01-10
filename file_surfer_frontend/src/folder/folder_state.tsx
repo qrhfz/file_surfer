@@ -129,6 +129,7 @@ export const FolderState = () => {
     fetchFolder,
     mode,
     filesFiltered,
+    showHidden,
     copy,
     cut,
     paste,

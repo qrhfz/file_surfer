@@ -64,6 +64,16 @@ export const FolderPage: FolderPageType = ({ location, matches }) => {
         return (
           <>
             <div class="flex flex-col h-full p-4">
+              <div class="flex flex-row">
+                <div>
+                  <span class="mr-2">Show Hidden Files</span>
+                  <input type="checkbox"
+                    checked={folder.showHidden.value}
+                    onChange={e => folder.showHidden.value = e.currentTarget.checked}
+                  />
+                </div>
+
+              </div>
               <Breadcrumb path={path} />
               <FolderView />
             </div>
