@@ -84,7 +84,7 @@ export const FolderView: FolderViewType = () => {
             window.open("download");
             closeContextMenu();
           }}
-          handleDelete={() => folder.delete()} />}
+          handleDelete={() => folder.deleteFiles()} />}
     </div>
   )
 }
@@ -105,9 +105,11 @@ const FolderListViewHead: FunctionComponent<{
 
 const FolderListViewBody: FunctionComponent = memo(() => {
   const folder = useContext(FolderContext)
+  const files = folder.filesFiltered.value
+
   return (
     <tbody>
-      {folder.files.value.map((f, i) => (
+      {files.map((f, i) => (
         <FolderListRow
           key={f.location! + f.name}
           index={i}

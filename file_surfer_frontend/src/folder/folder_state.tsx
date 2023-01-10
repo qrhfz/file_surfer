@@ -4,117 +4,143 @@ import { FolderService, File, ClipboardService, FileService } from "../generated
 import { joinPath } from "../utils/path";
 import { AsyncState } from "../utils/useAsync";
 
-export class FolderState {
-  files = signal<File[]>([]);
-  loading = signal(false)
-  err = signal("")
-  folderPath = ""
+export const FolderState = () => {
+  const files = signal<File[]>([]);
+  const loading = signal(false)
+  const err = signal("")
+  let folderPath = ""
 
-  selectedPaths = signal<string[]>([]);
-  lastSelectedIndex = signal<number | undefined>(undefined)
+  const showHidden = signal(false)
+  const filesFiltered = computed(() => {
+    if (showHidden.value) {
+      return files.value
+    }
+    console.log(files.value)
+    return files.value.filter(f => !f.name.startsWith("."));
+  })
 
-  clipboard: string[] = [];
-  #mode: "copy" | "cut" | undefined;
+  const selectedPaths = signal<string[]>([]);
+  const lastSelectedIndex = signal<number | undefined>(undefined)
 
-  fileOp = signal<AsyncState<boolean, string> | undefined>(undefined)
+  let clipboard: string[] = [];
+  let mode: "copy" | "cut" | undefined;
 
-  async fetchFolder(path: string = this.folderPath) {
+  const fileOp = signal<AsyncState<boolean, string> | undefined>(undefined)
+
+  const fetchFolder = async (path: string = folderPath) => {
     try {
-      this.folderPath = path
-      this.loading.value = true
-      this.files.value = await FolderService.getFolder(path)
+      folderPath = path
+      loading.value = true
+      files.value = await FolderService.getFolder(path)
     } catch (error) {
-      this.err.value = JSON.stringify(error)
+      err.value = JSON.stringify(error)
     } finally {
-      this.loading.value = false
+      loading.value = false
     }
   }
 
-  async refresh() {
-    await this.fetchFolder()
+  const refresh = async () => {
+    await fetchFolder()
   }
 
-  copy() {
-    this.clipboard = this.selectedPaths.value
-    this.#mode = "copy";
-    this.selectedPaths.value = []
+  const copy = () => {
+    clipboard = selectedPaths.value
+    mode = "copy";
+    selectedPaths.value = []
   }
 
-  cut() {
-    this.clipboard = this.selectedPaths.value
-    this.#mode = "cut";
-    this.selectedPaths.value = []
+  const cut = () => {
+    clipboard = selectedPaths.value
+    mode = "cut";
+    selectedPaths.value = []
   }
 
-  async paste() {
-    const sources = this.clipboard
-    const input = { sources, destination: this.folderPath }
+  const paste = async () => {
+    const sources = clipboard
+    const input = { sources, destination: folderPath }
 
     try {
-      if (this.#mode == "copy") {
+      if (mode == "copy") {
         await ClipboardService.postCopy(input);
-      } else if (this.#mode == "cut") {
+      } else if (mode == "cut") {
         await ClipboardService.postMove(input);
       }
-      this.fileOp.value = { status: "ok", data: true }
+      fileOp.value = { status: "ok", data: true }
     } catch (error) {
-      this.fileOp.value = { status: "error", error: "paste error" }
+      fileOp.value = { status: "error", error: "paste error" }
     } finally {
-      this.#mode = undefined;
-      await this.refresh()
+      mode = undefined;
+      await refresh()
     }
   }
 
-  async delete() {
-    this.fileOp.value = { status: "loading" }
+  const deleteFiles = async () => {
+    fileOp.value = { status: "loading" }
     try {
-      for (const path of this.selectedPaths.value) {
+      for (const path of selectedPaths.value) {
         await FileService.deleteFile(encodeURIComponent(path))
       }
 
-      this.fileOp.value = { status: "ok", data: true };
+      fileOp.value = { status: "ok", data: true };
 
     } catch (error) {
-      this.fileOp.value = { status: "error", error: JSON.stringify(error) }
+      fileOp.value = { status: "error", error: JSON.stringify(error) }
     } finally {
-      this.selectedPaths.value = []
-      await this.refresh()
+      selectedPaths.value = []
+      await refresh()
     }
   }
 
-  selectSingleFile(index: number) {
+  const selectSingleFile = (index: number) => {
 
-    const file = this.files.value[index]
+    const file = files.value[index]
     const path = joinPath(file.location, file.name)
-    this.selectedPaths.value = [path]
-    this.lastSelectedIndex.value = index
+    selectedPaths.value = [path]
+    lastSelectedIndex.value = index
 
 
   }
 
-  selectMultiFiles(index: number) {
-    const last = this.lastSelectedIndex.value
+  const selectMultiFiles = (index: number) => {
+    const last = lastSelectedIndex.value
     if (last === undefined) {
-      this.selectSingleFile(index)
+      selectSingleFile(index)
       return
     }
 
     const [start, end] = last > index ? [index, last] : [last, index]
 
-    const files = this.files.value.slice(start, end + 1)
-    const paths = files.map(f => joinPath(f.location, f.name))
-    this.selectedPaths.value = paths
-    this.lastSelectedIndex.value = index
+    const _files = files.value.slice(start, end + 1)
+    const paths = _files.map(f => joinPath(f.location, f.name))
+    selectedPaths.value = paths
+    lastSelectedIndex.value = index
 
 
   }
 
-  isSelected(fileName: string) {
+  const isSelected = (fileName: string) => {
     return computed(() => {
-      const path = joinPath(this.folderPath, fileName)
-      return this.selectedPaths.value.includes(path);
+      const path = joinPath(folderPath, fileName)
+      return selectedPaths.value.includes(path);
     })
+  }
+
+  return {
+    fetchFolder,
+    mode,
+    filesFiltered,
+    copy,
+    cut,
+    paste,
+    refresh,
+    deleteFiles,
+    selectMultiFiles,
+    selectSingleFile,
+    isSelected,
+    fileOp,
+    loading,
+    err
   }
 }
 
-export const FolderContext = createContext(new FolderState())
+export const FolderContext = createContext(FolderState())
