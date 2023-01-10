@@ -9,4 +9,8 @@ export const useGuard = () => {
       route("/login");
     }
   }, [tokenSignal.value]);
+
+  return {
+    authenticated: tokenSignal.value !== null,
+  };
 };

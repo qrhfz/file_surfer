@@ -11,35 +11,43 @@ import { joinPaths } from "../utils/path"
 import { FolderContext } from "./folder_state"
 import { PopupContext } from "../components/popup/popup_state"
 import { FunctionalComponent } from "preact";
+import { effect } from "@preact/signals"
 
 
 type Prop = { location?: string, matches?: { q: string | undefined, in: string | undefined } }
 type FolderPageType = FunctionalComponent<Prop>
 
 export const FolderPage: FolderPageType = ({ location, matches }) => {
-  useGuard()
+  const { authenticated } = useGuard()
+
+
   const folder = useContext(FolderContext)
   const popup = useContext(PopupContext)
   const path = joinPaths(location ?? '')
 
   useEffect(() => {
-    folder.fetchFolder(path)
+    if (authenticated) {
+      folder.fetchFolder(path)
+    }
   }, [path])
 
-  useEffect(() => {
-    const unsub = folder.fileOp.subscribe(status => {
-      if (status?.status === "loading") {
-        popup.show(<>Loading</>)
-      } else if (status?.status === "ok") {
+  effect(() => {
+    switch (folder.fileOp.value?.status) {
+      case "ok":
         popup.show(<>Ok</>)
-      } else if (status?.status === "error") {
-        popup.show(<div class="text-red-600 text-2x">
-          ERROR
-        </div>)
-      }
-    })
-    return unsub
-  }, [])
+        break;
+      case "loading":
+        popup.show(<>Loading</>)
+        break;
+      case "error":
+        popup.show(
+          <div class="text-red-600 text-2x">
+            ERROR
+          </div>
+        )
+        break;
+    }
+  })
 
   return (
     <FolderLayout
