@@ -126,6 +126,7 @@ export const FolderState = () => {
   }
 
   return {
+    folderPath,
     fetchFolder,
     mode,
     filesFiltered,

@@ -1,10 +1,13 @@
 import { FunctionComponent } from "preact";
 import Match from 'preact-router/match';
+import { useContext } from "preact/hooks";
 import { buildPath, comparePath, joinPath, parsePath } from "../utils/path";
+import { FolderContext } from "./folder_state";
 
-type BreadcrumbProp = { path: string }
 
-export const Breadcrumb: FunctionComponent<BreadcrumbProp> = ({ path }) => {
+export const Breadcrumb: FunctionComponent = () => {
+  const { folderPath: path } = useContext(FolderContext)
+
   const segments = parsePath(path)
   return (
     <nav aria-label="Breadcrumb" class="flex py-2">
@@ -45,7 +48,7 @@ const BreadcrumbItemActive: FunctionComponent<{ path: string }> = ({ children, p
     <li class="relative flex items-center">
       <span
         class="absolute inset-y-0 -left-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)]"
-       />
+      />
       <a
         href={path}
         class="active | flex h-10 items-center bg-white pl-8 pr-4 text-xs font-medium transition hover:text-gray-900"
