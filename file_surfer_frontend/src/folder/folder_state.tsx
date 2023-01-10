@@ -22,7 +22,7 @@ export class FolderState {
     try {
       this.folderPath = path
       this.loading.value = true
-      this.files.value = await FolderService.getFolder1(path)
+      this.files.value = await FolderService.getFolder(path)
     } catch (error) {
       this.err.value = JSON.stringify(error)
     } finally {

@@ -18,7 +18,7 @@ tags:
 paths:
   "/folder/":
     get:
-      operationId: get-folder
+      operationId: get-folder-base
       summary: List contents inside a directory
       description: Open a folder and returns list of files and folders inside
       responses:

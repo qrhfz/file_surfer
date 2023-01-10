@@ -15,7 +15,7 @@ export class FolderService {
      * @returns File success
      * @throws ApiError
      */
-    public static getFolder(): CancelablePromise<Array<File>> {
+    public static getFolderBase(): CancelablePromise<Array<File>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/folder/',
@@ -29,7 +29,7 @@ export class FolderService {
      * @returns File success
      * @throws ApiError
      */
-    public static getFolder1(
+    public static getFolder(
         path: string,
     ): CancelablePromise<Array<File>> {
         return __request(OpenAPI, {
