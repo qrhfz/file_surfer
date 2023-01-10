@@ -11,7 +11,7 @@ import { joinPaths } from "../utils/path"
 import { FolderContext } from "./folder_state"
 import { PopupContext } from "../components/popup/popup_state"
 import { FunctionalComponent } from "preact";
-import { effect } from "@preact/signals"
+// import { effect } from "@preact/signals"
 
 
 type Prop = { location?: string, matches?: { q: string | undefined, in: string | undefined } }
@@ -22,7 +22,6 @@ export const FolderPage: FolderPageType = ({ location, matches }) => {
 
 
   const folder = useContext(FolderContext)
-  const popup = useContext(PopupContext)
   const path = joinPaths(location ?? '')
 
   useEffect(() => {
@@ -31,7 +30,8 @@ export const FolderPage: FolderPageType = ({ location, matches }) => {
     }
   }, [path])
 
-  effect(() => {
+  const popup = useContext(PopupContext)
+  useEffect(() => {
     switch (folder.fileOp.value?.status) {
       case "ok":
         popup.show(<>Ok</>)
@@ -47,7 +47,7 @@ export const FolderPage: FolderPageType = ({ location, matches }) => {
         )
         break;
     }
-  })
+  }, [folder.fileOp.value?.status])
 
   return (
     <FolderLayout

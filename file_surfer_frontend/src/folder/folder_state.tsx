@@ -58,10 +58,10 @@ export class FolderState {
       }
       this.fileOp.value = { status: "ok", data: true }
     } catch (error) {
-      this.fileOp.value = { status: "error", error: JSON.stringify(error) }
+      this.fileOp.value = { status: "error", error: "paste error" }
     } finally {
       this.#mode = undefined;
-      await this.refresh()
+      // await this.refresh()
     }
   }
 
