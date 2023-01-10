@@ -24,7 +24,8 @@ func GetFolder(ctx echo.Context) error {
 	}
 
 	// fmt.Println("pathParam", pathParam)
-	files, err := os.ReadDir(filepath.Join(config.Base, pathParam))
+	dirPath := filepath.Join(config.Base, pathParam)
+	files, err := os.ReadDir(dirPath)
 	if err != nil {
 		// fmt.Println(err.Error())
 		return ctx.JSON(http.StatusInternalServerError, err.Error())
@@ -34,7 +35,7 @@ func GetFolder(ctx echo.Context) error {
 
 	for _, f := range files {
 		// fmt.Println(f.Name())
-		childPath := path.Join(pathParam, f.Name())
+		childPath := path.Join(dirPath, f.Name())
 
 		fileInfo, err := fileutils.GetFileInfo(childPath)
 		if err != nil && err != io.EOF {

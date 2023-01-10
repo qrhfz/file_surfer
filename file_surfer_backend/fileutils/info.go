@@ -22,14 +22,14 @@ func GetFileInfo(pathName string) (*api.File, error) {
 	}
 
 	fileType := ""
-	var contentCount *int = nil
+	var contentCount int
 
 	if stat.IsDir() {
 		i, err := os.ReadDir(pathName)
 		if err != nil {
 			return nil, err
 		}
-		*contentCount = len(i)
+		contentCount = len(i)
 		fileType = "directory"
 	} else { // its a file
 		fileType, err = GetMimeType(pathName)
@@ -52,7 +52,7 @@ func GetFileInfo(pathName string) (*api.File, error) {
 		Size:         int(stat.Size()),
 		Type:         fileType,
 		Location:     location,
-		ContentCount: contentCount,
+		ContentCount: &contentCount,
 		Url:          url,
 	}
 
