@@ -1,6 +1,8 @@
+import { useSignal } from "@preact/signals"
 import { FunctionComponent } from "preact"
+import { useEffect } from "preact/hooks"
 import { SmallPrimaryButton } from "../components/buttons"
-import { BlobService, File, FileService } from "../generated-sources/openapi"
+import { AuthService, BlobService, File, FileService } from "../generated-sources/openapi"
 import { useAsync } from "../utils/useAsync"
 
 type FilveViewPageType = FunctionComponent<{ loc?: string }>
@@ -15,6 +17,12 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
     }
   )
 
+  const accessToken = useSignal<string | undefined>(undefined)
+  useEffect(() => {
+    AuthService.getAccessToken()
+      .then(res => accessToken.value = res.accessToken)
+  }, [])
+
   return (
     <div class="w-screen h-screen bg-slate-300 pt-24 overflow-y-scroll">
 
@@ -25,28 +33,28 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
           <div className="flex flex-row justify-between pb-4 border-b-2 items-center">
             <h1 class="text-lg font-bold">{fileState.data?.name}</h1>
             <SmallPrimaryButton onClick={async () => {
-              // const result = await AuthService.getAccessToken();
-              window.open(`http://localhost:3000/file/${loc}/blob`)
+              window.open(`http://localhost:3000/file/${loc}/blob?accessToken=${accessToken}`)
             }}>
               Download
             </SmallPrimaryButton>
           </div>
-          <Content path={loc!} file={fileState.data} />
+          {accessToken.value && <Content path={loc!} file={fileState.data} accessToken={accessToken.value} />}
         </>}
       </div>
     </div>
   )
 }
 
-const Content: FunctionComponent<{ path: string, file: File }> = prop => {
+const Content: FunctionComponent<{ path: string, file: File, accessToken: string }> = prop => {
   const type = prop.file.type
   const isText = type.startsWith("text/")
   const isImage = type.startsWith("image/")
+
   return (
     <div class="py-4 h-[66vh] overflow-y-auto">
       {isText && <TextFile path={prop.path} />}
       {isImage && <div >
-        <img class="mx-auto" src={`http://localhost:3000/file/${prop.path}/blob`} />
+        <img class="mx-auto" src={`http://localhost:3000/file/${prop.path}/blob?accessToken=${prop.accessToken}`} />
       </div>}
     </div>
   )

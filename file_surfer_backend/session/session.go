@@ -20,8 +20,14 @@ func NewSessionStore(db *sql.DB) *SessionStore {
 	return &s
 }
 
+const defaultTTL int64 = 24 * 60 * 60 * 1000
+
 func (s *SessionStore) SetSession(content string) (string, error) {
-	var ttl int64 = 24 * 60 * 60 * 1000
+	return s.SetSessionWithTTL(content, defaultTTL)
+}
+
+// ttl in miliseconds
+func (s *SessionStore) SetSessionWithTTL(content string, ttl int64) (string, error) {
 	expired := time.Now().UTC().UnixMilli() + ttl
 
 	token := randomString(32)
@@ -39,21 +45,21 @@ func (s *SessionStore) SetSession(content string) (string, error) {
 }
 
 // raise if token not found or token is expired
-func (s *SessionStore) GetSession(token string) error {
+func (s *SessionStore) GetSession(token string) (string, error) {
 	row := s.db.QueryRow(`SELECT content, expired FROM session_store WHERE token=?;`, token)
 	var content string
 	var expired int64
 
 	if err := row.Scan(&content, &expired); err != nil {
-		return err
+		return "", err
 	}
 
 	if time.Now().UTC().UnixMilli() > expired {
 		s.RemoveSession(token)
-		return errors.New("token expired")
+		return "", errors.New("token expired")
 	}
 
-	return nil
+	return content, nil
 }
 
 func (s *SessionStore) RemoveSession(token string) error {

@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func AllowLoggedInOnly(auths auth.AuthService) echo.MiddlewareFunc {
+func AllowLoggedInOnly(auths *auth.AuthService) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			authorizationHeaders, ok := c.Request().Header["Authorization"]
@@ -23,6 +23,7 @@ func AllowLoggedInOnly(auths auth.AuthService) echo.MiddlewareFunc {
 			authorization := authorizationHeaders[0]
 			token := strings.Split(authorization, "Bearer ")[1]
 			if auths.AllowLoggedInOnly(token) {
+				c.Set("token", token)
 				return next(c)
 			}
 			return echo.NewHTTPError(http.StatusUnauthorized, "not logged in")

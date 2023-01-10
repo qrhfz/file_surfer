@@ -13,8 +13,8 @@ type AuthService struct {
 	sessionStore *session.SessionStore
 }
 
-func NewAuthService(us *user.UserService, ss *session.SessionStore) AuthService {
-	return AuthService{
+func NewAuthService(us *user.UserService, ss *session.SessionStore) *AuthService {
+	return &AuthService{
 		userService:  us,
 		sessionStore: ss,
 	}

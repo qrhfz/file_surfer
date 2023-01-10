@@ -4,5 +4,7 @@
 
 import type { BaseUser } from './BaseUser';
 
-export type User = BaseUser;
+export type NewUser = (BaseUser & {
+    password: string;
+});
 
