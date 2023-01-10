@@ -7,13 +7,15 @@ import { useAsync } from "../utils/useAsync"
 
 type FilveViewPageType = FunctionComponent<{ loc?: string }>
 
-export const FileViewPage: FilveViewPageType = ({ loc }) => {
+export const FileViewPage: FilveViewPageType = prop => {
+  const path = encodeURIComponent(prop.loc!)
+
   const fileState = useAsync(
-    FileService.getFile(encodeURIComponent(loc!)),
+    FileService.getFile(path),
     {
       ok: ok => ok,
       err: err => err,
-      key: loc
+      key: path
     }
   )
 
@@ -33,12 +35,12 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
           <div className="flex flex-row justify-between pb-4 border-b-2 items-center">
             <h1 class="text-lg font-bold">{fileState.data?.name}</h1>
             <SmallPrimaryButton onClick={async () => {
-              window.open(`${OpenAPI.BASE}/file/${loc}/blob?accessToken=${accessToken.value}`)
+              window.open(`${OpenAPI.BASE}/file/${path}/blob?accessToken=${accessToken.value}`)
             }}>
               Download
             </SmallPrimaryButton>
           </div>
-          {accessToken.value && <Content path={loc!} file={fileState.data} accessToken={accessToken.value} />}
+          {accessToken.value && <Content path={path} file={fileState.data} accessToken={accessToken.value} />}
         </>}
       </div>
     </div>
