@@ -8,7 +8,7 @@ export const FolderState = () => {
   const files = signal<File[]>([]);
   const loading = signal(false)
   const err = signal("")
-  let folderPath = ""
+  const folderPath = signal("")
 
   const showHidden = signal(false)
   const filesFiltered = computed(() => {
@@ -27,9 +27,9 @@ export const FolderState = () => {
 
   const fileOp = signal<AsyncState<boolean, string> | undefined>(undefined)
 
-  const fetchFolder = async (path: string = folderPath) => {
+  const fetchFolder = async (path: string = folderPath.value) => {
     try {
-      folderPath = path
+      folderPath.value = path
       loading.value = true
       files.value = await FolderService.getFolder(path)
     } catch (error) {
@@ -57,7 +57,7 @@ export const FolderState = () => {
 
   const paste = async () => {
     const sources = clipboard
-    const input = { sources, destination: folderPath }
+    const input = { sources, destination: folderPath.value }
 
     try {
       if (mode == "copy") {
@@ -120,7 +120,7 @@ export const FolderState = () => {
 
   const isSelected = (fileName: string) => {
     return computed(() => {
-      const path = joinPath(folderPath, fileName)
+      const path = joinPath(folderPath.value, fileName)
       return selectedPaths.value.includes(path);
     })
   }

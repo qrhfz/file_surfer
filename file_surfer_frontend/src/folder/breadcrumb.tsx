@@ -6,7 +6,8 @@ import { FolderContext } from "./folder_state";
 
 
 export const Breadcrumb: FunctionComponent = () => {
-  const { folderPath: path } = useContext(FolderContext)
+  const folder = useContext(FolderContext)
+  const path = folder.folderPath.value
 
   const segments = parsePath(path)
   return (
