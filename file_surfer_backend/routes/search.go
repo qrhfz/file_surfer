@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func registerSearchRoutes(e *echo.Echo) {
+func registerSearchRoutes(e *echo.Group) {
 	e.GET("/search/", search)
 	e.GET("/search/:path", search)
 }

@@ -3,4 +3,5 @@ tmp
 test/home
 *.env
 *.db
-static/*
+public/*
+file_surfer_backend

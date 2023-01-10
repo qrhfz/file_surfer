@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func registerFolderRoute(e *echo.Echo, auths *auth.AuthService) {
+func registerFolderRoute(e *echo.Group, auths *auth.AuthService) {
 
 	e.GET("/folder", server.GetFolder, AllowLoggedInOnly(auths))
 	e.GET("/folder/", server.GetFolder, AllowLoggedInOnly(auths))

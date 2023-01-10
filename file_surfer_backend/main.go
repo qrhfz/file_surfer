@@ -6,7 +6,6 @@ import (
 	"file_surfer_backend/routes"
 	"fmt"
 	"log"
-	"os"
 	"path"
 	"time"
 
@@ -19,10 +18,6 @@ func main() {
 	if !path.IsAbs(config.Base) {
 		log.Fatal("base path is not absolute", config.Base)
 	}
-	err := os.Chdir(config.Base)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
 
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -31,6 +26,7 @@ func main() {
 	}))
 
 	routes.RegisterRoute(e, config.AppAuthService)
+	e.Static("/", "public")
 
 	go sessionCleanupfunc()
 	e.Logger.Fatal(e.Start(":3000"))

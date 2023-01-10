@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func registerAuthRoutes(e *echo.Echo, auths *auth.AuthService) {
+func registerAuthRoutes(e *echo.Group, auths *auth.AuthService) {
 	e.POST("/login", func(c echo.Context) error {
 		var loginBody api.PostLoginJSONRequestBody
 		c.Bind(&loginBody)

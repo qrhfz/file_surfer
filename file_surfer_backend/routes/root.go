@@ -8,10 +8,11 @@ import (
 )
 
 func RegisterRoute(e *echo.Echo, auths *auth.AuthService) {
-	registerFileGroup(e, auths)
-	registerFolderRoute(e, auths)
-	e.POST("/upload", server.Upload)
-	registerClipboardRoutes(e)
-	registerSearchRoutes(e)
-	registerAuthRoutes(e, auths)
+	apiGroup := e.Group("/api")
+	registerFileGroup(apiGroup, auths)
+	registerFolderRoute(apiGroup, auths)
+	apiGroup.POST("/upload", server.Upload)
+	registerClipboardRoutes(apiGroup)
+	registerSearchRoutes(apiGroup)
+	registerAuthRoutes(apiGroup, auths)
 }
