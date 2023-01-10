@@ -30,3 +30,17 @@ func AllowLoggedInOnly(auths *auth.AuthService) echo.MiddlewareFunc {
 		}
 	}
 }
+
+func NeedAccessToken(auths *auth.AuthService) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			token := c.QueryParam("accessToken")
+
+			if !auths.VerifyAccessToken(token) {
+				return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
+			}
+
+			return next(c)
+		}
+	}
+}

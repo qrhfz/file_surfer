@@ -24,7 +24,10 @@ export const useAsync = <K, R, T, E>(
   useEffect(() => {
     setState(loading);
     task
-      .then((t) => setState({ status: "ok", data: ok(t) }))
+      .then(async (t) => {
+        const data = await ok(t);
+        setState({ status: "ok", data });
+      })
       .catch((e) => setState({ status: "error", error: err(e) }));
   }, [key]);
 

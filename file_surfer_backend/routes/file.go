@@ -13,5 +13,5 @@ func registerFileGroup(e *echo.Echo, auths *auth.AuthService) {
 	fileGroup.POST("", server.PostFile, AllowLoggedInOnly(auths))
 	fileGroup.PATCH("", server.PatchFile, AllowLoggedInOnly(auths))
 	fileGroup.DELETE("", server.DeleteFile, AllowLoggedInOnly(auths))
-	fileGroup.GET("/blob", server.GetBlob)
+	fileGroup.GET("/blob", server.GetBlob, NeedAccessToken(auths))
 }
