@@ -5,13 +5,20 @@ import (
 	"file_surfer_backend/db"
 	"file_surfer_backend/routes"
 	"fmt"
+	"io/fs"
 	"log"
+	"net/http"
 	"path"
 	"time"
+
+	"embed"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
+
+//go:embed public
+var f embed.FS
 
 func main() {
 	defer db.DB.Close()
@@ -26,7 +33,14 @@ func main() {
 	}))
 
 	routes.RegisterRoute(e, config.AppAuthService)
-	e.Static("/", "public")
+
+	fsys, err := fs.Sub(f, "public")
+	if err != nil {
+		panic(err)
+	}
+
+	assetHandler := http.FileServer(http.FS(fsys))
+	e.GET("/*", echo.WrapHandler(assetHandler))
 
 	go sessionCleanupfunc()
 	e.Logger.Fatal(e.Start(":3000"))

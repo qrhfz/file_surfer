@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:prod": "NODE_ENV=prod pnpm build",
     "preview": "vite preview",
     "generate": "openapi -i ../file_surfer_backend/spec.yaml -o src/generated-sources/openapi",
     "lint": "eslint --ext .ts,tsx --ignore-path .gitignore ."
