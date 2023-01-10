@@ -18,7 +18,23 @@ import (
 )
 
 //go:embed public
-var f embed.FS
+var content embed.FS
+
+var contentHandler = echo.WrapHandler(handler())
+var contentRewrite = middleware.Rewrite(
+	map[string]string{
+		"/assets/*": "/assets/$1",
+		"/*":        "/",
+	},
+)
+
+func handler() http.Handler {
+
+	fsys := fs.FS(content)
+	html, _ := fs.Sub(fsys, "public")
+
+	return http.FileServer(http.FS(html))
+}
 
 func main() {
 	defer db.DB.Close()
@@ -33,14 +49,7 @@ func main() {
 	}))
 
 	routes.RegisterRoute(e, config.AppAuthService)
-
-	fsys, err := fs.Sub(f, "public")
-	if err != nil {
-		panic(err)
-	}
-
-	assetHandler := http.FileServer(http.FS(fsys))
-	e.GET("/*", echo.WrapHandler(assetHandler))
+	e.GET("/*", contentHandler, contentRewrite)
 
 	go sessionCleanupfunc()
 	e.Logger.Fatal(e.Start(":3000"))
