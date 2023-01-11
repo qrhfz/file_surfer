@@ -8,6 +8,7 @@ type ContextMenuProp = {
   handlePaste: () => void,
   handleDownload: () => void,
   handleDelete: () => void,
+  handleRename: () => void,
   position: ContextMenuPosition
 }
 
@@ -33,6 +34,9 @@ export const ContextMenu: FunctionComponent<ContextMenuProp> = (prop) => {
 
       <ContextMenuItem onClick={prop.handleDownload}>
         Download
+      </ContextMenuItem>
+      <ContextMenuItem onClick={() => { }}>
+        Rename
       </ContextMenuItem>
       <ContextMenuItem onClick={prop.handleDelete}>
         <span className="text-red-400">

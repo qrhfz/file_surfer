@@ -1,10 +1,10 @@
 import "./folder_view.css";
-import { useState, useMemo, useContext } from "preact/hooks";
+import { useMemo, useContext } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
 import { createContext, FunctionalComponent, FunctionComponent } from "preact";
 import { memo } from "preact/compat";
 import { computed, signal } from "@preact/signals";
-import { ContextMenu, ContextMenuPosition } from "./context_menu";
+// import { ContextMenu, ContextMenuPosition } from "./context_menu";
 import { File } from "./../generated-sources/openapi";
 
 import { formatDateString } from "../utils/formatDateString";
@@ -35,12 +35,12 @@ const ColumnResizerContext = createContext(createColumnResizer())
 type FolderViewType = FunctionalComponent
 
 export const FolderView: FolderViewType = () => {
-  const [ctxMenuPos, setCtxMenuPos] = useState<ContextMenuPosition>()
+  // const [ctxMenuPos, setCtxMenuPos] = useState<ContextMenuPosition>()
 
-  const closeContextMenu = () => setCtxMenuPos(undefined)
+  // const closeContextMenu = () => setCtxMenuPos(undefined)
 
   const resizer = useContext(ColumnResizerContext)
-  const folder = useContext(FolderContext)
+  // const folder = useContext(FolderContext)
 
 
 
@@ -50,17 +50,17 @@ export const FolderView: FolderViewType = () => {
       onContextMenu={e => {
         e.preventDefault()
 
-        if (ctxMenuPos !== undefined) {
-          closeContextMenu()
-          return
-        }
+        // if (ctxMenuPos !== undefined) {
+        //   closeContextMenu()
+        //   return
+        // }
 
-        const { x, y } = e
-        setCtxMenuPos({ x, y })
+        // const { x, y } = e
+        // setCtxMenuPos({ x, y })
       }}
 
       onClick={_ => {
-        closeContextMenu()
+        // closeContextMenu()
       }}
     >
       <table
@@ -73,7 +73,7 @@ export const FolderView: FolderViewType = () => {
         <FolderListViewBody />
 
       </table>
-      {ctxMenuPos &&
+      {/* {ctxMenuPos &&
         <ContextMenu
           position={ctxMenuPos}
           handleCopy={() => folder.copy()}
@@ -84,7 +84,8 @@ export const FolderView: FolderViewType = () => {
             window.open("download");
             closeContextMenu();
           }}
-          handleDelete={() => folder.deleteFiles()} />}
+          handleRename={() => { }}
+          handleDelete={() => folder.deleteFiles()} />} */}
     </div>
   )
 }

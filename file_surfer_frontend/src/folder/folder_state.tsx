@@ -1,14 +1,15 @@
-import { computed, signal } from "@preact/signals";
+import { batch, computed, signal } from "@preact/signals";
 import { createContext } from "preact";
 import { FolderService, File, ClipboardService, FileService } from "../generated-sources/openapi";
 import { joinPath } from "../utils/path";
 import { AsyncState } from "../utils/useAsync";
 
 export const FolderState = () => {
+  const folderPath = signal("")
+
   const files = signal<File[]>([]);
   const loading = signal(false)
   const err = signal("")
-  const folderPath = signal("")
 
   const showHidden = signal(false)
   const filesFiltered = computed(() => {
@@ -21,9 +22,12 @@ export const FolderState = () => {
 
   const selectedPaths = signal<string[]>([]);
   const lastSelectedIndex = signal<number | undefined>(undefined)
+  const isOneSelected = computed(() => selectedPaths.value.length === 1)
+  const isMultiSelected = computed(() => selectedPaths.value.length >= 1)
 
-  let clipboard: string[] = [];
+  const clipboard = signal<string[]>([]);
   let mode: "copy" | "cut" | undefined;
+  const isPastable = computed(() => clipboard.value.length > 0)
 
   const fileOp = signal<AsyncState<boolean, string> | undefined>(undefined)
 
@@ -44,21 +48,30 @@ export const FolderState = () => {
   }
 
   const copy = () => {
-    clipboard = selectedPaths.value
-    mode = "copy";
-    selectedPaths.value = []
+    batch(() => {
+      clipboard.value = selectedPaths.value
+      mode = "copy";
+      selectedPaths.value = []
+    })
+
   }
 
   const cut = () => {
-    clipboard = selectedPaths.value
-    mode = "cut";
-    selectedPaths.value = []
+    batch(() => {
+      clipboard.value = selectedPaths.value
+      mode = "cut";
+      selectedPaths.value = []
+    })
+
   }
 
   const paste = async () => {
-    const sources = clipboard
+    const sources = clipboard.value
+    batch(() => {
+      selectedPaths.value = []
+      clipboard.value = []
+    })
     const input = { sources, destination: folderPath.value }
-
     try {
       if (mode == "copy") {
         await ClipboardService.postCopy(input);
@@ -141,7 +154,10 @@ export const FolderState = () => {
     isSelected,
     fileOp,
     loading,
-    err
+    err,
+    isOneSelected,
+    isMultiSelected,
+    isPastable
   }
 }
 

@@ -1,6 +1,6 @@
 import { FunctionComponent } from "preact";
 import { useContext } from "preact/hooks";
-import { BiFile, BiFolderPlus } from "react-icons/bi";
+import { BiCopy, BiCut, BiFile, BiFolderPlus, BiPaste } from "react-icons/bi";
 import { SmallSecondaryButton } from "../components/buttons";
 import { SingleInputForm } from "../components/forms/single_input_form";
 import { FileService } from "../generated-sources/openapi";
@@ -29,7 +29,38 @@ export const Toolbar: FunctionComponent = () => {
           <BiFolderPlus /> New Folder
         </div>
       </SmallSecondaryButton>
+
+
+      {(folder.isOneSelected.value || folder.isOneSelected.value) &&
+        <>
+          <SmallSecondaryButton onClick={() => folder.copy()}>
+            <div className="flex flex-row items-center gap-2">
+              <BiCopy />
+              Copy
+            </div>
+          </SmallSecondaryButton>
+          <SmallSecondaryButton onClick={() => folder.cut()}>
+            <div className="flex flex-row items-center gap-2">
+              <BiCut />
+              Cut
+            </div>
+          </SmallSecondaryButton>
+
+        </>
+      }
+      {folder.isPastable.value &&
+        <SmallSecondaryButton onClick={() => folder.paste()}>
+          <div className="flex flex-row items-center gap-2">
+            <BiPaste />
+            Paste
+          </div>
+        </SmallSecondaryButton>
+      }
+
       <div className="flex-grow" />
+
+
+
       <div>
         <span class="mr-2">Show Hidden Files</span>
         <input type="checkbox"
