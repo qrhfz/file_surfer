@@ -3,7 +3,7 @@ import { Redirect } from './components/redirect';
 import { FileViewPage } from './file/file_view_page';
 import { FolderPage } from './folder/folder_page';
 import { PopupContext } from "./components/popup/popup_state";
-import { LoginPage } from "./pages/login_page";
+import { LoginPage } from "./auth/login_page";
 import { ModalContext } from "./signals/modal_state";
 import { Modal } from "./components/modals/modal";
 import { Popup } from "./components/popup/popup";

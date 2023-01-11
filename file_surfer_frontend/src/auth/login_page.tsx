@@ -4,7 +4,7 @@ import { BiHide, BiShow, BiUserCircle } from "react-icons/bi"
 import { AuthService } from "../generated-sources/openapi"
 import { FunctionalComponent } from "preact";
 import { effect } from "@preact/signals";
-import { TokenContext } from "../auth/tokenSignal";
+import { TokenContext } from "./tokenSignal";
 
 export const LoginPage: FunctionalComponent = () => {
   const [username, setUsername] = useState("")
