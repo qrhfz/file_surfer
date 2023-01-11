@@ -8,7 +8,7 @@ info:
     url: "https://www.qori.dev"
     email: contact@qori.dev
 servers:
-  - url: "http://localhost:3000"
+  - url: "http://localhost:3000/api"
 tags:
   - name: auth
   - name: blob

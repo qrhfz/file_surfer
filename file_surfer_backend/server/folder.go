@@ -11,6 +11,7 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/labstack/echo/v4"
 )
@@ -54,21 +55,17 @@ func SearchFolder(pathName, search string) ([]api.File, error) {
 	results := make([]api.File, 0)
 
 	search = strings.ToLower(search)
+	fChan := make(chan *api.File, 100)
+	job := 0
+	var wg sync.WaitGroup
 
 	err := filepath.Walk(pathName,
 		func(path string, info fs.FileInfo, err error) error {
 			if err != nil {
 				return err
 			}
-			name := strings.ToLower(info.Name())
-			if strings.Contains(name, search) {
-				inf, err := fileutils.GetFileInfo(path)
-				if err != nil {
-					return err
-				}
-				results = append(results, *inf)
-			}
 
+			go matchFile(info, search, path, fChan, &wg, &job)
 			return nil
 		},
 	)
@@ -77,5 +74,34 @@ func SearchFolder(pathName, search string) ([]api.File, error) {
 		return nil, err
 	}
 
+	for f := range fChan {
+		results = append(results, *f)
+		if job <= 0 {
+			break
+		}
+	}
+
 	return results, nil
+}
+
+func matchFile(info fs.FileInfo, search, path string, fChan chan<- *api.File, wg *sync.WaitGroup, job *int) {
+	wg.Add(1)
+	*job++
+	wg.Done()
+
+	defer func() {
+		wg.Add(1)
+		*job--
+		wg.Done()
+	}()
+
+	name := strings.ToLower(info.Name())
+	if !strings.Contains(name, search) {
+		return
+	}
+	inf, err := fileutils.GetFileInfo(path)
+	if err != nil {
+		return
+	}
+	fChan <- inf
 }
