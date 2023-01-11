@@ -10,6 +10,7 @@ import { joinPaths } from "../utils/path"
 import { FolderContext } from "./folder_state"
 import { PopupContext } from "../components/popup/popup_state"
 import { FunctionalComponent } from "preact";
+import { Toolbar } from "./toolbar"
 // import { effect } from "@preact/signals"
 
 
@@ -63,16 +64,7 @@ export const FolderPage: FolderPageType = ({ location, matches }) => {
         return (
           <>
             <div class="flex flex-col h-full p-4">
-              <div class="flex flex-row">
-                <div>
-                  <span class="mr-2">Show Hidden Files</span>
-                  <input type="checkbox"
-                    checked={folder.showHidden.value}
-                    onChange={e => folder.showHidden.value = e.currentTarget.checked}
-                  />
-                </div>
-
-              </div>
+              <Toolbar />
               <FolderView />
             </div>
             {folder.loading.value &&

@@ -1,10 +1,8 @@
 import { FunctionComponent } from "preact";
 import { useContext, useState } from "preact/hooks";
-import { BlobService, FileService } from "../generated-sources/openapi";
+import { BlobService } from "../generated-sources/openapi";
 import { ModalContext } from "../signals/modal_state";
-import { joinPath } from "../utils/path";
-import { PrimaryButton, SecondaryButton } from "../components/buttons";
-import { SingleInputForm } from "../components/forms/single_input_form";
+import { PrimaryButton } from "../components/buttons";
 import { FolderContext } from "./folder_state";
 import { TokenContext } from "../auth/tokenSignal";
 
@@ -23,16 +21,7 @@ export const FolderSidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
         }}>
           Upload File
         </PrimaryButton>
-        <SecondaryButton onClick={() => {
-          modal.show(<NewFileForm path={loc} />)
-        }}>
-          New File
-        </SecondaryButton>
-        <SecondaryButton onClick={() => {
-          modal.show(<NewFolderForm path={loc} />)
-        }}>
-          New Folder
-        </SecondaryButton>
+
       </div>
 
       <nav
@@ -64,30 +53,7 @@ export const FolderSidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
 
 
 
-const NewFolderForm: FunctionComponent<{ path: string }> = ({ path }) => {
-  return (
-    <NewFileForm path={path} isDir={true} />
-  )
-}
 
-const NewFileForm: FunctionComponent<{ path: string, isDir?: boolean }> = ({ path, isDir = false }) => {
-  const modal = useContext(ModalContext)
-  const folder = useContext(FolderContext)
-
-  return (
-    <SingleInputForm
-      placeholder={isDir ? "New Folder Name" : "New File Name"}
-      onSubmit={async (name) => {
-        await FileService.postFile(encodeURIComponent(joinPath(path, name)), isDir)
-      }}
-
-      onDone={() => {
-        modal.close();
-        folder.refresh()
-      }}
-    />
-  )
-}
 
 const UploadFileForm: FunctionComponent<{ path: string }> = ({ path }) => {
   const [files, setFiles] = useState<FileList>()
