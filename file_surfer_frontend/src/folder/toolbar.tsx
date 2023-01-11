@@ -1,6 +1,6 @@
 import { FunctionComponent } from "preact";
 import { useContext } from "preact/hooks";
-import { BiCopy, BiCut, BiFile, BiFolderPlus, BiPaste } from "react-icons/bi";
+import { BiCopy, BiCut, BiDownload, BiFile, BiFolderPlus, BiPaste, BiTrash } from "react-icons/bi";
 import { SmallSecondaryButton } from "../components/buttons";
 import { SingleInputForm } from "../components/forms/single_input_form";
 import { FileService } from "../generated-sources/openapi";
@@ -45,7 +45,12 @@ export const Toolbar: FunctionComponent = () => {
               Cut
             </div>
           </SmallSecondaryButton>
-
+          <SmallSecondaryButton onClick={() => folder.deleteFiles()}>
+            <div className="flex flex-row items-center gap-2">
+              <BiTrash />
+              Delete
+            </div>
+          </SmallSecondaryButton>
         </>
       }
       {folder.isPastable.value &&
@@ -53,6 +58,18 @@ export const Toolbar: FunctionComponent = () => {
           <div className="flex flex-row items-center gap-2">
             <BiPaste />
             Paste
+          </div>
+        </SmallSecondaryButton>
+      }
+      {folder.isOneSelected &&
+        <SmallSecondaryButton
+          onClick={async () => {
+            const url = await folder.getDownloadUrl()
+            url && window.open(url)
+          }}>
+          <div className="flex flex-row items-center gap-2">
+            <BiDownload />
+            Download
           </div>
         </SmallSecondaryButton>
       }

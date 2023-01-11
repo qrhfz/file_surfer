@@ -1,7 +1,7 @@
 import { batch, computed, signal } from "@preact/signals";
 import { createContext } from "preact";
-import { FolderService, File, ClipboardService, FileService } from "../generated-sources/openapi";
-import { joinPath } from "../utils/path";
+import { FolderService, File, ClipboardService, FileService, OpenAPI, AuthService } from "../generated-sources/openapi";
+import { joinPath, joinPaths } from "../utils/path";
 import { AsyncState } from "../utils/useAsync";
 
 export const FolderState = () => {
@@ -104,14 +104,19 @@ export const FolderState = () => {
     }
   }
 
-  const selectSingleFile = (index: number) => {
+  const getDownloadUrl = async () => {
+    const { accessToken } = await AuthService.getAccessToken()
+    if (selectedPaths.value.length === 1) {
+      const path = selectedPaths.value[0]
+      return OpenAPI.BASE + joinPaths('/file', encodeURIComponent(path), `blob?accessToken=${accessToken}`)
+    }
+  }
 
+  const selectSingleFile = (index: number) => {
     const file = files.value[index]
     const path = joinPath(file.location, file.name)
     selectedPaths.value = [path]
     lastSelectedIndex.value = index
-
-
   }
 
   const selectMultiFiles = (index: number) => {
@@ -157,7 +162,8 @@ export const FolderState = () => {
     err,
     isOneSelected,
     isMultiSelected,
-    isPastable
+    isPastable,
+    getDownloadUrl
   }
 }
 
