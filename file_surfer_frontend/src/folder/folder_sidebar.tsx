@@ -30,7 +30,7 @@ export const FolderSidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
         <ul class="space-y-1 py-2">
           <li>
             <a
-              href=""
+              href="/settings"
               class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
               Settings
             </a>

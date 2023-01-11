@@ -9,6 +9,7 @@ import { Modal } from "./components/modals/modal";
 import { Popup } from "./components/popup/popup";
 import { SearchPage } from "./search/search_page";
 import { useContext } from "preact/hooks";
+import { SettingsPage } from "./settings/settings_page";
 
 
 export function App() {
@@ -24,7 +25,9 @@ export function App() {
         <LoginPage path="/login" />
         <FolderPage path="/browse/:location*" />
         <FileViewPage path="/view/:loc*" />
+        <SettingsPage path="/settings" />
         <Redirect path="/" to="/browse/" />
+
       </Router>
 
     </>
