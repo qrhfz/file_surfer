@@ -51,6 +51,7 @@ const Content: FunctionComponent<{ path: string, file: File, accessToken: string
   const type = prop.file.type
   const isText = type.startsWith("text/")
   const isImage = type.startsWith("image/")
+  const isVideo = type.startsWith("video/")
 
   return (
     <div class="py-4 h-[66vh] overflow-y-auto">
@@ -58,6 +59,11 @@ const Content: FunctionComponent<{ path: string, file: File, accessToken: string
       {isImage && <div >
         <img class="mx-auto" src={`${OpenAPI.BASE}/file/${prop.path}/blob?accessToken=${prop.accessToken}`} />
       </div>}
+      {isVideo &&
+        <div >
+          <video class="mx-auto" src={`${OpenAPI.BASE}/file/${prop.path}/blob?accessToken=${prop.accessToken}`} controls />
+        </div>
+      }
     </div>
   )
 }
