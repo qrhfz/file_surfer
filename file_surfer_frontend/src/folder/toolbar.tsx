@@ -1,6 +1,6 @@
 import { FunctionComponent } from "preact";
 import { useContext } from "preact/hooks";
-import { BiCopy, BiCut, BiDownload, BiFile, BiFolderPlus, BiPaste, BiTrash } from "react-icons/bi";
+import { BiCopy, BiCut, BiDownload, BiFile, BiFolderPlus, BiPaste, BiRename, BiTrash } from "react-icons/bi";
 import { SmallSecondaryButton } from "../components/buttons";
 import { SingleInputForm } from "../components/forms/single_input_form";
 import { FileService } from "../generated-sources/openapi";
@@ -61,7 +61,24 @@ export const Toolbar: FunctionComponent = () => {
           </div>
         </SmallSecondaryButton>
       }
-      {folder.isOneSelected &&
+      {folder.isOneSelected && <>
+        <SmallSecondaryButton
+          onClick={() => modal.show(<>
+            <SingleInputForm
+              placeholder="New name"
+              onSubmit={async (name) => {
+                await folder.rename(name)
+              }}
+              onDone={() => {
+                modal.close()
+              }}
+            />
+          </>)}>
+          <div className="flex flex-row items-center gap-2">
+            <BiRename />
+            Rename
+          </div>
+        </SmallSecondaryButton>
         <SmallSecondaryButton
           onClick={async () => {
             const url = await folder.getDownloadUrl()
@@ -72,7 +89,7 @@ export const Toolbar: FunctionComponent = () => {
             Download
           </div>
         </SmallSecondaryButton>
-      }
+      </>}
 
       <div className="flex-grow" />
 

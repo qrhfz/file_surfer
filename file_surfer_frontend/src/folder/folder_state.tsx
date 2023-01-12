@@ -87,6 +87,22 @@ export const FolderState = () => {
     }
   }
 
+  const rename = async (newName: string) => {
+    if (selectedPaths.value.length !== 1) {
+      return
+    }
+
+    const path = selectedPaths.value[0]
+
+    try {
+      await FileService.patchFile(path, { name: newName })
+    } catch (error) {
+
+    } finally {
+      await refresh()
+    }
+  }
+
   const deleteFiles = async () => {
     fileOp.value = { status: "loading" }
     try {
@@ -163,7 +179,8 @@ export const FolderState = () => {
     isOneSelected,
     isMultiSelected,
     isPastable,
-    getDownloadUrl
+    getDownloadUrl,
+    rename
   }
 }
 
