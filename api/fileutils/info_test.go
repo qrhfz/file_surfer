@@ -1,8 +1,8 @@
 package fileutils_test
 
 import (
-	"file_surfer/api/config"
-	"file_surfer/api/fileutils"
+	"file_surfer/config"
+	"file_surfer/fileutils"
 	"os"
 	"path/filepath"
 	"testing"
