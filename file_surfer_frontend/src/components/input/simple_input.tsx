@@ -1,21 +1,24 @@
 import { FunctionComponent } from "preact";
 
 type SimpleInputProp = {
-  placeholder: string,
+  placeholder?: string,
   value: string,
   disabled?: boolean,
-  handleChange: (_s: string) => void
+  handleChange: (_s: string) => void,
+  type?: string
 }
 type SimpleInputType = FunctionComponent<SimpleInputProp>
+
 export const SimpleInput: SimpleInputType = (prop) => {
   const { placeholder, value, handleChange, disabled = false } = prop
   return (
     <input
-      type="text"
+      type={prop.type ?? "text"}
       class="simple-input"
       placeholder={placeholder}
       value={value}
       disabled={disabled}
-      onChange={e => handleChange(e.currentTarget.value)} />
+      onChange={e => handleChange(e.currentTarget.value)}
+    />
   )
 }
