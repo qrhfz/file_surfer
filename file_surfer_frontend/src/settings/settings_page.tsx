@@ -2,13 +2,14 @@ import { useSignal } from "@preact/signals"
 import { FunctionComponent } from "preact"
 import { SmallPrimaryButton } from "../components/buttons"
 import { SimpleInput } from "../components/input/simple_input"
+import { SingleColumnLayout } from "../layout/single_column_layout"
 
 export const SettingsPage: FunctionComponent = () => {
   const oldPass = useSignal("")
   const newPass = useSignal("")
 
   return (
-    <div class="w-full md:w-8/12 lg:w-6/12 p-8 mt-16 mx-auto shadow-lg">
+    <SingleColumnLayout>
       <h1 class="font-bold text-xl mb-4">Settings</h1>
 
       <h2 className="font-bold text-lg mb-2">Change Password</h2>
@@ -41,6 +42,6 @@ export const SettingsPage: FunctionComponent = () => {
         </div>
 
       </form>
-    </div>
+    </SingleColumnLayout>
   )
 }

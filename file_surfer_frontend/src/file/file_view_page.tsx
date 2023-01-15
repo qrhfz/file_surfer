@@ -3,6 +3,7 @@ import { FunctionComponent } from "preact"
 import { useEffect } from "preact/hooks"
 import { SmallPrimaryButton } from "../components/buttons"
 import { AuthService, File, FileService, OpenAPI } from "../generated-sources/openapi"
+import { SingleColumnLayout } from "../layout/single_column_layout"
 import { useAsync } from "../utils/useAsync"
 
 type FilveViewPageType = FunctionComponent<{ loc?: string }>
@@ -26,24 +27,21 @@ export const FileViewPage: FilveViewPageType = prop => {
   }, [])
 
   return (
-    <div class="w-screen h-screen bg-slate-300 pt-24 overflow-y-scroll">
-
-      <div class="w-8/12 mx-auto bg-white p-8 ">
-        {fileState.status == "error" && JSON.stringify(fileState.error)}
-        {fileState.status == "loading" && "loading"}
-        {fileState.status == "ok" && <>
-          <div className="flex flex-row justify-between pb-4 border-b-2 items-center">
-            <h1 class="text-lg font-bold">{fileState.data?.name}</h1>
-            <SmallPrimaryButton onClick={async () => {
-              window.open(`${OpenAPI.BASE}/file/${path}/blob?accessToken=${accessToken.value}`)
-            }}>
-              Download
-            </SmallPrimaryButton>
-          </div>
-          {accessToken.value && <Content path={path} file={fileState.data} accessToken={accessToken.value} />}
-        </>}
-      </div>
-    </div>
+    <SingleColumnLayout>
+      {fileState.status == "error" && JSON.stringify(fileState.error)}
+      {fileState.status == "loading" && "loading"}
+      {fileState.status == "ok" && <>
+        <div className="flex flex-row justify-between pb-4 border-b-2 items-center">
+          <h1 class="text-lg font-bold">{fileState.data?.name}</h1>
+          <SmallPrimaryButton onClick={async () => {
+            window.open(`${OpenAPI.BASE}/file/${path}/blob?accessToken=${accessToken.value}`)
+          }}>
+            Download
+          </SmallPrimaryButton>
+        </div>
+        {accessToken.value && <Content path={path} file={fileState.data} accessToken={accessToken.value} />}
+      </>}
+    </SingleColumnLayout>
   )
 }
 
