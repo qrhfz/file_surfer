@@ -10,9 +10,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/qrhfz/file_surfer/api/api"
 	"github.com/qrhfz/file_surfer/api/config"
 	"github.com/qrhfz/file_surfer/api/fileutils"
+	"github.com/qrhfz/file_surfer/openapi/api"
 
 	"github.com/labstack/echo/v4"
 )

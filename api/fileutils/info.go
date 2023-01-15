@@ -7,7 +7,6 @@ import (
 	pathpkg "path"
 	"path/filepath"
 
-	"github.com/qrhfz/file_surfer/api/api"
 	"github.com/qrhfz/file_surfer/api/config"
 )
 

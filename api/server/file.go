@@ -3,9 +3,9 @@ package server
 import (
 	"path/filepath"
 
-	"github.com/qrhfz/file_surfer/api/api"
 	"github.com/qrhfz/file_surfer/api/config"
 	"github.com/qrhfz/file_surfer/api/fileutils"
+	"github.com/qrhfz/file_surfer/openapi/api"
 
 	"net/http"
 	"os"

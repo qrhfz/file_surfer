@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/qrhfz/file_surfer/api/api"
 	"github.com/qrhfz/file_surfer/api/auth"
 	"github.com/qrhfz/file_surfer/api/config"
+	"github.com/qrhfz/file_surfer/openapi/api"
 
 	"github.com/labstack/echo/v4"
 )
