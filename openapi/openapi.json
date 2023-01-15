@@ -1,0 +1,881 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "File Surfer API",
+    "version": "1.0",
+    "description": "File Surfer API",
+    "contact": {
+      "name": "Qori El-Hafizh",
+      "url": "https://www.qori.dev",
+      "email": "contact@qori.dev"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "auth"
+    },
+    {
+      "name": "blob"
+    },
+    {
+      "name": "clipboard"
+    },
+    {
+      "name": "file"
+    },
+    {
+      "name": "folder"
+    }
+  ],
+  "paths": {
+    "/folder": {
+      "get": {
+        "operationId": "get-folder-base",
+        "summary": "List contents inside a directory",
+        "description": "Open a folder and returns list of files and folders inside",
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/File"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "folder"
+        ],
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/folder/{path}": {
+      "get": {
+        "operationId": "get-folder",
+        "summary": "List contents inside a directory",
+        "description": "Open a folder and returns list of files and folders inside",
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/File"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "tags": [
+          "folder"
+        ],
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "required": true,
+          "name": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/file/{path}": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [
+          "file"
+        ],
+        "responses": {
+          "200": {
+            "description": "Get File success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-file",
+        "description": "returns file info. if type is text/* it will returns it content as content property",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": []
+      },
+      "post": {
+        "summary": "Create new file.",
+        "operationId": "post-file",
+        "responses": {
+          "201": {
+            "description": "Creating new empty file success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "file"
+        ],
+        "description": "Create a new empty file",
+        "parameters": [
+          {
+            "name": "isDir",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "required": true,
+          "name": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "description": "Rename a file",
+        "summary": "Rename a file",
+        "operationId": "patch-file",
+        "responses": {
+          "200": {
+            "description": "File renamed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "file"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete a file",
+        "operationId": "delete-file",
+        "responses": {
+          "204": {
+            "description": "File deleted successfully"
+          }
+        },
+        "description": "Delete a file",
+        "parameters": [],
+        "tags": [
+          "file"
+        ],
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/file/{path}/blob": {
+      "get": {
+        "tags": [
+          "blob"
+        ],
+        "summary": "Your GET endpoint",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-blob",
+        "parameters": [],
+        "description": "Download file at given path",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "path",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/search": {
+      "get": {
+        "summary": "Search directory content in base directory",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/File"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-search-base",
+        "description": "Search file or folder in scoped folder",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "search",
+            "required": true
+          }
+        ],
+        "tags": [
+          "folder"
+        ]
+      }
+    },
+    "/search/{path}": {
+      "get": {
+        "summary": "Search directory content",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/File"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-search",
+        "description": "Search file or folder in scoped folder",
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "path",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "search",
+            "required": true
+          }
+        ],
+        "tags": [
+          "folder"
+        ]
+      }
+    },
+    "/copy": {
+      "post": {
+        "security": [],
+        "summary": "Copy list of files to a directory",
+        "operationId": "post-copy",
+        "responses": {
+          "201": {
+            "description": "copy success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/File"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Copy list of files and folders defined in sources to destination folder",
+        "tags": [
+          "clipboard"
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PasteRequest"
+        }
+      }
+    },
+    "/move": {
+      "post": {
+        "security": [],
+        "description": "Move list of files and folders defined in sources to destination folder",
+        "summary": "Move list of files to a directory",
+        "operationId": "post-move",
+        "responses": {
+          "200": {
+            "description": "move success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/File"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "clipboard"
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PasteRequest"
+        }
+      }
+    },
+    "/upload": {
+      "post": {
+        "summary": "Upload a file",
+        "operationId": "upload",
+        "responses": {
+          "201": {
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/File"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Upload a file to folder defined in path",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                },
+                "required": [
+                  "path",
+                  "files"
+                ]
+              }
+            }
+          }
+        },
+        "tags": [
+          "blob"
+        ],
+        "security": [
+          {
+            "token": []
+          }
+        ],
+        "parameters": []
+      }
+    },
+    "/user": {
+      "get": {
+        "security": [],
+        "tags": [
+          "user"
+        ],
+        "operationId": "get-users",
+        "summary": "get list of user",
+        "responses": {
+          "200": {
+            "description": "list of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "required": true,
+          "in": "path",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "security": [],
+        "operationId": "get-user",
+        "summary": "Get a user info",
+        "tags": [
+          "user"
+        ],
+        "responses": {
+          "200": {
+            "description": "single user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [],
+        "operationId": "post-user",
+        "summary": "Create new user.",
+        "tags": [
+          "user"
+        ],
+        "description": "create new user",
+        "responses": {
+          "201": {
+            "description": "created user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewUser"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Change user data",
+        "security": [],
+        "operationId": "patch-user",
+        "tags": [
+          "user"
+        ],
+        "description": "edit user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "edited user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me": {
+      "patch": {
+        "security": [],
+        "summary": "Edit currently logged in user data",
+        "operationId": "patch-current-user",
+        "tags": [
+          "user"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "return updated user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "security": [],
+        "summary": "Login",
+        "operationId": "post-login",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "token"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "default": "invalid username or password"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/access-token": {
+      "get": {
+        "summary": "Get access token",
+        "tags": [
+          "auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-access-token",
+        "description": "Ask for token to access file download etc",
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      },
+      "parameters": []
+    }
+  },
+  "components": {
+    "schemas": {
+      "File": {
+        "title": "File",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^\\w+\\/\\w+$",
+            "example": "text/plain"
+          },
+          "location": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "modified": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "url": {
+            "type": "string"
+          },
+          "isDir": {
+            "type": "boolean"
+          },
+          "contentCount": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "location",
+          "size",
+          "modified",
+          "url",
+          "isDir"
+        ]
+      },
+      "BaseUser": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          }
+        }
+      },
+      "User": {
+        "allOf": [
+          {
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "username",
+              "role"
+            ]
+          },
+          {
+            "$ref": "#/components/schemas/BaseUser"
+          }
+        ]
+      },
+      "NewUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseUser"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "password": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "username",
+              "role",
+              "password"
+            ]
+          }
+        ]
+      },
+      "UpdateUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseUser"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "password": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "Role": {
+        "title": "Role",
+        "type": "string",
+        "enum": [
+          "admin",
+          "basic"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "token": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "accessToken": {
+        "name": "accessToken",
+        "type": "apiKey",
+        "in": "query"
+      }
+    },
+    "requestBodies": {
+      "PasteRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "destination": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
