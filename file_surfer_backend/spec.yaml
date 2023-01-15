@@ -337,14 +337,35 @@ paths:
       tags:
         - user
       description: "edit user"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUser"
       responses:
-        201:
+        200:
           description: "edited user"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-
+  /user/current:
+    patch:
+      operationId: patch-current-user
+      tags:
+        - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUser"
+      responses:
+        200:
+          description: "return updated user"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
   /login:
     parameters: []
     post:

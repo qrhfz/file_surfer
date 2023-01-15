@@ -48,6 +48,13 @@ type NewUser struct {
 // Role defines model for Role.
 type Role string
 
+// UpdateUser defines model for UpdateUser.
+type UpdateUser struct {
+	Password *string `json:"password,omitempty"`
+	Role     *Role   `json:"role,omitempty"`
+	Username *string `json:"username,omitempty"`
+}
+
 // User defines model for User.
 type User struct {
 	Id       string `json:"id"`
@@ -119,3 +126,9 @@ type PostMoveJSONRequestBody PostMoveJSONBody
 
 // UploadMultipartRequestBody defines body for Upload for multipart/form-data ContentType.
 type UploadMultipartRequestBody UploadMultipartBody
+
+// PatchCurrentUserJSONRequestBody defines body for PatchCurrentUser for application/json ContentType.
+type PatchCurrentUserJSONRequestBody = UpdateUser
+
+// PatchUserJSONRequestBody defines body for PatchUser for application/json ContentType.
+type PatchUserJSONRequestBody = UpdateUser

@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { NewUser } from '../models/NewUser';
+import type { UpdateUser } from '../models/UpdateUser';
 import type { User } from '../models/User';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -60,11 +61,13 @@ export class UserService {
     /**
      * edit user
      * @param id
+     * @param requestBody
      * @returns User edited user
      * @throws ApiError
      */
     public static patchUser(
         id: string,
+        requestBody?: UpdateUser,
     ): CancelablePromise<User> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -72,6 +75,24 @@ export class UserService {
             path: {
                 'id': id,
             },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * @param requestBody
+     * @returns User return updated user
+     * @throws ApiError
+     */
+    public static patchCurrentUser(
+        requestBody?: UpdateUser,
+    ): CancelablePromise<User> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/user/current',
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 
