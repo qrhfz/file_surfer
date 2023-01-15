@@ -7,8 +7,8 @@ import (
 	pathpkg "path"
 	"path/filepath"
 
-	"file_surfer/api/config"
-	"file_surfer/openapi/api"
+	"file_surfer/api"
+	"file_surfer/config"
 )
 
 // [pathName] must be absolute

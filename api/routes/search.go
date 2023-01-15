@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"file_surfer/api/fileutils"
-	"file_surfer/api/server"
+	"file_surfer/fileutils"
+	"file_surfer/server"
 
 	"github.com/labstack/echo/v4"
 )

@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"file_surfer/api/auth"
-	"file_surfer/api/server"
+	"file_surfer/auth"
+	"file_surfer/server"
 
 	"github.com/labstack/echo/v4"
 )

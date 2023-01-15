@@ -7,10 +7,10 @@ import (
 	"os"
 	"path"
 
-	"file_surfer/api/config"
-	"file_surfer/api/fileutils"
+	"file_surfer/config"
+	"file_surfer/fileutils"
 
-	"github.com/qrhfz/file_surfer/openapi/api"
+	"file_surfer/api"
 
 	"github.com/labstack/echo/v4"
 )

@@ -1,10 +1,10 @@
 package config
 
 import (
-	"file_surfer/api/auth"
-	"file_surfer/api/db"
-	"file_surfer/api/session"
-	"file_surfer/api/user"
+	"file_surfer/auth"
+	"file_surfer/db"
+	"file_surfer/session"
+	"file_surfer/user"
 )
 
 var AppUserService = user.NewUserService(db.DB)

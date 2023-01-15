@@ -8,9 +8,9 @@ import (
 	"path"
 	"time"
 
-	"file_surfer/api/config"
-	"file_surfer/api/db"
-	"file_surfer/api/routes"
+	"file_surfer/config"
+	"file_surfer/db"
+	"file_surfer/routes"
 
 	"embed"
 

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"file_surfer/api/auth"
-	"file_surfer/api/config"
-	"file_surfer/openapi/api"
+	"file_surfer/api"
+	"file_surfer/auth"
+	"file_surfer/config"
 
 	"github.com/labstack/echo/v4"
 )
