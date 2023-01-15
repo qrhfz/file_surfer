@@ -7,6 +7,9 @@ info:
     name: Qori El-Hafizh
     url: "https://www.qori.dev"
     email: contact@qori.dev
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
 servers:
   - url: "http://localhost:3000/api"
 tags:
@@ -16,7 +19,7 @@ tags:
   - name: file
   - name: folder
 paths:
-  "/folder/":
+  /folder:
     get:
       operationId: get-folder-base
       summary: List contents inside a directory
@@ -77,7 +80,7 @@ paths:
         - token: []
       parameters: []
     post:
-      summary: ""
+      summary: "Create new file."
       operationId: post-file
       responses:
         "201":
@@ -128,7 +131,7 @@ paths:
       security:
         - token: []
     delete:
-      summary: ""
+      summary: "Delete a file"
       operationId: delete-file
       responses:
         "204":
@@ -163,7 +166,7 @@ paths:
         name: path
         in: path
         required: true
-  /search/:
+  /search:
     get:
       summary: Search directory content in base directory
       responses:
@@ -218,7 +221,8 @@ paths:
         - folder
   /copy:
     post:
-      summary: ""
+      security: []
+      summary: "Copy list of files to a directory"
       operationId: post-copy
       responses:
         "201":
@@ -236,8 +240,9 @@ paths:
         $ref: "#/components/requestBodies/PasteRequest"
   /move:
     post:
+      security: []
       description: Move list of files and folders defined in sources to destination folder
-      summary: ""
+      summary: "Move list of files to a directory"
       operationId: post-move
       responses:
         "200":
@@ -254,7 +259,7 @@ paths:
         $ref: "#/components/requestBodies/PasteRequest"
   /upload:
     post:
-      summary: ""
+      summary: "Upload a file"
       operationId: upload
       responses:
         "201":
@@ -287,8 +292,9 @@ paths:
       security:
         - token: []
       parameters: []
-  /user/:
+  /user:
     get:
+      security: []
       tags:
         - user
       operationId: get-users
@@ -310,7 +316,9 @@ paths:
         schema:
           type: string
     get:
+      security: []
       operationId: get-user
+      summary: "Get a user info"
       tags:
         - user
       responses:
@@ -321,7 +329,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
     post:
+      security: []
       operationId: post-user
+      summary: "Create new user."
       tags:
         - user
       description: "create new user"
@@ -333,6 +343,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/NewUser"
     patch:
+      summary: "Change user data"
+      security: []
       operationId: patch-user
       tags:
         - user
@@ -349,8 +361,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-  /user/current:
+  /me:
     patch:
+      security: []
+      summary: Edit currently logged in user data
       operationId: patch-current-user
       tags:
         - user
@@ -367,9 +381,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
   /login:
-    parameters: []
     post:
-      summary: ""
+      security: []
+      summary: Login
       operationId: post-login
       responses:
         "200":
@@ -413,7 +427,7 @@ paths:
         - auth
   /access-token:
     get:
-      summary: Your GET endpoint
+      summary: Get access token
       tags:
         - auth
       responses:
