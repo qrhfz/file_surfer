@@ -1,4 +1,4 @@
-module github.com/qrhfz/file_surfer/api
+module file_surfer
 
 go 1.19
 

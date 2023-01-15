@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/qrhfz/file_surfer/api/auth"
+	"file_surfer/api/auth"
 
 	"github.com/labstack/echo/v4"
 )

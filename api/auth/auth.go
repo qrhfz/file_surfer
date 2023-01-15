@@ -2,9 +2,8 @@ package auth
 
 import (
 	"encoding/json"
-
-	"github.com/qrhfz/file_surfer/api/session"
-	"github.com/qrhfz/file_surfer/api/user"
+	"file_surfer/api/session"
+	"file_surfer/api/user"
 
 	"golang.org/x/crypto/bcrypt"
 )

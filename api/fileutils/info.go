@@ -7,7 +7,8 @@ import (
 	pathpkg "path"
 	"path/filepath"
 
-	"github.com/qrhfz/file_surfer/api/config"
+	"file_surfer/api/config"
+	"file_surfer/openapi/api"
 )
 
 // [pathName] must be absolute

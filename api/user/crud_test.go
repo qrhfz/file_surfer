@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"testing"
 
-	appDB "github.com/qrhfz/file_surfer/api/db"
-	"github.com/qrhfz/file_surfer/api/user"
+	appDB "file_surfer/api/db"
+	"file_surfer/api/user"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/stretchr/testify/assert"

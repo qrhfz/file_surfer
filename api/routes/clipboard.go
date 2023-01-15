@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/qrhfz/file_surfer/api/server"
+	"file_surfer/api/server"
 
 	"github.com/labstack/echo/v4"
 )

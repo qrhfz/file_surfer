@@ -8,9 +8,9 @@ import (
 	"path"
 	"time"
 
-	"github.com/qrhfz/file_surfer/api/config"
-	"github.com/qrhfz/file_surfer/api/db"
-	"github.com/qrhfz/file_surfer/api/routes"
+	"file_surfer/api/config"
+	"file_surfer/api/db"
+	"file_surfer/api/routes"
 
 	"embed"
 

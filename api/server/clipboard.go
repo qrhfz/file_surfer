@@ -4,8 +4,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/qrhfz/file_surfer/api/config"
-	"github.com/qrhfz/file_surfer/api/fileutils"
+	"file_surfer/api/config"
+	"file_surfer/api/fileutils"
+
 	"github.com/qrhfz/file_surfer/openapi/api"
 
 	"github.com/labstack/echo/v4"
