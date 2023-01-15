@@ -1,9 +1,10 @@
 package routes
 
 import (
-	"file_surfer_backend/auth"
 	"net/http"
 	"strings"
+
+	"github.com/qrhfz/file_surfer/api/auth"
 
 	"github.com/labstack/echo/v4"
 )

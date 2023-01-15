@@ -2,9 +2,10 @@ package user_test
 
 import (
 	"database/sql"
-	appDB "file_surfer_backend/db"
-	"file_surfer_backend/user"
 	"testing"
+
+	appDB "github.com/qrhfz/file_surfer/api/db"
+	"github.com/qrhfz/file_surfer/api/user"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/stretchr/testify/assert"

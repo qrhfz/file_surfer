@@ -1,10 +1,11 @@
 package server
 
 import (
-	"file_surfer_backend/api"
-	"file_surfer_backend/config"
-	"file_surfer_backend/fileutils"
 	"path/filepath"
+
+	"github.com/qrhfz/file_surfer/api/api"
+	"github.com/qrhfz/file_surfer/api/config"
+	"github.com/qrhfz/file_surfer/api/fileutils"
 
 	"net/http"
 	"os"

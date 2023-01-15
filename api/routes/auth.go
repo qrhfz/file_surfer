@@ -1,11 +1,12 @@
 package routes
 
 import (
-	"file_surfer_backend/api"
-	"file_surfer_backend/auth"
-	"file_surfer_backend/config"
 	"fmt"
 	"net/http"
+
+	"github.com/qrhfz/file_surfer/api/api"
+	"github.com/qrhfz/file_surfer/api/auth"
+	"github.com/qrhfz/file_surfer/api/config"
 
 	"github.com/labstack/echo/v4"
 )

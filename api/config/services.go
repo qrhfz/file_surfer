@@ -1,10 +1,10 @@
 package config
 
 import (
-	"file_surfer_backend/auth"
-	"file_surfer_backend/db"
-	"file_surfer_backend/session"
-	"file_surfer_backend/user"
+	"github.com/qrhfz/file_surfer/api/auth"
+	"github.com/qrhfz/file_surfer/api/db"
+	"github.com/qrhfz/file_surfer/api/session"
+	"github.com/qrhfz/file_surfer/api/user"
 )
 
 var AppUserService = user.NewUserService(db.DB)

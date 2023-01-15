@@ -1,11 +1,13 @@
 package fileutils_test
 
 import (
-	"file_surfer_backend/config"
-	"file_surfer_backend/fileutils"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/qrhfz/file_surfer/api/config"
+
+	"github.com/qrhfz/file_surfer/api/fileutils"
 )
 
 func TestGetFileInfo(t *testing.T) {

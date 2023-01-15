@@ -2,12 +2,13 @@ package fileutils
 
 import (
 	"errors"
-	"file_surfer_backend/api"
-	"file_surfer_backend/config"
 	"fmt"
 	"os"
 	pathpkg "path"
 	"path/filepath"
+
+	"github.com/qrhfz/file_surfer/api/api"
+	"github.com/qrhfz/file_surfer/api/config"
 )
 
 // [pathName] must be absolute

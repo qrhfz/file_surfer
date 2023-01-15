@@ -1,9 +1,6 @@
 package server
 
 import (
-	"file_surfer_backend/api"
-	"file_surfer_backend/config"
-	"file_surfer_backend/fileutils"
 	"io"
 	"io/fs"
 	"net/http"
@@ -12,6 +9,10 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/qrhfz/file_surfer/api/api"
+	"github.com/qrhfz/file_surfer/api/config"
+	"github.com/qrhfz/file_surfer/api/fileutils"
 
 	"github.com/labstack/echo/v4"
 )

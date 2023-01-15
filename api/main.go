@@ -1,15 +1,16 @@
 package main
 
 import (
-	"file_surfer_backend/config"
-	"file_surfer_backend/db"
-	"file_surfer_backend/routes"
 	"fmt"
 	"io/fs"
 	"log"
 	"net/http"
 	"path"
 	"time"
+
+	"github.com/qrhfz/file_surfer/api/config"
+	"github.com/qrhfz/file_surfer/api/db"
+	"github.com/qrhfz/file_surfer/api/routes"
 
 	"embed"
 
