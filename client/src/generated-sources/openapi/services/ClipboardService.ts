@@ -10,6 +10,7 @@ import { request as __request } from '../core/request';
 export class ClipboardService {
 
     /**
+     * Copy list of files to a directory
      * Copy list of files and folders defined in sources to destination folder
      * @param requestBody
      * @returns File copy success
@@ -30,6 +31,7 @@ export class ClipboardService {
     }
 
     /**
+     * Move list of files to a directory
      * Move list of files and folders defined in sources to destination folder
      * @param requestBody
      * @returns File move success

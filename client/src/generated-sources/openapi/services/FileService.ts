@@ -10,7 +10,7 @@ import { request as __request } from '../core/request';
 export class FileService {
 
     /**
-     * Your GET endpoint
+     * Get a file info
      * returns file info. if type is text* it will returns it content as content property
      * @param path
      * @returns File Get File success
@@ -29,6 +29,7 @@ export class FileService {
     }
 
     /**
+     * Create new file.
      * Create a new empty file
      * @param path
      * @param isDir
@@ -77,6 +78,7 @@ export class FileService {
     }
 
     /**
+     * Delete a file
      * Delete a file
      * @param path
      * @returns void

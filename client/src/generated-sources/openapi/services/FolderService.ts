@@ -18,7 +18,7 @@ export class FolderService {
     public static getFolderBase(): CancelablePromise<Array<File>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/folder/',
+            url: '/folder',
         });
     }
 
@@ -53,7 +53,7 @@ export class FolderService {
     ): CancelablePromise<Array<File>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/search/',
+            url: '/search',
             query: {
                 'search': search,
             },

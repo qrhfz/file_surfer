@@ -9,6 +9,7 @@ export class AuthService {
 
     /**
      * Login
+     * Login
      * @param requestBody
      * @returns any OK
      * @throws ApiError
@@ -33,7 +34,7 @@ export class AuthService {
     }
 
     /**
-     * Your GET endpoint
+     * Get access token
      * Ask for token to access file download etc
      * @returns any OK
      * @throws ApiError

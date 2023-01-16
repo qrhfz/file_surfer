@@ -10,7 +10,7 @@ import { request as __request } from '../core/request';
 export class BlobService {
 
     /**
-     * Your GET endpoint
+     * Download a file
      * Download file at given path
      * @param path
      * @returns binary OK
@@ -29,6 +29,7 @@ export class BlobService {
     }
 
     /**
+     * Upload a file
      * Upload a file to folder defined in path
      * @param formData
      * @returns File File uploaded successfully

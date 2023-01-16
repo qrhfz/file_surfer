@@ -19,11 +19,25 @@ export class UserService {
     public static getUsers(): CancelablePromise<Array<User>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/user/',
+            url: '/user',
         });
     }
 
     /**
+     * Create new user.
+     * create new user
+     * @returns NewUser created user
+     * @throws ApiError
+     */
+    public static postUser(): CancelablePromise<NewUser> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/user',
+        });
+    }
+
+    /**
+     * Get a user info
      * @param id
      * @returns User single user
      * @throws ApiError
@@ -41,24 +55,7 @@ export class UserService {
     }
 
     /**
-     * create new user
-     * @param id
-     * @returns NewUser created user
-     * @throws ApiError
-     */
-    public static postUser(
-        id: string,
-    ): CancelablePromise<NewUser> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/user/{id}',
-            path: {
-                'id': id,
-            },
-        });
-    }
-
-    /**
+     * Change user data
      * edit user
      * @param id
      * @param requestBody
@@ -81,6 +78,19 @@ export class UserService {
     }
 
     /**
+     * Get current loggedin user info
+     * @returns User Sucess get current user
+     * @throws ApiError
+     */
+    public static getMe(): CancelablePromise<User> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/me',
+        });
+    }
+
+    /**
+     * Edit currently logged in user data
      * @param requestBody
      * @returns User return updated user
      * @throws ApiError
@@ -90,7 +100,7 @@ export class UserService {
     ): CancelablePromise<User> {
         return __request(OpenAPI, {
             method: 'PATCH',
-            url: '/user/current',
+            url: '/me',
             body: requestBody,
             mediaType: 'application/json',
         });
