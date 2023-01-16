@@ -11,7 +11,7 @@ import { FolderContext } from "./folder_state"
 import { PopupContext } from "../components/popup/popup_state"
 import { FunctionalComponent } from "preact";
 import { Toolbar } from "./toolbar"
-// import { effect } from "@preact/signals"
+import { useSignalEffect } from "@preact/signals"
 
 
 type Prop = { location?: string, matches?: { q: string | undefined, in: string | undefined } }
@@ -20,15 +20,15 @@ type FolderPageType = FunctionalComponent<Prop>
 export const FolderPage: FolderPageType = ({ location, matches }) => {
   const { authenticated } = useGuard()
 
-
   const folder = useContext(FolderContext)
   const path = joinPaths(location ?? '')
 
-  useEffect(() => {
-    if (authenticated) {
+  useSignalEffect(() => {
+    if (authenticated.value) {
+      console.log("fetch")
       folder.fetchFolder(path)
     }
-  }, [path])
+  })
 
   const popup = useContext(PopupContext)
   useEffect(() => {

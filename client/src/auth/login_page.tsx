@@ -3,7 +3,6 @@ import { useContext, useState } from "preact/hooks"
 import { BiHide, BiShow, BiUserCircle } from "react-icons/bi"
 import { AuthService } from "../generated-sources/openapi"
 import { FunctionalComponent } from "preact";
-import { effect } from "@preact/signals";
 import { TokenContext } from "./tokenSignal";
 import { PrimaryButton } from "../components/buttons";
 
@@ -14,18 +13,12 @@ export const LoginPage: FunctionalComponent = () => {
 
   const token = useContext(TokenContext)
 
-  effect(() => {
-    if (token.value !== null) {
-      route("/browse/")
-    }
-  })
-
   const submit = async (e: Event) => {
     e.preventDefault()
     const result = await AuthService.postLogin({ username, password })
     if (result?.token !== undefined) {
       token.value = result.token
-
+      route("/browse/")
     }
   }
 
