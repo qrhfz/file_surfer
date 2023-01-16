@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 
 	"file_surfer/controllers"
@@ -20,7 +19,6 @@ func search(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	fmt.Println("search", path)
 
 	search := c.QueryParam("search")
 	results, err := controllers.SearchFolder(path, search)

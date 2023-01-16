@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 
 	"file_surfer/api"
@@ -14,7 +13,6 @@ func (app *App) registerAuthRoutes() {
 	app.base.POST("/login", func(c echo.Context) error {
 		var loginBody api.PostLoginJSONRequestBody
 		c.Bind(&loginBody)
-		fmt.Println(loginBody)
 
 		token, err := app.services.Auth.Login(loginBody.Username, loginBody.Password)
 
