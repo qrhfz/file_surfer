@@ -608,7 +608,7 @@
         }
       }
     },
-    "/me": {
+    "/user/me": {
       "get": {
         "security": [
           {

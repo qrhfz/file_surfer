@@ -26,13 +26,18 @@ export class UserService {
     /**
      * Create new user.
      * create new user
+     * @param requestBody
      * @returns NewUser created user
      * @throws ApiError
      */
-    public static postUser(): CancelablePromise<NewUser> {
+    public static postUser(
+        requestBody?: NewUser,
+    ): CancelablePromise<NewUser> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/user',
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 
@@ -82,10 +87,10 @@ export class UserService {
      * @returns User Sucess get current user
      * @throws ApiError
      */
-    public static getMe(): CancelablePromise<User> {
+    public static getUserMe(): CancelablePromise<User> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/me',
+            url: '/user/me',
         });
     }
 
@@ -100,7 +105,7 @@ export class UserService {
     ): CancelablePromise<User> {
         return __request(OpenAPI, {
             method: 'PATCH',
-            url: '/me',
+            url: '/user/me',
             body: requestBody,
             mediaType: 'application/json',
         });

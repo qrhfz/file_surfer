@@ -121,14 +121,17 @@ type PatchFileJSONRequestBody PatchFileJSONBody
 // PostLoginJSONRequestBody defines body for PostLogin for application/json ContentType.
 type PostLoginJSONRequestBody PostLoginJSONBody
 
-// PatchCurrentUserJSONRequestBody defines body for PatchCurrentUser for application/json ContentType.
-type PatchCurrentUserJSONRequestBody = UpdateUser
-
 // PostMoveJSONRequestBody defines body for PostMove for application/json ContentType.
 type PostMoveJSONRequestBody PostMoveJSONBody
 
 // UploadMultipartRequestBody defines body for Upload for multipart/form-data ContentType.
 type UploadMultipartRequestBody UploadMultipartBody
+
+// PostUserJSONRequestBody defines body for PostUser for application/json ContentType.
+type PostUserJSONRequestBody = NewUser
+
+// PatchCurrentUserJSONRequestBody defines body for PatchCurrentUser for application/json ContentType.
+type PatchCurrentUserJSONRequestBody = UpdateUser
 
 // PatchUserJSONRequestBody defines body for PatchUser for application/json ContentType.
 type PatchUserJSONRequestBody = UpdateUser
