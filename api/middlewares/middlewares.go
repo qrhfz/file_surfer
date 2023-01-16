@@ -3,7 +3,6 @@ package middlewares
 import (
 	"errors"
 	"file_surfer/auth"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -11,7 +10,6 @@ import (
 )
 
 func LoggedInOnly(authService *auth.AuthService) echo.MiddlewareFunc {
-	fmt.Println("AAAAAAAAAAARRRRRRGHH")
 
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
