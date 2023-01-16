@@ -5,12 +5,10 @@ import (
 	"net/http"
 	"strings"
 
-	"file_surfer/auth"
-
 	"github.com/labstack/echo/v4"
 )
 
-func AllowLoggedInOnly(auths *auth.AuthService) echo.MiddlewareFunc {
+func (api *ApiRoute) AllowLoggedInOnly() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			token, err := getBearerToken(c)
@@ -18,7 +16,7 @@ func AllowLoggedInOnly(auths *auth.AuthService) echo.MiddlewareFunc {
 				return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 			}
 
-			if auths.IsLoggedIn(token) {
+			if api.services.Auth.IsLoggedIn(token) {
 				return next(c)
 			}
 			return echo.NewHTTPError(http.StatusUnauthorized, "not logged in")
@@ -26,7 +24,7 @@ func AllowLoggedInOnly(auths *auth.AuthService) echo.MiddlewareFunc {
 	}
 }
 
-func AdminOnly(auths *auth.AuthService) echo.MiddlewareFunc {
+func (api *ApiRoute) AdminOnly() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			token, err := getBearerToken(c)
@@ -34,7 +32,7 @@ func AdminOnly(auths *auth.AuthService) echo.MiddlewareFunc {
 				return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 			}
 
-			if auths.IsAdmin(token) {
+			if api.services.Auth.IsAdmin(token) {
 				return next(c)
 			}
 			return echo.NewHTTPError(http.StatusUnauthorized, "not admin")
@@ -42,12 +40,12 @@ func AdminOnly(auths *auth.AuthService) echo.MiddlewareFunc {
 	}
 }
 
-func NeedAccessToken(auths *auth.AuthService) echo.MiddlewareFunc {
+func (api *ApiRoute) NeedAccessToken() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			token := c.QueryParam("accessToken")
 
-			if !auths.VerifyAccessToken(token) {
+			if !api.services.Auth.VerifyAccessToken(token) {
 				return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
 			}
 

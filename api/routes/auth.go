@@ -39,5 +39,5 @@ func (a *ApiRoute) registerAuthRoutes() {
 		return c.JSON(200, map[string]string{
 			"accessToken": accessToken,
 		})
-	}, AllowLoggedInOnly(a.services.Auth))
+	}, a.AllowLoggedInOnly())
 }
