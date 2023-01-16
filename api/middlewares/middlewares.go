@@ -17,6 +17,7 @@ func LoggedInOnly(authService *auth.AuthService) echo.MiddlewareFunc {
 			}
 
 			if authService.IsLoggedIn(token) {
+				c.Set("token", token)
 				return next(c)
 			}
 			return echo.NewHTTPError(http.StatusUnauthorized, "not logged in")
