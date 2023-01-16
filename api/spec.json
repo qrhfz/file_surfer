@@ -574,7 +574,6 @@
           }
         }
       },
-
       "patch": {
         "summary": "Change user data",
         "security": [
@@ -604,6 +603,15 @@
                 }
               }
             }
+          }
+        }
+      },
+      "delete":{
+        "tags": ["user"],
+        "security": [{"token":[]}],
+        "responses": {
+          "204":{
+            "description": "delete user success"
           }
         }
       }

@@ -4,7 +4,6 @@ import (
 	"file_surfer/api"
 	"file_surfer/user"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -65,10 +64,8 @@ func (uct *UserController) CreateUser(ctx echo.Context) error {
 }
 
 func (uct *UserController) GetUserById(ctx echo.Context) error {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "invalid id")
-	}
+	id := ctx.Get("id").(int)
+
 	u, err := uct.userService.GetUser(id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
@@ -84,13 +81,10 @@ func (uct *UserController) GetUserById(ctx echo.Context) error {
 }
 
 func (uct *UserController) UpdateUser(ctx echo.Context) error {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "invalid id")
-	}
+	id := ctx.Get("id").(int)
 
 	var body api.UpdateUser
-	err = ctx.Bind(&body)
+	err := ctx.Bind(&body)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -114,4 +108,15 @@ func (uct *UserController) UpdateUser(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(200, resp)
+}
+
+func (uct *UserController) DeleteUser(ctx echo.Context) error {
+	id := ctx.Get("id").(int)
+	err := uct.userService.DeleteUser(id)
+
+	if err != nil {
+		return echo.NewHTTPError(500, err.Error())
+	}
+
+	return ctx.JSON(204, nil)
 }
