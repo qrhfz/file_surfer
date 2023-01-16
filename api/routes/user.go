@@ -7,15 +7,19 @@ import (
 )
 
 func (api *ApiRoute) registerUserRoutes() {
-	controller := controllers.NewUserController(api.services.User)
+	uct := controllers.NewUserController(api.services.User)
 
 	g := api.base.Group("/user", AllowLoggedInOnly(api.services.Auth))
-	g.GET("", func(c echo.Context) error {
-		resp, err := controller.GetUsers()
+	g.GET("", getUsers(uct))
+}
+
+func getUsers(uct *controllers.UserController) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		resp, err := uct.GetUsers()
 		if err != nil {
 			return echo.NewHTTPError(500, err.Error())
 		}
 
 		return c.JSON(200, resp)
-	})
+	}
 }
