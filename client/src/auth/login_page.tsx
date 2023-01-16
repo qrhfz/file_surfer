@@ -5,6 +5,7 @@ import { AuthService } from "../generated-sources/openapi"
 import { FunctionalComponent } from "preact";
 import { effect } from "@preact/signals";
 import { TokenContext } from "./tokenSignal";
+import { PrimaryButton } from "../components/buttons";
 
 export const LoginPage: FunctionalComponent = () => {
   const [username, setUsername] = useState("")
@@ -32,7 +33,7 @@ export const LoginPage: FunctionalComponent = () => {
   return (
     <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
       <div class="mx-auto max-w-lg">
-        <h1 class="text-center text-2xl font-bold text-indigo-600 sm:text-3xl">
+        <h1 class="text-center text-2xl font-bold text-green-400 sm:text-3xl">
           File Surfer
         </h1>
 
@@ -78,13 +79,11 @@ export const LoginPage: FunctionalComponent = () => {
               </span>
             </div>
           </div>
-
-          <button
-            type="submit"
-            class="block w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white"
-          >
-            Sign in
-          </button>
+          <div className="pt-4">
+            <PrimaryButton type="submit" class="w-full">
+              Login
+            </PrimaryButton>
+          </div>
         </form>
       </div>
     </div>

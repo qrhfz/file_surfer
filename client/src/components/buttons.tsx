@@ -1,54 +1,54 @@
-import { FunctionComponent } from "preact"
+import { FC } from "preact/compat"
 
 type ButtonProp = {
   onClick?: () => void,
-  type?: string
+  type?: string,
+  class?: string
 }
-
-export const PrimaryButton: FunctionComponent<ButtonProp> = ({ children, onClick, type }) => {
+export const PrimaryButton: FC<ButtonProp> = prop => {
   return (
     <button
-      class="btn btn-primary"
-      onClick={onClick}
-      type={type}
+      class={`btn btn-primary ${prop.class ?? ""}`}
+      onClick={prop.onClick}
+      type={prop.type}
     >
-      {children}
+      {prop.children}
     </button>
   )
 }
 
-export const SmallPrimaryButton: FunctionComponent<ButtonProp> = ({ children, onClick, type }) => {
+export const SmallPrimaryButton: FC<ButtonProp> = prop => {
   return (
     <button
-      class="btn btn-primary btn-sm"
-      onClick={onClick}
-      type={type}
+      class={`btn btn-primary btn-sm ${prop.class ?? ""}`}
+      onClick={prop.onClick}
+      type={prop.type}
     >
-      {children}
+      {prop.children}
     </button>
   )
 }
 
-export const SmallSecondaryButton: FunctionComponent<ButtonProp> = ({ children, onClick, type }) => {
+export const SmallSecondaryButton: FC<ButtonProp> = prop => {
   return (
     <button
-      class="btn btn-secondary btn-sm"
-      onClick={onClick}
-      type={type}
+      class={`btn btn-secondary btn-sm ${prop.class ?? ""}`}
+      onClick={prop.onClick}
+      type={prop.type}
     >
-      {children}
+      {prop.children}
     </button>
   )
 }
 
-export const SecondaryButton: FunctionComponent<ButtonProp> = ({ children, onClick, type }) => {
+export const SecondaryButton: FC<ButtonProp> = prop => {
   return (
     <button
-      class="btn btn-secondary"
-      onClick={onClick}
-      type={type}
+      class={`btn btn-secondary${prop.class ?? ""}`}
+      onClick={prop.onClick}
+      type={prop.type}
     >
-      {children}
+      {prop.children}
     </button>
   )
 }
