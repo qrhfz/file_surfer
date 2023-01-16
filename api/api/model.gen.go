@@ -57,7 +57,7 @@ type UpdateUser struct {
 
 // User defines model for User.
 type User struct {
-	Id       string `json:"id"`
+	Id       int    `json:"id"`
 	Role     Role   `json:"role"`
 	Username string `json:"username"`
 }

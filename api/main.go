@@ -42,7 +42,7 @@ func main() {
 		},
 	}))
 
-	routes.RegisterRoute(e, authService)
+	routes.RegisterRoute(e, authService, userService)
 	e.GET("/*", contentHandler, contentRewrite)
 
 	go sessionCleanupfunc(sessionStore)

@@ -819,7 +819,7 @@
           {
             "properties": {
               "id": {
-                "type": "string"
+                "type": "integer"
               }
             },
             "required": [
