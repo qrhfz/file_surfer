@@ -18,9 +18,9 @@ func (a *AuthService) IsAdmin(token string) bool {
 		return false
 	}
 
-	var u *user.User
+	var u user.User
 
-	json.Unmarshal([]byte(sess), u)
+	json.Unmarshal([]byte(sess), &u)
 
 	return u.Role == "admin"
 }
