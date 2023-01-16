@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 
@@ -12,22 +13,31 @@ import (
 func AllowLoggedInOnly(auths *auth.AuthService) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			authorizationHeaders, ok := c.Request().Header["Authorization"]
-			if !ok {
-				return echo.NewHTTPError(http.StatusUnauthorized, "no Authorization header")
+			token, err := getBearerToken(c)
+			if err != nil {
+				return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 			}
 
-			if len(authorizationHeaders) < 1 {
-				return echo.NewHTTPError(http.StatusUnauthorized, "invalid Authorization header")
-			}
-
-			authorization := authorizationHeaders[0]
-			token := strings.Split(authorization, "Bearer ")[1]
-			if auths.AllowLoggedInOnly(token) {
-				c.Set("token", token)
+			if auths.IsLoggedIn(token) {
 				return next(c)
 			}
 			return echo.NewHTTPError(http.StatusUnauthorized, "not logged in")
+		}
+	}
+}
+
+func AdminOnly(auths *auth.AuthService) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			token, err := getBearerToken(c)
+			if err != nil {
+				return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
+			}
+
+			if auths.IsAdmin(token) {
+				return next(c)
+			}
+			return echo.NewHTTPError(http.StatusUnauthorized, "not admin")
 		}
 	}
 }
@@ -44,4 +54,15 @@ func NeedAccessToken(auths *auth.AuthService) echo.MiddlewareFunc {
 			return next(c)
 		}
 	}
+}
+
+func getBearerToken(c echo.Context) (string, error) {
+	ah, ok := c.Request().Header["Authorization"]
+	if !ok || len(ah) < 1 {
+		return "", errors.New("no authorization header")
+	}
+	bearer := ah[0]
+	token := strings.Split(bearer, "Bearer ")[1]
+
+	return token, nil
 }
