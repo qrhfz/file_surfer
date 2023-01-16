@@ -6,7 +6,6 @@ import (
 
 	"file_surfer/api"
 	"file_surfer/auth"
-	"file_surfer/config"
 
 	"github.com/labstack/echo/v4"
 )
@@ -17,7 +16,7 @@ func registerAuthRoutes(e *echo.Group, auths *auth.AuthService) {
 		c.Bind(&loginBody)
 		fmt.Println(loginBody)
 
-		token, err := config.AppAuthService.Login(loginBody.Username, loginBody.Password)
+		token, err := auths.Login(loginBody.Username, loginBody.Password)
 
 		if err != nil {
 			return echo.NewHTTPError(http.StatusUnauthorized, err.Error())

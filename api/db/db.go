@@ -8,11 +8,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var DB *sql.DB
-
-func init() {
+func Connect() *sql.DB {
 	var err error
-	DB, err = sql.Open("sqlite3", "./foo.db")
+	DB, err := sql.Open("sqlite3", "./file_surfer.db")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -34,4 +32,6 @@ func init() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
+	return DB
 }
