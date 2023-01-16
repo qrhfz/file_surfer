@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"file_surfer/api"
+	"file_surfer/auth"
 
 	"github.com/labstack/echo/v4"
 )
@@ -40,4 +41,18 @@ func (app *App) registerAuthRoutes() {
 			"accessToken": accessToken,
 		})
 	}, app.middlewares.LoggedInOnly)
+
+	app.base.GET("/logout", func(c echo.Context) error {
+		token, err := auth.GetBearerToken(c)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
+		}
+
+		err = app.services.Auth.Logout(token)
+		if err != nil {
+			return echo.NewHTTPError(500, err.Error())
+		}
+
+		return c.JSON(http.StatusNoContent, nil)
+	})
 }

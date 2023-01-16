@@ -1,10 +1,8 @@
 package middlewares
 
 import (
-	"errors"
 	"file_surfer/auth"
 	"net/http"
-	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -13,7 +11,7 @@ func LoggedInOnly(authService *auth.AuthService) echo.MiddlewareFunc {
 
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			token, err := getBearerToken(c)
+			token, err := auth.GetBearerToken(c)
 			if err != nil {
 				return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 			}
@@ -29,7 +27,7 @@ func LoggedInOnly(authService *auth.AuthService) echo.MiddlewareFunc {
 func AdminOnly(authService *auth.AuthService) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			token, err := getBearerToken(c)
+			token, err := auth.GetBearerToken(c)
 			if err != nil {
 				return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 			}
@@ -54,15 +52,4 @@ func NeedAccessToken(authService *auth.AuthService) echo.MiddlewareFunc {
 			return next(c)
 		}
 	}
-}
-
-func getBearerToken(c echo.Context) (string, error) {
-	ah, ok := c.Request().Header["Authorization"]
-	if !ok || len(ah) < 1 {
-		return "", errors.New("no authorization header")
-	}
-	bearer := ah[0]
-	token := strings.Split(bearer, "Bearer ")[1]
-
-	return token, nil
 }

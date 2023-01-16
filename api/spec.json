@@ -732,6 +732,18 @@
         ]
       }
     },
+    "/logout":{
+      "get":{
+        "security": [{"token":[]}],
+        "operationId": "logout",
+        "tags": ["auth"],
+        "responses": {
+          "204":{
+            "description": "logout success"
+          }
+        }
+      }
+    },
     "/access-token": {
       "get": {
         "summary": "Get access token",
