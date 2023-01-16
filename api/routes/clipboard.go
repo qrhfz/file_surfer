@@ -4,7 +4,7 @@ import (
 	"file_surfer/controllers"
 )
 
-func (api *ApiRoute) registerClipboardRoutes() {
-	api.base.POST("/copy", controllers.PostCopy)
-	api.base.POST("/move", controllers.PostMove)
+func (app *App) registerClipboardRoutes() {
+	app.base.POST("/copy", controllers.PostCopy)
+	app.base.POST("/move", controllers.PostMove)
 }

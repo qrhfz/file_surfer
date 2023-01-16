@@ -4,9 +4,9 @@ import (
 	"file_surfer/controllers"
 )
 
-func (api *ApiRoute) registerFolderRoute() {
+func (app *App) registerFolderRoute() {
 
-	api.base.GET("/folder", controllers.GetFolder, api.middlewares.LoggedInOnly)
-	api.base.GET("/folder/", controllers.GetFolder, api.middlewares.LoggedInOnly)
-	api.base.GET("/folder/:path", controllers.GetFolder, api.middlewares.LoggedInOnly)
+	app.base.GET("/folder", controllers.GetFolder, app.middlewares.LoggedInOnly)
+	app.base.GET("/folder/", controllers.GetFolder, app.middlewares.LoggedInOnly)
+	app.base.GET("/folder/:path", controllers.GetFolder, app.middlewares.LoggedInOnly)
 }

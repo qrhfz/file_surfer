@@ -9,15 +9,15 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type ApiRoute struct {
+type App struct {
 	echo        *echo.Echo
 	base        *echo.Group
 	services    *Services
 	middlewares *Middlewares
 }
 
-func NewApiRoute(e *echo.Echo, base string, services *Services) *ApiRoute {
-	return &ApiRoute{
+func NewApiRoute(e *echo.Echo, base string, services *Services) *App {
+	return &App{
 		echo:     e,
 		base:     e.Group(base),
 		services: services,
@@ -40,7 +40,7 @@ type Middlewares struct {
 	LoggedInOnly echo.MiddlewareFunc
 }
 
-func (api *ApiRoute) RegisterRoute() {
+func (api *App) RegisterRoute() {
 	api.registerFileGroup()
 	api.registerFolderRoute()
 	api.registerClipboardRoutes()

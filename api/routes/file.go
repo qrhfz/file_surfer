@@ -4,11 +4,11 @@ import (
 	"file_surfer/controllers"
 )
 
-func (api *ApiRoute) registerFileGroup() {
-	loggedInMW := api.middlewares.LoggedInOnly
-	accessTokenMW := api.middlewares.AccessToken
+func (app *App) registerFileGroup() {
+	loggedInMW := app.middlewares.LoggedInOnly
+	accessTokenMW := app.middlewares.AccessToken
 
-	fileGroup := api.base.Group("/file/:path")
+	fileGroup := app.base.Group("/file/:path")
 	fileGroup.GET("", controllers.GetFile, loggedInMW)
 	fileGroup.POST("", controllers.PostFile, loggedInMW)
 	fileGroup.PATCH("", controllers.PatchFile, loggedInMW)
