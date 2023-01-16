@@ -16,7 +16,6 @@ export const FolderState = () => {
     if (showHidden.value) {
       return files.value
     }
-    console.log(files.value)
     return files.value.filter(f => !f.name.startsWith("."));
   })
 
