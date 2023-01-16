@@ -1,6 +1,7 @@
 import { useSignal } from "@preact/signals"
 import { FunctionComponent } from "preact"
 import { useEffect } from "preact/hooks"
+import { useGuard } from "../auth/useGuard"
 import { SmallPrimaryButton } from "../components/buttons"
 import { AuthService, File, FileService, OpenAPI } from "../generated-sources/openapi"
 import { SingleColumnLayout } from "../layout/single_column_layout"
@@ -9,6 +10,8 @@ import { useAsync } from "../utils/useAsync"
 type FilveViewPageType = FunctionComponent<{ loc?: string }>
 
 export const FileViewPage: FilveViewPageType = prop => {
+  useGuard()
+
   const path = encodeURIComponent(prop.loc!)
 
   const fileState = useAsync(

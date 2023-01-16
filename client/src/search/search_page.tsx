@@ -1,5 +1,6 @@
 import { FunctionComponent } from "preact"
 import { useEffect, useRef } from "preact/hooks"
+import { useGuard } from "../auth/useGuard"
 import { SmallPrimaryButton } from "../components/buttons"
 import { LoadingCircle } from "../components/loading_circle"
 import { formatBytes } from "../utils/formatBytes"
@@ -9,6 +10,7 @@ import { createSearchState } from "./search_state"
 const state = createSearchState()
 
 export const SearchPage: FunctionComponent = () => {
+  useGuard()
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {

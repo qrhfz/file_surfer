@@ -2,6 +2,7 @@ import { useComputed, useSignal } from "@preact/signals"
 import { FunctionComponent } from "preact"
 import { TargetedEvent } from "preact/compat"
 import { BiCheck } from "react-icons/bi"
+import { useGuard } from "../auth/useGuard"
 import { SmallPrimaryButton } from "../components/buttons"
 import { SimpleInput } from "../components/input/simple_input"
 import { LoadingCircle } from "../components/loading_circle"
@@ -9,6 +10,8 @@ import { UserService } from "../generated-sources/openapi"
 import { SingleColumnLayout } from "../layout/single_column_layout"
 
 export const SettingsPage: FunctionComponent = () => {
+  useGuard()
+
   const confirmPass = useSignal("")
   const newPass = useSignal("")
   const status = useSignal<"init" | "loading" | "error" | "ok">("init")
