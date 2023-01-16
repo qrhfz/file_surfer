@@ -10,6 +10,7 @@ import (
 	"file_surfer/auth"
 	"file_surfer/config"
 	"file_surfer/db"
+	"file_surfer/middlewares"
 	"file_surfer/routes"
 	"file_surfer/session"
 	"file_surfer/user"
@@ -47,7 +48,13 @@ func main() {
 		User: userService,
 	}
 
-	routes.NewApiRoute(e, "/api", &services).RegisterRoute()
+	middlewares := routes.Middlewares{
+		AdminOnly:    middlewares.AdminOnly(services.Auth),
+		AccessToken:  middlewares.NeedAccessToken(services.Auth),
+		LoggedInOnly: middlewares.LoggedInOnly(services.Auth),
+	}
+
+	routes.NewApiRoute(e, "/api", &services, &middlewares).RegisterRoute()
 
 	e.GET("/*", contentHandler, contentRewrite)
 

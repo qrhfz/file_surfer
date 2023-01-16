@@ -3,7 +3,6 @@ package routes
 import (
 	"file_surfer/auth"
 	"file_surfer/controllers"
-	"file_surfer/middlewares"
 	"file_surfer/user"
 
 	"github.com/labstack/echo/v4"
@@ -16,16 +15,12 @@ type App struct {
 	middlewares *Middlewares
 }
 
-func NewApiRoute(e *echo.Echo, base string, services *Services) *App {
+func NewApiRoute(e *echo.Echo, base string, services *Services, middlewares *Middlewares) *App {
 	return &App{
-		echo:     e,
-		base:     e.Group(base),
-		services: services,
-		middlewares: &Middlewares{
-			AdminOnly:    middlewares.AdminOnly(services.Auth),
-			AccessToken:  middlewares.NeedAccessToken(services.Auth),
-			LoggedInOnly: middlewares.LoggedInOnly(services.Auth),
-		},
+		echo:        e,
+		base:        e.Group(base),
+		services:    services,
+		middlewares: middlewares,
 	}
 }
 
