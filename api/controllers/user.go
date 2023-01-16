@@ -3,6 +3,8 @@ package controllers
 import (
 	"file_surfer/api"
 	"file_surfer/user"
+	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -60,4 +62,23 @@ func (uct *UserController) CreateUser(ctx echo.Context) error {
 		Role:     api.Role(u.Role),
 		Username: u.Username,
 	})
+}
+
+func (uct *UserController) GetUserById(ctx echo.Context) error {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid id")
+	}
+	u, err := uct.userService.GetUser(id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	}
+
+	resp := api.User{
+		Id:       u.Id,
+		Role:     api.Role(u.Role),
+		Username: u.Username,
+	}
+
+	return ctx.JSON(200, resp)
 }

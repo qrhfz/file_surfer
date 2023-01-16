@@ -10,4 +10,5 @@ func (app *App) registerUserRoutes() {
 	g := app.base.Group("/user", app.middlewares.AdminOnly)
 	g.GET("", uct.GetUsers)
 	g.POST("", uct.CreateUser)
+	g.GET("/:id", uct.GetUserById)
 }
