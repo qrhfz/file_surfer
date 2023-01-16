@@ -83,6 +83,23 @@ export class UserService {
     }
 
     /**
+     * @param id
+     * @returns void
+     * @throws ApiError
+     */
+    public static deleteUser(
+        id: string,
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/user/{id}',
+            path: {
+                'id': id,
+            },
+        });
+    }
+
+    /**
      * Get current loggedin user info
      * @returns User Sucess get current user
      * @throws ApiError

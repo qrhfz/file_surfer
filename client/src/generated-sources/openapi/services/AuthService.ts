@@ -34,6 +34,17 @@ export class AuthService {
     }
 
     /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static logout(): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/logout',
+        });
+    }
+
+    /**
      * Get access token
      * Ask for token to access file download etc
      * @returns any OK
