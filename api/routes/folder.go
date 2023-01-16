@@ -5,9 +5,8 @@ import (
 )
 
 func (api *ApiRoute) registerFolderRoute() {
-	loggedInMW := api.AllowLoggedInOnly()
 
-	api.base.GET("/folder", controllers.GetFolder, loggedInMW)
-	api.base.GET("/folder/", controllers.GetFolder, loggedInMW)
-	api.base.GET("/folder/:path", controllers.GetFolder, loggedInMW)
+	api.base.GET("/folder", controllers.GetFolder, api.middlewares.LoggedInOnly)
+	api.base.GET("/folder/", controllers.GetFolder, api.middlewares.LoggedInOnly)
+	api.base.GET("/folder/:path", controllers.GetFolder, api.middlewares.LoggedInOnly)
 }

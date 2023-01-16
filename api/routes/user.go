@@ -9,7 +9,7 @@ import (
 func (api *ApiRoute) registerUserRoutes() {
 	uct := controllers.NewUserController(api.services.User)
 
-	g := api.base.Group("/user", api.AllowLoggedInOnly())
+	g := api.base.Group("/user", api.middlewares.LoggedInOnly)
 	g.GET("", getUsers(uct))
 }
 

@@ -5,8 +5,8 @@ import (
 )
 
 func (api *ApiRoute) registerFileGroup() {
-	loggedInMW := api.AllowLoggedInOnly()
-	accessTokenMW := api.NeedAccessToken()
+	loggedInMW := api.middlewares.LoggedInOnly
+	accessTokenMW := api.middlewares.AccessToken
 
 	fileGroup := api.base.Group("/file/:path")
 	fileGroup.GET("", controllers.GetFile, loggedInMW)
