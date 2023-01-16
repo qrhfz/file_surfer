@@ -49,6 +49,21 @@ func (a *AuthService) Login(username, plainPassword string) (string, error) {
 	return token, nil
 }
 
+func (a *AuthService) GetUserFromToken(token string) (*user.User, error) {
+	sess, err := a.sessionStore.GetSession(token)
+	if err != nil {
+		return nil, err
+	}
+
+	u := user.User{}
+	err = json.Unmarshal([]byte(sess), &u)
+	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
+}
+
 func (a *AuthService) Logout(token string) error {
 	return a.sessionStore.RemoveSession(token)
 }
