@@ -8,13 +8,32 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func RegisterRoute(e *echo.Echo, auths *auth.AuthService, us *user.UserService) {
-	apiGroup := e.Group("/api")
-	registerFileGroup(apiGroup, auths)
-	registerFolderRoute(apiGroup, auths)
+type Services struct {
+	Auth *auth.AuthService
+	User *user.UserService
+}
+
+type ApiRoute struct {
+	e        *echo.Echo
+	base     string
+	services *Services
+}
+
+func NewApiRoute(e *echo.Echo, base string, services *Services) *ApiRoute {
+	return &ApiRoute{
+		e:        e,
+		base:     base,
+		services: services,
+	}
+}
+
+func (api *ApiRoute) RegisterRoute() {
+	apiGroup := api.e.Group("/api")
+	registerFileGroup(apiGroup, api.services)
+	registerFolderRoute(apiGroup, api.services)
 	apiGroup.POST("/upload", controllers.Upload)
 	registerClipboardRoutes(apiGroup)
 	registerSearchRoutes(apiGroup)
-	registerAuthRoutes(apiGroup, auths)
-	registerUserRoutes(apiGroup, auths, us)
+	registerAuthRoutes(apiGroup, api.services)
+	registerUserRoutes(apiGroup, api.services)
 }

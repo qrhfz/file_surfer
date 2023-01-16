@@ -42,7 +42,13 @@ func main() {
 		},
 	}))
 
-	routes.RegisterRoute(e, authService, userService)
+	services := routes.Services{
+		Auth: authService,
+		User: userService,
+	}
+
+	routes.NewApiRoute(e, "/api", &services).RegisterRoute()
+
 	e.GET("/*", contentHandler, contentRewrite)
 
 	go sessionCleanupfunc(sessionStore)

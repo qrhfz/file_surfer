@@ -1,17 +1,20 @@
 package routes
 
 import (
-	"file_surfer/auth"
 	"file_surfer/controllers"
 
 	"github.com/labstack/echo/v4"
 )
 
-func registerFileGroup(e *echo.Group, auths *auth.AuthService) {
+func registerFileGroup(e *echo.Group, service *Services) {
+
+	loggedInMW := AllowLoggedInOnly(service.Auth)
+	accessTokenMW := NeedAccessToken(service.Auth)
+
 	fileGroup := e.Group("/file/:path")
-	fileGroup.GET("", controllers.GetFile, AllowLoggedInOnly(auths))
-	fileGroup.POST("", controllers.PostFile, AllowLoggedInOnly(auths))
-	fileGroup.PATCH("", controllers.PatchFile, AllowLoggedInOnly(auths))
-	fileGroup.DELETE("", controllers.DeleteFile, AllowLoggedInOnly(auths))
-	fileGroup.GET("/blob", controllers.GetBlob, NeedAccessToken(auths))
+	fileGroup.GET("", controllers.GetFile, loggedInMW)
+	fileGroup.POST("", controllers.PostFile, loggedInMW)
+	fileGroup.PATCH("", controllers.PatchFile, loggedInMW)
+	fileGroup.DELETE("", controllers.DeleteFile, loggedInMW)
+	fileGroup.GET("/blob", controllers.GetBlob, accessTokenMW)
 }
