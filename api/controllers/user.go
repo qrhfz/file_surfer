@@ -82,3 +82,36 @@ func (uct *UserController) GetUserById(ctx echo.Context) error {
 
 	return ctx.JSON(200, resp)
 }
+
+func (uct *UserController) UpdateUser(ctx echo.Context) error {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid id")
+	}
+
+	var body api.UpdateUser
+	err = ctx.Bind(&body)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	p := user.UserUpdateParam{
+		ID:       id,
+		Username: body.Username,
+		Role:     (*string)(body.Role),
+		Password: body.Password,
+	}
+
+	u, err := uct.userService.UpdateUser(p)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	}
+
+	resp := api.User{
+		Id:       u.Id,
+		Role:     api.Role(u.Role),
+		Username: u.Username,
+	}
+
+	return ctx.JSON(200, resp)
+}

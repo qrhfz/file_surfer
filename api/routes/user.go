@@ -11,4 +11,5 @@ func (app *App) registerUserRoutes() {
 	g.GET("", uct.GetUsers)
 	g.POST("", uct.CreateUser)
 	g.GET("/:id", uct.GetUserById)
+	g.PATCH("/:id", uct.UpdateUser)
 }

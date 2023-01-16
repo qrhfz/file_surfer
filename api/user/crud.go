@@ -113,7 +113,18 @@ func (us *UserService) UpdateUser(param UserUpdateParam) (*User, error) {
 		RETURNING id, username, role;
 	`
 
-	row := us.db.QueryRow(stmt, param.Username, param.Password, param.Role, param.ID)
+	name, pass, role, id := param.Username, param.Password, param.Role, param.ID
+
+	if pass != nil {
+		hash, err := bcrypt.GenerateFromPassword([]byte(*pass), config.HashCost)
+		if err != nil {
+			return nil, err
+		}
+
+		*pass = string(hash)
+	}
+
+	row := us.db.QueryRow(stmt, name, pass, role, id)
 	u := User{}
 
 	if err := row.Scan(&u.Id, &u.Username, &u.Role); err != nil {
