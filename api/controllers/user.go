@@ -3,6 +3,8 @@ package controllers
 import (
 	"file_surfer/api"
 	"file_surfer/user"
+
+	"github.com/labstack/echo/v4"
 )
 
 type UserController struct {
@@ -13,10 +15,10 @@ func NewUserController(us *user.UserService) *UserController {
 	return &UserController{userService: us}
 }
 
-func (c *UserController) GetUsers() ([]api.User, error) {
+func (c *UserController) GetUsers(ctx echo.Context) error {
 	dbUsers, err := c.userService.GetUsers()
 	if err != nil {
-		return nil, err
+		return echo.NewHTTPError(500, err.Error())
 	}
 
 	users := make([]api.User, len(dbUsers))
@@ -30,5 +32,11 @@ func (c *UserController) GetUsers() ([]api.User, error) {
 		users[i] = u
 	}
 
-	return users, nil
+	if err != nil {
+		return echo.NewHTTPError(500, err.Error())
+	}
+
+	return ctx.JSON(200, users)
 }
+
+func (c *UserController) GetUserById() {}
