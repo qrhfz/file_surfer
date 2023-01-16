@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"file_surfer/config"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -25,7 +26,7 @@ func Connect() *sql.DB {
 		log.Fatal(err.Error())
 	}
 
-	hash, _ := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
+	hash, _ := bcrypt.GenerateFromPassword([]byte("admin"), config.HashCost)
 
 	insertAdminStmt := `INSERT OR IGNORE INTO user(username, password, role) VALUES('admin',?,'admin');`
 	_, err = DB.Exec(insertAdminStmt, string(hash))

@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var Base = ""
@@ -15,3 +16,5 @@ func init() {
 	// }
 	Base = os.Getenv("BASE")
 }
+
+const HashCost = bcrypt.DefaultCost

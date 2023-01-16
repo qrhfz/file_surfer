@@ -39,4 +39,25 @@ func (c *UserController) GetUsers(ctx echo.Context) error {
 	return ctx.JSON(200, users)
 }
 
-func (c *UserController) GetUserById() {}
+func (uct *UserController) CreateUser(ctx echo.Context) error {
+	var body api.NewUser
+	ctx.Bind(&body)
+
+	name, pass, role := body.Username, body.Password, string(body.Role)
+
+	id, err := uct.userService.CreateNewUser(name, pass, role)
+	if err != nil {
+		return echo.NewHTTPError(500, err.Error())
+	}
+
+	u, err := uct.userService.GetUser(id)
+	if err != nil {
+		return echo.NewHTTPError(500, err.Error())
+	}
+
+	return ctx.JSON(201, api.User{
+		Id:       u.Id,
+		Role:     api.Role(u.Role),
+		Username: u.Username,
+	})
+}

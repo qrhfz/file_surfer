@@ -1,9 +1,24 @@
 package user
 
+import (
+	"file_surfer/config"
+
+	"golang.org/x/crypto/bcrypt"
+)
+
 func (us *UserService) CreateNewUser(name, password, role string) (int, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), config.HashCost)
+	if err != nil {
+		return 0, err
+	}
+
 	var id int
-	stmt := `INSERT INTO user(username, password, role) values(?,?,?) RETURNING id;`
-	err := us.db.QueryRow(stmt, name, password, role).Scan(&id)
+	stmt := `INSERT INTO 
+						user(username, password, role) 
+						values(?,?,?) 
+						RETURNING id;`
+
+	err = us.db.QueryRow(stmt, name, string(hash), role).Scan(&id)
 	if err != nil {
 		return 0, err
 	}
