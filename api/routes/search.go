@@ -10,9 +10,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func registerSearchRoutes(e *echo.Group) {
-	e.GET("/search/", search)
-	e.GET("/search/:path", search)
+func (api *ApiRoute) registerSearchRoutes() {
+	api.base.GET("/search/", search)
+	api.base.GET("/search/:path", search)
 }
 
 func search(c echo.Context) error {

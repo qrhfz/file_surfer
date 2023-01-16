@@ -6,10 +6,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func registerUserRoutes(root *echo.Group, services *Services) {
-	controller := controllers.NewUserController(services.User)
+func (api *ApiRoute) registerUserRoutes() {
+	controller := controllers.NewUserController(api.services.User)
 
-	g := root.Group("/user", AllowLoggedInOnly(services.Auth))
+	g := api.base.Group("/user", AllowLoggedInOnly(api.services.Auth))
 	g.GET("", func(c echo.Context) error {
 		resp, err := controller.GetUsers()
 		if err != nil {

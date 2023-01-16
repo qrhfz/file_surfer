@@ -14,26 +14,26 @@ type Services struct {
 }
 
 type ApiRoute struct {
-	e        *echo.Echo
-	base     string
+	echo     *echo.Echo
+	base     *echo.Group
 	services *Services
 }
 
 func NewApiRoute(e *echo.Echo, base string, services *Services) *ApiRoute {
 	return &ApiRoute{
-		e:        e,
-		base:     base,
+		echo:     e,
+		base:     e.Group(base),
 		services: services,
 	}
 }
 
 func (api *ApiRoute) RegisterRoute() {
-	apiGroup := api.e.Group("/api")
-	registerFileGroup(apiGroup, api.services)
-	registerFolderRoute(apiGroup, api.services)
-	apiGroup.POST("/upload", controllers.Upload)
-	registerClipboardRoutes(apiGroup)
-	registerSearchRoutes(apiGroup)
-	registerAuthRoutes(apiGroup, api.services)
-	registerUserRoutes(apiGroup, api.services)
+	api.registerFileGroup()
+	api.registerFolderRoute()
+	api.registerClipboardRoutes()
+	api.registerSearchRoutes()
+	api.registerAuthRoutes()
+	api.registerUserRoutes()
+
+	api.base.POST("/upload", controllers.Upload)
 }

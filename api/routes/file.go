@@ -2,16 +2,13 @@ package routes
 
 import (
 	"file_surfer/controllers"
-
-	"github.com/labstack/echo/v4"
 )
 
-func registerFileGroup(e *echo.Group, service *Services) {
+func (api *ApiRoute) registerFileGroup() {
+	loggedInMW := AllowLoggedInOnly(api.services.Auth)
+	accessTokenMW := NeedAccessToken(api.services.Auth)
 
-	loggedInMW := AllowLoggedInOnly(service.Auth)
-	accessTokenMW := NeedAccessToken(service.Auth)
-
-	fileGroup := e.Group("/file/:path")
+	fileGroup := api.base.Group("/file/:path")
 	fileGroup.GET("", controllers.GetFile, loggedInMW)
 	fileGroup.POST("", controllers.PostFile, loggedInMW)
 	fileGroup.PATCH("", controllers.PatchFile, loggedInMW)
