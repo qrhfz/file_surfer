@@ -26,4 +26,45 @@
   .btn-secondary{
     @apply text-green-600 bg-white hover:bg-green-600 hover:text-white border-green-600
   }
+
+  .layout-lside{
+    display: grid;
+    height: 100vh;
+    grid-template:  "head head head head" auto
+                    "side main main main" 1fr/16rem 1fr 1fr 1fr;
+    border: solid red 1px;
+  }
+  
+  .layout-i-main{
+    grid-area: main;
+  }
+
+  .layout-i-head{
+    grid-area: head;
+  }
+
+  .layout-i-side{
+    grid-area: side;
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 0.25rem;
+  height: 0.25rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

@@ -13,7 +13,7 @@ export const Toolbar: FunctionComponent = () => {
   const modal = useContext(ModalContext)
 
   return (
-    <div class="flex flex-row items-center gap-4 py-4 pr-2 whitespace-nowrap w-full overflow-x-auto">
+    <div class="flex flex-row items-center gap-4 pr-8 py-4 whitespace-nowrap w-full overflow-x-auto">
       <SmallSecondaryButton onClick={() => {
         modal.show(<NewFileForm path={folder.folderPath.value} />)
       }}>

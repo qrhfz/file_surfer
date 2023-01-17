@@ -47,26 +47,20 @@ export const FolderPage: FolderPageType = ({ location, matches }) => {
   }, [folder.fileOp.value?.status])
 
   return (
-    <div class="grid" style={{
-      gridTemplateAreas: `
-        "head head head head"
-        "side main main main"
-      `
-    }}>
+    <div class="lg:layout-lside" >
       <Nav q={matches?.q} at={matches?.in} />
       <FolderSidebar loc={path} />
-      <main style={{ gridArea: "main" }} class="min-w-0">
-        <div class="flex flex-col">
+      <main class="layout-i-main min-w-0 min-h-0 flex flex-col">
+        <div class="mb-4">
           <Toolbar />
-          <FolderView />
         </div>
+        <FolderView />
 
         {folder.loading.value &&
-          <div class="h-full grid items-center justify-center">
-            <div>
-              <LoadingCircle />
-            </div>
-          </div>}
+          <div>
+            <LoadingCircle />
+          </div>
+        }
 
         {folder.err.value && <pre>{folder.err.value}</pre>}
       </main>
