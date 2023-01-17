@@ -4,6 +4,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
 	"path"
 	"time"
 
@@ -22,26 +23,37 @@ import (
 )
 
 func main() {
-	db := db.Connect()
-	defer db.Close()
-
-	var userService = user.NewUserService(db)
-	var sessionStore = session.NewSessionStore(db)
-	var authService = auth.NewAuthService(userService, sessionStore)
-
 	if !path.IsAbs(config.Base) {
 		log.Fatal("base path is not absolute", config.Base)
 	}
 
 	e := echo.New()
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+
+	cors := middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{echo.HeaderOrigin,
 			echo.HeaderContentType,
 			echo.HeaderAccept,
 			echo.HeaderAuthorization,
 		},
-	}))
+	})
+
+	logFile, err := os.OpenFile("log.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	defer logFile.Close()
+
+	logger := middleware.LoggerWithConfig(config.LoggerConf(logFile))
+
+	e.Use(cors, logger)
+
+	db := db.Connect()
+	defer db.Close()
+
+	var userService = user.NewUserService(db)
+	var sessionStore = session.NewSessionStore(db)
+	var authService = auth.NewAuthService(userService, sessionStore)
 
 	services := routes.Services{
 		Auth: authService,

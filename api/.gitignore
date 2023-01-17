@@ -5,3 +5,4 @@ test/home
 *.db
 public/*
 file_surfer_backend
+log.txt
