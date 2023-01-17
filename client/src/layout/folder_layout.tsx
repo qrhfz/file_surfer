@@ -8,11 +8,11 @@ export const FolderLayout: FolderLayoutType = ({ Header, Main, Aside }) => {
   return (
     <div class="flex flex-col h-screen">
       <Header />
-      <div class="flex flex-row items-stretch h-full">
+      <div class="flex flex-row items-stretch">
         <div class="basis-2/12">
           <Aside />
         </div>
-        <div class="basis-10/12 overflow-x-scroll">
+        <div class="basis-10/12">
           <Main />
         </div>
       </div>

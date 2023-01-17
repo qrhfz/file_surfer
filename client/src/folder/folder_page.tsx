@@ -52,7 +52,6 @@ export const FolderPage: FolderPageType = ({ location, matches }) => {
       Header={() => <Nav q={matches?.q} at={matches?.in} />}
       Aside={() => <FolderSidebar loc={path} />}
       Main={() => {
-
         if (folder.err.value) {
           return (
             <pre>{folder.err.value}</pre>
