@@ -36,7 +36,7 @@ type FolderViewType = FunctionalComponent
 export const FolderView: FolderViewType = () => {
   const resizer = useContext(ColumnResizerContext)
   return (
-    <div class="h-full w-full overflow-x-auto">
+    <div class="overflow-x-auto">
       <table
         class="folder-list-view"
         style={`grid-template-columns:${resizer.template}`}>

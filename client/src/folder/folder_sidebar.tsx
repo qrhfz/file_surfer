@@ -12,7 +12,7 @@ export const FolderSidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
   const token = useContext(TokenContext)
 
   return (
-    <aside class="w-64 p-4">
+    <aside style={{ gridArea: "side" }} class="w-64 p-4">
       <div className="p-4 flex flex-col flex-shrink gap-4">
         <PrimaryButton onClick={() => {
           modal.show(

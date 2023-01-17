@@ -4,7 +4,6 @@ import { FolderView } from "./folder_view"
 import { LoadingCircle } from "../components/loading_circle"
 import { Nav } from "./nav"
 import { FolderSidebar } from "./folder_sidebar"
-import { FolderLayout } from "../layout/folder_layout"
 
 import { joinPaths } from "../utils/path"
 import { FolderContext } from "./folder_state"
@@ -48,31 +47,29 @@ export const FolderPage: FolderPageType = ({ location, matches }) => {
   }, [folder.fileOp.value?.status])
 
   return (
-    <FolderLayout
-      Header={() => <Nav q={matches?.q} at={matches?.in} />}
-      Aside={() => <FolderSidebar loc={path} />}
-      Main={() => {
-        if (folder.err.value) {
-          return (
-            <pre>{folder.err.value}</pre>
-          )
-        }
+    <div class="grid" style={{
+      gridTemplateAreas: `
+        "head head head head"
+        "side main main main"
+      `
+    }}>
+      <Nav q={matches?.q} at={matches?.in} />
+      <FolderSidebar loc={path} />
+      <main style={{ gridArea: "main" }} class="min-w-0">
+        <div class="flex flex-col">
+          <Toolbar />
+          <FolderView />
+        </div>
 
-        return (
-          <>
-            <div class="flex flex-col h-full p-4">
-              <Toolbar />
-              <FolderView />
+        {folder.loading.value &&
+          <div class="h-full grid items-center justify-center">
+            <div>
+              <LoadingCircle />
             </div>
-            {folder.loading.value &&
-              <div class="h-full grid items-center justify-center">
-                <div>
-                  <LoadingCircle />
-                </div>
-              </div>}
-          </>
-        )
-      }}
-    />
+          </div>}
+
+        {folder.err.value && <pre>{folder.err.value}</pre>}
+      </main>
+    </div>
   )
 }
