@@ -19,7 +19,6 @@ type FolderPageType = FunctionalComponent<Prop>
 export const FolderPage: FolderPageType = ({ location, matches }) => {
   const { authenticated } = useGuard()
 
-
   const folder = useContext(FolderContext)
   const path = joinPaths(location ?? '')
 

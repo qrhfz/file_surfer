@@ -4,7 +4,6 @@ import { BiFile, BiFolder } from "react-icons/bi";
 import { createContext, FunctionalComponent, FunctionComponent } from "preact";
 import { memo } from "preact/compat";
 import { computed, signal } from "@preact/signals";
-// import { ContextMenu, ContextMenuPosition } from "./context_menu";
 import { File } from "./../generated-sources/openapi";
 
 import { formatDateString } from "../utils/formatDateString";
@@ -35,57 +34,16 @@ const ColumnResizerContext = createContext(createColumnResizer())
 type FolderViewType = FunctionalComponent
 
 export const FolderView: FolderViewType = () => {
-  // const [ctxMenuPos, setCtxMenuPos] = useState<ContextMenuPosition>()
-
-  // const closeContextMenu = () => setCtxMenuPos(undefined)
-
   const resizer = useContext(ColumnResizerContext)
-  // const folder = useContext(FolderContext)
-
-
-
+  console.log("xxxxx")
   return (
-    <div
-      class="h-full"
-      onContextMenu={e => {
-        e.preventDefault()
-
-        // if (ctxMenuPos !== undefined) {
-        //   closeContextMenu()
-        //   return
-        // }
-
-        // const { x, y } = e
-        // setCtxMenuPos({ x, y })
-      }}
-
-      onClick={_ => {
-        // closeContextMenu()
-      }}
-    >
+    <div class="h-full">
       <table
         class="folder-list-view"
-        style={{
-          gridTemplateColumns: resizer.template.value
-        }}
-      >
+        style={`grid-template-columns:${resizer.template}`}>
         <FolderListViewHead columns={resizer.columns} />
         <FolderListViewBody />
-
       </table>
-      {/* {ctxMenuPos &&
-        <ContextMenu
-          position={ctxMenuPos}
-          handleCopy={() => folder.copy()}
-          handleCut={() => folder.cut()}
-          handlePaste={() => folder.paste()}
-          handleDownload={() => {
-            // TODO: download link
-            window.open("download");
-            closeContextMenu();
-          }}
-          handleRename={() => { }}
-          handleDelete={() => folder.deleteFiles()} />} */}
     </div>
   )
 }
