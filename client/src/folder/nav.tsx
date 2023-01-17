@@ -7,13 +7,14 @@ type Prop = { q?: string, at?: string }
 
 export const Nav: FC<Prop> = () => {
   return (
-    <nav class="layout-i-head bg-slate-200 flex flex-row items-center gap-8 justify-between px-8">
-      <Breadcrumb />
+    <nav class="layout-i-head bg-slate-200 flex flex-row items-center gap-8 justify-between px-4">
+      <div class="over">
+        <Breadcrumb />
+      </div>
       <a href="/search">
-        <div class="bg-white w-48 p-2 rounded-lg flex flex-row items-center">
-          <BiSearch />
-          <div className="basis-4" />
-          <span class="text-slate-400">Search</span>
+        <div class="bg-white md:w-48 p-2 rounded-lg flex flex-row items-center">
+          <BiSearch size="1rem" />
+          <span class="text-slate-400 ml-4 hidden md:block">Search</span>
         </div>
       </a>
     </nav>
