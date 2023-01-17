@@ -128,7 +128,7 @@ export const FolderState = () => {
   }
 
   const selectSingleFile = (index: number) => {
-    const file = files.value[index]
+    const file = filesFiltered.value[index]
     const path = joinPath(file.location, file.name)
     selectedPaths.value = [path]
     lastSelectedIndex.value = index
@@ -143,8 +143,8 @@ export const FolderState = () => {
 
     const [start, end] = last > index ? [index, last] : [last, index]
 
-    const _files = files.value.slice(start, end + 1)
-    const paths = _files.map(f => joinPath(f.location, f.name))
+    const files = filesFiltered.value.slice(start, end + 1)
+    const paths = files.map(f => joinPath(f.location, f.name))
     selectedPaths.value = paths
     lastSelectedIndex.value = index
 

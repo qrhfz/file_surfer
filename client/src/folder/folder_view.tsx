@@ -90,6 +90,7 @@ const FolderListRow: FunctionComponent<{
   return (
     <tr
       onClick={e => {
+        e.preventDefault()
         if (e.type !== "click") return;
         if (e.shiftKey) {
           folder.selectMultiFiles(index)
