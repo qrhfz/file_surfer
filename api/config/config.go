@@ -20,7 +20,7 @@ func init() {
 
 const HashCost = bcrypt.DefaultCost
 
-const logFormat = `${remote_ip} [${time_custom}] "${method} ${uri} ${protocol}" ${status} ${bytes_out}b
+const logFormat = `${remote_ip} [${time_custom}] "${method} ${uri} ${protocol}" ${status} ${bytes_out}B
 `
 
 type loggerWriter struct {
