@@ -3,6 +3,11 @@
 /* eslint-disable */
 
 import type { BaseUser } from './BaseUser';
+import type { Role } from './Role';
+import type { userId } from './userId';
 
-export type User = BaseUser;
+export type User = (userId & BaseUser & {
+    username: string;
+    role: Role;
+});
 

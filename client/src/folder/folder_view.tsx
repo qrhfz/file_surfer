@@ -1,4 +1,3 @@
-import "./folder_view.css";
 import { useMemo, useContext } from "preact/hooks";
 import { BiFile, BiFolder } from "react-icons/bi";
 import { createContext, FunctionalComponent, FunctionComponent } from "preact";

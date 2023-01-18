@@ -369,7 +369,11 @@
     },
     "/copy": {
       "post": {
-        "security": [{"token":[]}],
+        "security": [
+          {
+            "token": []
+          }
+        ],
         "summary": "Copy list of files to a directory",
         "operationId": "post-copy",
         "responses": {
@@ -398,7 +402,11 @@
     },
     "/move": {
       "post": {
-        "security": [{"token":[]}],
+        "security": [
+          {
+            "token": []
+          }
+        ],
         "description": "Move list of files and folders defined in sources to destination folder",
         "summary": "Move list of files to a directory",
         "operationId": "post-move",
@@ -428,7 +436,6 @@
     "/upload": {
       "post": {
         "summary": "Upload a file",
-        
         "operationId": "upload",
         "responses": {
           "201": {
@@ -485,7 +492,9 @@
     "/user": {
       "get": {
         "security": [
-          {"token":[]}
+          {
+            "token": []
+          }
         ],
         "tags": [
           "user"
@@ -510,7 +519,9 @@
       },
       "post": {
         "security": [
-          {"token":[]}
+          {
+            "token": []
+          }
         ],
         "operationId": "post-user",
         "summary": "Create new user.",
@@ -518,11 +529,11 @@
           "user"
         ],
         "description": "create new user",
-        "requestBody":{
+        "requestBody": {
           "content": {
-            "application/json":{
-              "schema":{
-                "$ref":"#/components/schemas/NewUser"
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUser"
               }
             }
           }
@@ -554,7 +565,9 @@
       ],
       "get": {
         "security": [
-          {"token":[]}
+          {
+            "token": []
+          }
         ],
         "operationId": "get-user",
         "summary": "Get a user info",
@@ -577,7 +590,9 @@
       "patch": {
         "summary": "Change user data",
         "security": [
-          {"token":[]}
+          {
+            "token": []
+          }
         ],
         "operationId": "patch-user",
         "tags": [
@@ -606,11 +621,17 @@
           }
         }
       },
-      "delete":{
-        "tags": ["user"],
-        "security": [{"token":[]}],
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "token": []
+          }
+        ],
         "responses": {
-          "204":{
+          "204": {
             "description": "delete user success"
           }
         }
@@ -623,7 +644,9 @@
             "token": []
           }
         ],
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "summary": "Get current loggedin user info",
         "responses": {
           "200": {
@@ -640,7 +663,9 @@
       },
       "patch": {
         "security": [
-          {"token":[]}
+          {
+            "token": []
+          }
         ],
         "summary": "Edit currently logged in user data",
         "operationId": "patch-current-user",
@@ -740,13 +765,19 @@
         ]
       }
     },
-    "/logout":{
-      "get":{
-        "security": [{"token":[]}],
+    "/logout": {
+      "get": {
+        "security": [
+          {
+            "token": []
+          }
+        ],
         "operationId": "logout",
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "responses": {
-          "204":{
+          "204": {
             "description": "logout success"
           }
         }
@@ -758,10 +789,10 @@
         "tags": [
           "auth"
         ],
-        "requestBody":{
+        "requestBody": {
           "content": {
-            "application/json":{
-              "schema":{
+            "application/json": {
+              "schema": {
                 "type": "object",
                 "properties": {
                   "path": {
@@ -857,23 +888,37 @@
           }
         }
       },
+      "userId": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
       "User": {
         "allOf": [
           {
-            "properties": {
-              "id": {
-                "type": "integer"
-              }
-            },
-            "required": [
-              "id",
-              "username",
-              "role"
-            ]
+            "$ref": "#/components/schemas/userId"
           },
           {
             "$ref": "#/components/schemas/BaseUser"
+          },
+          {
+            "type": "object",
+            "required": [
+              "username",
+              "role"
+            ]
           }
+        ],
+        "required": [
+          "id",
+          "username",
+          "role"
         ]
       },
       "NewUser": {

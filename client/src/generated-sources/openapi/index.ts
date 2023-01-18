@@ -12,6 +12,7 @@ export type { NewUser } from './models/NewUser';
 export { Role } from './models/Role';
 export type { UpdateUser } from './models/UpdateUser';
 export type { User } from './models/User';
+export type { userId } from './models/userId';
 
 export { AuthService } from './services/AuthService';
 export { BlobService } from './services/BlobService';

@@ -62,6 +62,11 @@ type User struct {
 	Username string `json:"username"`
 }
 
+// UserId defines model for userId.
+type UserId struct {
+	Id int `json:"id"`
+}
+
 // PasteRequest defines model for PasteRequest.
 type PasteRequest struct {
 	Destination *string   `json:"destination,omitempty"`
