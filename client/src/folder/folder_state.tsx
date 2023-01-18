@@ -6,6 +6,7 @@ import { AsyncState } from "../utils/useAsync";
 
 export const FolderState = () => {
   const folderPath = signal("")
+
   const files = signal<AsyncState<File[], string>>({ status: "loading" });
 
   const showHidden = signal(false)
@@ -37,7 +38,7 @@ export const FolderState = () => {
     files.value = { status: "loading" }
 
     try {
-      const res = await FolderService.getFolder(path)
+      const res = await FolderService.getFolder(encodeURIComponent(path))
       files.value = { status: "ok", data: res }
     } catch (e) {
       const error = JSON.stringify(e)
@@ -123,11 +124,19 @@ export const FolderState = () => {
   }
 
   const getDownloadUrl = async () => {
-    if (selectedPaths.value.length === 1) {
-      const path = selectedPaths.value[0]
-      const { accessToken } = await AuthService.postAccessToken({ path })
-      return OpenAPI.BASE + joinPaths('/file', encodeURIComponent(path), `blob?accessToken=${accessToken}`)
+    if (selectedPaths.value.length !== 1) {
+      return
     }
+    const path = selectedPaths.value[0]
+    try {
+      const { accessToken } = await AuthService.postAccessToken({ path })
+      const encodedPath = encodeURIComponent(path)
+      const blobWToken = `blob?accessToken=${accessToken}`
+      return OpenAPI.BASE + joinPaths('/file', encodedPath, blobWToken)
+    } catch (error) {
+
+    }
+
   }
 
   const selectSingleFile = (index: number) => {
