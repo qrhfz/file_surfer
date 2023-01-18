@@ -3,8 +3,21 @@
 @tailwind utilities;
 
 @layer components {
+  
+
+  .folder-list-view {
+    display: grid;
+    user-select: none;
+  }
+
   .folder-list-view td {
     @apply px-3 py-2 overflow-hidden whitespace-nowrap text-ellipsis cursor-default
+  }
+  
+  .folder-list-view thead,
+  .folder-list-view tbody,
+  .folder-list-view tr {
+    display: contents;
   }
 
   .simple-input {
@@ -45,6 +58,8 @@
   .layout-i-side{
     grid-area: side;
   }
+
+  
 }
 
 /* width */

@@ -1,71 +1,218 @@
-import { useComputed, useSignal } from "@preact/signals"
+import { useSignal } from "@preact/signals"
 import { FunctionComponent } from "preact"
-import { TargetedEvent } from "preact/compat"
-import { BiCheck } from "react-icons/bi"
+import { useEffect } from "preact/hooks"
 import { useGuard } from "../auth/useGuard"
-import { SmallPrimaryButton } from "../components/buttons"
-import { SimpleInput } from "../components/input/simple_input"
-import { LoadingCircle } from "../components/loading_circle"
 import { UserService } from "../generated-sources/openapi"
 import { SingleColumnLayout } from "../layout/single_column_layout"
+import { ChangePass } from "./change_pass"
 
 export const SettingsPage: FunctionComponent = () => {
   useGuard()
 
-  const confirmPass = useSignal("")
-  const newPass = useSignal("")
-  const status = useSignal<"init" | "loading" | "error" | "ok">("init")
+  const isAdmin = useSignal(false)
 
-  const passMatch = useComputed(() => {
-    return confirmPass.value === newPass.value
+  useEffect(() => {
+    UserService.getUserMe()
+      .then(u => isAdmin.value = (u.role === "admin"))
   })
 
-  const submit = (e: TargetedEvent) => {
-    e.preventDefault()
-    status.value = "loading"
-    UserService.patchCurrentUser({
-      password: newPass.value
-    }).then(() => status.value = "ok")
-      .catch(() => status.value = "error")
-  }
 
   return (
     <SingleColumnLayout>
       <h1 class="font-bold text-xl mb-4">Settings</h1>
+      <ChangePass />
+      <h2 className="font-bold text-lg mb-2">Users</h2>
+      {isAdmin.value &&
+        <div class="overflow-hidden overflow-x-auto rounded-lg border border-gray-200">
+          <table class="min-w-full divide-y divide-gray-200 text-sm">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="sticky inset-y-0 left-0 bg-gray-100 px-4 py-2 text-left">
+                  <label class="sr-only" for="SelectAll">Select All</label>
 
-      <h2 className="font-bold text-lg mb-2">Change Password</h2>
+                  <input
+                    class="h-5 w-5 rounded border-gray-200"
+                    type="checkbox"
+                    id="SelectAll"
+                  />
+                </th>
+                <th
+                  class="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900"
+                >
+                  <div class="flex items-center gap-2">
+                    ID
 
-      <form
-        className="grid grid-cols-2 items-center gap-2"
-        onSubmit={submit}>
-        <label>New Password</label>
-        <SimpleInput
-          type="password"
-          value={newPass.value}
-          handleChange={(v) => newPass.value = v}
-        />
-        <label>Confirm Password</label>
-        <SimpleInput
-          type="password"
-          value={confirmPass.value}
-          handleChange={(v) => confirmPass.value = v}
-        />
-        <div />
-        <div class="flex flex-row py-4 gap-2 items-center">
-          <SmallPrimaryButton
-            type="submit"
-            disabled={!passMatch.value}>
-            Submit
-          </SmallPrimaryButton>
-          <div>
-            {status.value === "loading"
-              && <LoadingCircle size="32px" />}
-          </div>
-          {status.value === "ok"
-            && <>Password Changed <BiCheck /> </>}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 text-gray-700"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </th>
+                <th
+                  class="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900"
+                >
+                  <div class="flex items-center gap-2">
+                    Name
+
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 text-gray-700"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </th>
+                <th
+                  class="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900"
+                >
+                  <div class="flex items-center gap-2">
+                    Email
+
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 text-gray-700"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </th>
+                <th
+                  class="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900"
+                >
+                  <div class="flex items-center gap-2">
+                    Amount
+
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 text-gray-700"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </th>
+                <th
+                  class="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900"
+                >
+                  Status
+                </th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-200">
+              <tr>
+                <td class="sticky inset-y-0 left-0 bg-white px-4 py-2">
+                  <label class="sr-only" for="Row1">Row 1</label>
+
+                  <input
+                    class="h-5 w-5 rounded border-gray-200"
+                    type="checkbox"
+                    id="Row1"
+                  />
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                  #00001
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                  John Frusciante
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">john@rhcp.com</td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">$783.23</td>
+                <td class="whitespace-nowrap px-4 py-2">
+                  <strong
+                    class="rounded bg-red-100 px-3 py-1.5 text-xs font-medium text-red-700"
+                  >
+                    Cancelled
+                  </strong>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="sticky inset-y-0 left-0 bg-white px-4 py-2">
+                  <label class="sr-only" for="Row2">Row 2</label>
+
+                  <input
+                    class="h-5 w-5 rounded border-gray-200"
+                    type="checkbox"
+                    id="Row2"
+                  />
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                  #00002
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                  George Harrison
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                  george@beatles.com
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">$128.99</td>
+                <td class="whitespace-nowrap px-4 py-2">
+                  <strong
+                    class="rounded bg-green-100 px-3 py-1.5 text-xs font-medium text-green-700"
+                  >
+                    Paid
+                  </strong>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="sticky inset-y-0 left-0 bg-white px-4 py-2">
+                  <label class="sr-only" for="Row3">Row 3</label>
+
+                  <input
+                    class="h-5 w-5 rounded border-gray-200"
+                    type="checkbox"
+                    id="Row3"
+                  />
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                  #00003
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">Dave Gilmour</td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                  dave@pinkfloyd.com
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">$459.43</td>
+                <td class="whitespace-nowrap px-4 py-2">
+                  <strong
+                    class="rounded bg-amber-100 px-3 py-1.5 text-xs font-medium text-amber-700"
+                  >
+                    Partially Refunded
+                  </strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
-      </form>
+      }
+
     </SingleColumnLayout>
   )
 }
