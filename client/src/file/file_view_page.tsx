@@ -12,20 +12,21 @@ type FilveViewPageType = FunctionComponent<{ loc?: string }>
 export const FileViewPage: FilveViewPageType = prop => {
   useGuard()
 
-  const path = encodeURIComponent(prop.loc!)
+  const path = prop.loc ?? ""
+  const encodedPath = encodeURIComponent(path)
 
   const fileState = useAsync(
-    FileService.getFile(path),
+    FileService.getFile(encodedPath),
     {
       ok: ok => ok,
       err: err => err,
-      key: path
+      key: encodedPath
     }
   )
 
   const accessToken = useSignal<string | undefined>(undefined)
   useEffect(() => {
-    AuthService.getAccessToken()
+    AuthService.postAccessToken({ path })
       .then(res => accessToken.value = res.accessToken)
   }, [])
 
@@ -37,12 +38,12 @@ export const FileViewPage: FilveViewPageType = prop => {
         <div className="flex flex-row justify-between pb-4 border-b-2 items-center">
           <h1 class="text-lg font-bold">{fileState.data?.name}</h1>
           <SmallPrimaryButton onClick={async () => {
-            window.open(`${OpenAPI.BASE}/file/${path}/blob?accessToken=${accessToken.value}`)
+            window.open(`${OpenAPI.BASE}/file/${encodedPath}/blob?accessToken=${accessToken.value}`)
           }}>
             Download
           </SmallPrimaryButton>
         </div>
-        {accessToken.value && <Content path={path} file={fileState.data} accessToken={accessToken.value} />}
+        {accessToken.value && <Content path={encodedPath} file={fileState.data} accessToken={accessToken.value} />}
       </>}
     </SingleColumnLayout>
   )

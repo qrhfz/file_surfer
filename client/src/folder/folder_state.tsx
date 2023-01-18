@@ -123,9 +123,9 @@ export const FolderState = () => {
   }
 
   const getDownloadUrl = async () => {
-    const { accessToken } = await AuthService.getAccessToken()
     if (selectedPaths.value.length === 1) {
       const path = selectedPaths.value[0]
+      const { accessToken } = await AuthService.postAccessToken({ path })
       return OpenAPI.BASE + joinPaths('/file', encodeURIComponent(path), `blob?accessToken=${accessToken}`)
     }
   }
