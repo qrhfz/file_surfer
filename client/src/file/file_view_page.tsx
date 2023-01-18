@@ -1,92 +1,95 @@
 import { useSignal } from "@preact/signals"
 import { FunctionComponent } from "preact"
-import { useEffect } from "preact/hooks"
+import { FC } from "preact/compat"
+import { useContext, useEffect } from "preact/hooks"
 import { useGuard } from "../auth/useGuard"
 import { SmallPrimaryButton } from "../components/buttons"
-import { AuthService, File, FileService, OpenAPI } from "../generated-sources/openapi"
-import { useAsync } from "../utils/useAsync"
+import { LoadingCircle } from "../components/loading_circle"
+import { File, OpenAPI } from "../generated-sources/openapi"
+import { FileViewContext } from "./file_view_state"
 
 type FilveViewPageType = FunctionComponent<{ loc?: string }>
 
-export const FileViewPage: FilveViewPageType = prop => {
+export const FileViewPage: FilveViewPageType = ({ loc }) => {
   useGuard()
-
-  const path = prop.loc ?? ""
-  const encodedPath = encodeURIComponent(path)
-
-  const fileState = useAsync(
-    FileService.getFile(encodedPath),
-    {
-      ok: ok => ok,
-      err: err => err,
-      key: encodedPath
-    }
-  )
-
-  const accessToken = useSignal<string | undefined>(undefined)
+  const fileView = useContext(FileViewContext)
   useEffect(() => {
-    AuthService.postAccessToken({ path: encodedPath })
-      .then(res => accessToken.value = res.accessToken)
-  }, [])
+    if (loc) {
+      fileView.setPath(loc)
+    }
 
-  return (
-    <div>
-      {fileState.status == "error" && JSON.stringify(fileState.error)}
-      {fileState.status == "loading" && "loading"}
-      {fileState.status == "ok" && <>
+    return () => fileView.reset()
+  }, [loc])
+  const info = fileView.info.value
+  const encodedPath = fileView.encodedPath.value
+  const accessToken = fileView.accessToken.value
+
+  if (info.status === "error") {
+    return <div>{info.error}</div>
+  }
+
+  if (encodedPath && info.status === "ok" && accessToken) {
+
+    return (
+      <div class="flex flex-col h-screen">
         <div className="flex flex-row justify-between p-4 border-b-2 items-center">
-          <h1 class="text-lg font-bold">{fileState.data?.name}</h1>
+          <h1 class="text-lg font-bold">{info.data.name}</h1>
           <SmallPrimaryButton onClick={async () => {
-            window.open(`${OpenAPI.BASE}/file/${encodedPath}/blob?accessToken=${accessToken.value}`)
+            window.open(`${OpenAPI.BASE}/file/${encodedPath}/blob?accessToken=${accessToken}`)
           }}>
             Download
           </SmallPrimaryButton>
         </div>
-        {accessToken.value && <Content path={encodedPath} file={fileState.data} accessToken={accessToken.value} />}
-      </>}
-
+        <Content path={encodedPath} file={info.data} accessToken={accessToken} />
+      </div>
+    )
+  }
+  return (
+    <div class="grid h-screen items-center justify-center">
+      <div>
+        <LoadingCircle />
+      </div>
     </div>
   )
 }
 
-const Content: FunctionComponent<{ path: string, file: File, accessToken: string }> = prop => {
-  const type = prop.file.type
+type ContentProp = { path: string, file: File, accessToken: string }
+const Content: FC<ContentProp> = ({ path, file, accessToken }) => {
+  const type = file.type
   const isText = type.startsWith("text/")
   const isImage = type.startsWith("image/")
   const isVideo = type.startsWith("video/")
 
   return (
-    <div class="py-4 overflow-y-auto">
-      {isText && <TextFile path={prop.path} accessToken={prop.accessToken} />}
+    <div class="flex-grow py-4 overflow-y-auto">
+      {isText && <TextFile path={path} accessToken={accessToken} />}
       {isImage && <div >
-        <img class="mx-auto" src={`${OpenAPI.BASE}/file/${prop.path}/blob?accessToken=${prop.accessToken}`} />
+        <img class="mx-auto" src={`${OpenAPI.BASE}/file/${path}/blob?accessToken=${accessToken}`} />
       </div>}
       {isVideo &&
         <div >
-          <video class="mx-auto" src={`${OpenAPI.BASE}/file/${prop.path}/blob?accessToken=${prop.accessToken}`} controls />
+          <video class="mx-auto" src={`${OpenAPI.BASE}/file/${path}/blob?accessToken=${accessToken}`} controls />
         </div>
       }
     </div>
   )
 }
 
-const TextFile: FunctionComponent<{ path: string, accessToken: string }> = prop => {
 
+type TextFileProp = { path: string, accessToken: string }
+const TextFile: FC<TextFileProp> = ({ path, accessToken }) => {
 
-  const text = useAsync(
-    fetch(`${OpenAPI.BASE}/file/${prop.path}/blob?accessToken=${prop.accessToken}`),
-    {
-      ok: async ok => await ok.text(),
-      err: err => err,
-      key: prop.path
-    }
-  )
+  const content = useSignal("")
 
+  useEffect(() => {
+    fetch(`${OpenAPI.BASE}/file/${path}/blob?accessToken=${accessToken}`)
+      .then(res => res.text())
+      .then(t => content.value = t)
+      .catch(e => content.value = JSON.stringify(e))
+  }, [path,])
   return (
     <pre>
-      {text.status === "ok" && text.data}
-      {text.status === "error" && JSON.stringify(text.error, null, 2)}
-
+      {content}
     </pre>
   )
 }
