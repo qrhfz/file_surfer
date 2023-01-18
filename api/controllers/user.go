@@ -17,20 +17,9 @@ func NewUserController(us *user.UserService) *UserController {
 }
 
 func (c *UserController) GetUsers(ctx echo.Context) error {
-	dbUsers, err := c.userService.GetUsers()
+	users, err := c.userService.GetUsers()
 	if err != nil {
 		return echo.NewHTTPError(500, err.Error())
-	}
-
-	users := make([]api.User, len(dbUsers))
-
-	for i, v := range dbUsers {
-		u := api.User{
-			Id:       v.Id,
-			Role:     api.Role(v.Role),
-			Username: v.Username,
-		}
-		users[i] = u
 	}
 
 	if err != nil {
@@ -44,23 +33,12 @@ func (uct *UserController) CreateUser(ctx echo.Context) error {
 	var body api.NewUser
 	ctx.Bind(&body)
 
-	name, pass, role := body.Username, body.Password, string(body.Role)
-
-	id, err := uct.userService.CreateNewUser(name, pass, role)
+	u, err := uct.userService.CreateNewUser(body)
 	if err != nil {
 		return echo.NewHTTPError(500, err.Error())
 	}
 
-	u, err := uct.userService.GetUser(id)
-	if err != nil {
-		return echo.NewHTTPError(500, err.Error())
-	}
-
-	return ctx.JSON(201, api.User{
-		Id:       u.Id,
-		Role:     api.Role(u.Role),
-		Username: u.Username,
-	})
+	return ctx.JSON(201, u)
 }
 
 func (uct *UserController) GetUserById(ctx echo.Context) error {
@@ -71,13 +49,7 @@ func (uct *UserController) GetUserById(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
 
-	resp := api.User{
-		Id:       u.Id,
-		Role:     api.Role(u.Role),
-		Username: u.Username,
-	}
-
-	return ctx.JSON(200, resp)
+	return ctx.JSON(200, u)
 }
 
 func (uct *UserController) UpdateUser(ctx echo.Context) error {
@@ -94,20 +66,16 @@ func (uct *UserController) UpdateUser(ctx echo.Context) error {
 		Username: body.Username,
 		Role:     (*string)(body.Role),
 		Password: body.Password,
+		Base:     body.Base,
+		Write:    body.Write,
 	}
 
-	u, err := uct.userService.UpdateUser(p)
+	user, err := uct.userService.UpdateUser(p)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
 
-	resp := api.User{
-		Id:       u.Id,
-		Role:     api.Role(u.Role),
-		Username: u.Username,
-	}
-
-	return ctx.JSON(200, resp)
+	return ctx.JSON(200, user)
 }
 
 func (uct *UserController) DeleteUser(ctx echo.Context) error {

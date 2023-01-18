@@ -9,5 +9,7 @@ import type { userId } from './userId';
 export type User = (userId & BaseUser & {
     username: string;
     role: Role;
+    base: string;
+    write: boolean;
 });
 

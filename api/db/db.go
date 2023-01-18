@@ -9,6 +9,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const insertAdminStmt = `INSERT OR IGNORE 
+	INTO user(username, password, role, write) 
+	VALUES('admin',?,'admin', TRUE);`
+
 func Connect() *sql.DB {
 	var err error
 	DB, err := sql.Open("sqlite3", "./file_surfer.db")
@@ -28,7 +32,6 @@ func Connect() *sql.DB {
 
 	hash, _ := bcrypt.GenerateFromPassword([]byte("admin"), config.HashCost)
 
-	insertAdminStmt := `INSERT OR IGNORE INTO user(username, password, role) VALUES('admin',?,'admin');`
 	_, err = DB.Exec(insertAdminStmt, string(hash))
 	if err != nil {
 		log.Fatal(err.Error())

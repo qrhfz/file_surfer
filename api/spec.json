@@ -885,6 +885,12 @@
           },
           "role": {
             "$ref": "#/components/schemas/Role"
+          },
+          "base": {
+            "type": "string"
+          },
+          "write": {
+            "type": "boolean"
           }
         }
       },
@@ -911,14 +917,18 @@
             "type": "object",
             "required": [
               "username",
-              "role"
+              "role",
+              "base",
+              "write"
             ]
           }
         ],
         "required": [
           "id",
           "username",
-          "role"
+          "role",
+          "base",
+          "write"
         ]
       },
       "NewUser": {
@@ -936,9 +946,18 @@
             "required": [
               "username",
               "role",
-              "password"
+              "password",
+              "base",
+              "write"
             ]
           }
+        ],
+        "required": [
+          "username",
+          "role",
+          "password",
+          "base",
+          "write"
         ]
       },
       "UpdateUser": {

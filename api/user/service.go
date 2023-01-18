@@ -2,6 +2,7 @@ package user
 
 import (
 	"database/sql"
+	"file_surfer/api"
 )
 
 type UserService struct {
@@ -16,9 +17,4 @@ func NewUserService(db *sql.DB) *UserService {
 	return &service
 }
 
-type User struct {
-	Id       int
-	Username string
-	Password string
-	Role     string
-}
+type User = api.User

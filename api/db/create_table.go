@@ -5,7 +5,9 @@ const CreateUserTableStmt = `
 		id INTEGER NOT NULL PRIMARY KEY, 
 		username TEXT NOT NULL UNIQUE, 
 		password TEXT NOT NULL, 
-		role TEXT NOT NULL CHECK(role IN ('admin','basic'))
+		role TEXT NOT NULL CHECK(role IN ('admin','basic')),
+		write INTEGER DEFAULT FALSE NOT NULL,
+		base TEXT DEFAULT '.' NOT NULL
 	);
 `
 

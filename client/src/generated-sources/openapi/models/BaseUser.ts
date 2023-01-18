@@ -7,5 +7,7 @@ import type { Role } from './Role';
 export type BaseUser = {
     username?: string;
     role?: Role;
+    base?: string;
+    write?: boolean;
 };
 

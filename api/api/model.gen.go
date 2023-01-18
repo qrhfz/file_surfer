@@ -22,8 +22,10 @@ const (
 
 // BaseUser defines model for BaseUser.
 type BaseUser struct {
+	Base     *string `json:"base,omitempty"`
 	Role     *Role   `json:"role,omitempty"`
 	Username *string `json:"username,omitempty"`
+	Write    *bool   `json:"write,omitempty"`
 }
 
 // File defines model for File.
@@ -40,9 +42,11 @@ type File struct {
 
 // NewUser defines model for NewUser.
 type NewUser struct {
+	Base     string `json:"base"`
 	Password string `json:"password"`
 	Role     Role   `json:"role"`
 	Username string `json:"username"`
+	Write    bool   `json:"write"`
 }
 
 // Role defines model for Role.
@@ -50,16 +54,20 @@ type Role string
 
 // UpdateUser defines model for UpdateUser.
 type UpdateUser struct {
+	Base     *string `json:"base,omitempty"`
 	Password *string `json:"password,omitempty"`
 	Role     *Role   `json:"role,omitempty"`
 	Username *string `json:"username,omitempty"`
+	Write    *bool   `json:"write,omitempty"`
 }
 
 // User defines model for User.
 type User struct {
+	Base     string `json:"base"`
 	Id       int    `json:"id"`
 	Role     Role   `json:"role"`
 	Username string `json:"username"`
+	Write    bool   `json:"write"`
 }
 
 // UserId defines model for userId.

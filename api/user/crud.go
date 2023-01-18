@@ -1,32 +1,43 @@
 package user
 
 import (
+	"file_surfer/api"
 	"file_surfer/config"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (us *UserService) CreateNewUser(name, password, role string) (int, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), config.HashCost)
+const createUserStmt = `INSERT INTO 
+user(username, password, role, base, write) 
+values(?,?,?,?,?) 
+RETURNING id, username, role, base, write;`
+
+func (us *UserService) CreateNewUser(u api.NewUser) (*api.User, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), config.HashCost)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
-	var id int
-	stmt := `INSERT INTO 
-						user(username, password, role) 
-						values(?,?,?) 
-						RETURNING id;`
-
-	err = us.db.QueryRow(stmt, name, string(hash), role).Scan(&id)
+	row := us.db.QueryRow(
+		createUserStmt,
+		u.Username,
+		string(hash),
+		u.Role,
+		u.Base,
+		u.Write,
+	)
+	var created api.User
+	row.Scan(&created.Id, &created.Username, &created.Role, &created.Base, &created.Write)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	return id, nil
+	return &created, nil
 }
 
+const selectUserStmt = `SELECT id, username, role, base, write FROM user;`
+
 func (us *UserService) GetUsers() ([]User, error) {
-	rows, err := us.db.Query(`SELECT id, username, role FROM user;`)
+	rows, err := us.db.Query(selectUserStmt)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +47,7 @@ func (us *UserService) GetUsers() ([]User, error) {
 
 	for rows.Next() {
 		u := User{}
-		err := rows.Scan(&u.Id, &u.Username, &u.Role)
+		err := rows.Scan(&u.Id, &u.Username, &u.Role, &u.Base, &u.Write)
 		if err != nil {
 			return nil, err
 		}
@@ -47,12 +58,16 @@ func (us *UserService) GetUsers() ([]User, error) {
 	return users, nil
 }
 
+const selectUserByIdStmt = `
+SELECT id, username, role, base, write 
+FROM user WHERE id=?;`
+
 func (us *UserService) GetUser(id int) (*User, error) {
-	row := us.db.QueryRow(`SELECT id, username, role FROM user WHERE id=?;`, id)
+	row := us.db.QueryRow(selectUserByIdStmt, id)
 
 	u := User{}
 
-	err := row.Scan(&u.Id, &u.Username, &u.Role)
+	err := row.Scan(&u.Id, &u.Username, &u.Role, &u.Base, &u.Write)
 	if err != nil {
 		return nil, err
 	}
@@ -60,12 +75,16 @@ func (us *UserService) GetUser(id int) (*User, error) {
 	return &u, nil
 }
 
+const selectUserByUsername = `
+SELECT id, username, role, base, write 
+FROM user WHERE username=?;`
+
 func (us *UserService) GetUserByUsername(username string) (*User, error) {
-	row := us.db.QueryRow(`SELECT id, username, role FROM user WHERE username=?;`, username)
+	row := us.db.QueryRow(selectUserByUsername, username)
 
 	u := User{}
 
-	err := row.Scan(&u.Id, &u.Username, &u.Role)
+	err := row.Scan(&u.Id, &u.Username, &u.Role, &u.Base, &u.Write)
 	if err != nil {
 		return nil, err
 	}
@@ -100,34 +119,48 @@ type UserUpdateParam struct {
 	Username *string
 	Password *string
 	Role     *string
+	Base     *string
+	Write    *bool
 }
 
+const updateStmt = `
+UPDATE user 
+SET 
+	username=coalesce(?,username),
+	password=coalesce(?,password),
+	role=coalesce(?,role),
+	base=coalesce(?,base),
+	write=coalesce(?,write)
+WHERE id=?
+RETURNING id, username, role, base, write;
+`
+
 func (us *UserService) UpdateUser(param UserUpdateParam) (*User, error) {
-	stmt := `
-		UPDATE user 
-		SET 
-			username=coalesce(?,username),
-			password=coalesce(?,password),
-			role=coalesce(?,role)
-		WHERE id=?
-		RETURNING id, username, role;
-	`
 
-	name, pass, role, id := param.Username, param.Password, param.Role, param.ID
-
-	if pass != nil {
-		hash, err := bcrypt.GenerateFromPassword([]byte(*pass), config.HashCost)
+	if param.Password != nil {
+		b := []byte(*param.Password)
+		hash, err := bcrypt.GenerateFromPassword(b, config.HashCost)
 		if err != nil {
 			return nil, err
 		}
 
-		*pass = string(hash)
+		*param.Password = string(hash)
 	}
 
-	row := us.db.QueryRow(stmt, name, pass, role, id)
+	row := us.db.QueryRow(
+		updateStmt,
+		param.Username,
+		param.Password,
+		param.Role,
+		param.Base,
+		param.Write,
+		param.ID,
+	)
+
 	u := User{}
 
-	if err := row.Scan(&u.Id, &u.Username, &u.Role); err != nil {
+	err := row.Scan(&u.Id, &u.Username, &u.Role, &u.Base, &u.Write)
+	if err != nil {
 		return nil, err
 	}
 
