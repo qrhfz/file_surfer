@@ -1,6 +1,6 @@
 import { FunctionComponent } from "preact";
 import { useContext, useState } from "preact/hooks";
-import { BlobService } from "../generated-sources/openapi";
+import { AuthService, BlobService } from "../generated-sources/openapi";
 import { ModalContext } from "../signals/modal_state";
 import { FolderContext } from "./folder_state";
 import { TokenContext } from "../auth/tokenSignal";
@@ -36,7 +36,9 @@ export const FolderSidebar: FunctionComponent<{ loc: string }> = ({ loc }) => {
             </Btn>
           </li>
           <li>
-            <Btn onClick={() => token.value = null}>
+            <Btn onClick={() => {
+              AuthService.logout().then(() => token.value = null)
+            }}>
               <BiLogOut />
               <span class="hidden md:block">
                 Logout
