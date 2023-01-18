@@ -25,19 +25,25 @@ func (app *App) registerAuthRoutes() {
 		})
 	})
 
-	app.base.GET("/access-token", func(c echo.Context) error {
+	app.base.POST("/access-token", func(c echo.Context) error {
 		authToken, ok := c.Get("token").(string)
 		if !ok {
 			return echo.NewHTTPError(http.StatusUnauthorized, "no token")
 		}
 
-		accessToken, err := app.services.Auth.GetAccessToken(authToken)
+		var body api.PostAccessTokenJSONBody
+		c.Bind(&body)
+
+		accessToken, err := app.services.Auth.GetAccessToken(authToken, *body.Path)
 		if err != nil {
 			return echo.NewHTTPError(500, err.Error())
 		}
-		return c.JSON(200, map[string]string{
+
+		res := echo.Map{
 			"accessToken": accessToken,
-		})
+		}
+
+		return c.JSON(200, res)
 	}, app.middlewares.LoggedInOnly)
 
 	app.base.GET("/logout", func(c echo.Context) error {

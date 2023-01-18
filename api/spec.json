@@ -753,11 +753,25 @@
       }
     },
     "/access-token": {
-      "get": {
-        "summary": "Get access token",
+      "post": {
+        "summary": "Create access token to download file",
         "tags": [
           "auth"
         ],
+        "requestBody":{
+          "content": {
+            "application/json":{
+              "schema":{
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -775,7 +789,7 @@
             }
           }
         },
-        "operationId": "get-access-token",
+        "operationId": "post-access-token",
         "description": "Ask for token to access file download etc",
         "security": [
           {

@@ -45,8 +45,9 @@ func NeedAccessToken(authService *auth.AuthService) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			token := c.QueryParam("accessToken")
+			path := c.Param("path")
 
-			if !authService.VerifyAccessToken(token) {
+			if !authService.VerifyAccessToken(token, path) {
 				return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
 			}
 

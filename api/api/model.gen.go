@@ -68,6 +68,11 @@ type PasteRequest struct {
 	Sources     *[]string `json:"sources,omitempty"`
 }
 
+// PostAccessTokenJSONBody defines parameters for PostAccessToken.
+type PostAccessTokenJSONBody struct {
+	Path *string `json:"path,omitempty"`
+}
+
 // PostCopyJSONBody defines parameters for PostCopy.
 type PostCopyJSONBody struct {
 	Destination *string   `json:"destination,omitempty"`
@@ -111,6 +116,9 @@ type UploadMultipartBody struct {
 	Files []openapi_types.File `json:"files"`
 	Path  string               `json:"path"`
 }
+
+// PostAccessTokenJSONRequestBody defines body for PostAccessToken for application/json ContentType.
+type PostAccessTokenJSONRequestBody PostAccessTokenJSONBody
 
 // PostCopyJSONRequestBody defines body for PostCopy for application/json ContentType.
 type PostCopyJSONRequestBody PostCopyJSONBody

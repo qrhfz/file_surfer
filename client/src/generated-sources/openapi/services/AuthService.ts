@@ -45,17 +45,24 @@ export class AuthService {
     }
 
     /**
-     * Get access token
+     * Create access token to download file
      * Ask for token to access file download etc
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
-    public static getAccessToken(): CancelablePromise<{
+    public static postAccessToken(
+        requestBody?: {
+            path?: string;
+        },
+    ): CancelablePromise<{
         accessToken?: string;
     }> {
         return __request(OpenAPI, {
-            method: 'GET',
+            method: 'POST',
             url: '/access-token',
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 
