@@ -6,17 +6,19 @@ import { AsyncState } from "../utils/useAsync";
 
 export const FolderState = () => {
   const folderPath = signal("")
-
-  const files = signal<File[]>([]);
-  const loading = signal(false)
-  const err = signal("")
+  const files = signal<AsyncState<File[], string>>({ status: "loading" });
 
   const showHidden = signal(false)
-  const filesFiltered = computed(() => {
-    if (showHidden.value) {
-      return files.value
+  const filesFiltered = computed<File[]>(() => {
+    if (files.value.status !== "ok") {
+      return []
     }
-    return files.value.filter(f => !f.name.startsWith("."));
+
+    if (showHidden.value) {
+      return files.value.data
+    }
+
+    return files.value.data.filter(f => !f.name.startsWith("."));
   })
 
   const selectedPaths = signal<string[]>([]);
@@ -31,14 +33,15 @@ export const FolderState = () => {
   const fileOp = signal<AsyncState<boolean, string> | undefined>(undefined)
 
   const fetchFolder = async (path: string = folderPath.value) => {
+    folderPath.value = path
+    files.value = { status: "loading" }
+
     try {
-      folderPath.value = path
-      loading.value = true
-      files.value = await FolderService.getFolder(path)
-    } catch (error) {
-      err.value = JSON.stringify(error)
-    } finally {
-      loading.value = false
+      const res = await FolderService.getFolder(path)
+      files.value = { status: "ok", data: res }
+    } catch (e) {
+      const error = JSON.stringify(e)
+      files.value = { status: "error", error }
     }
   }
 
@@ -159,6 +162,7 @@ export const FolderState = () => {
   }
 
   return {
+    files,
     folderPath,
     fetchFolder,
     mode,
@@ -173,8 +177,6 @@ export const FolderState = () => {
     selectSingleFile,
     isSelected,
     fileOp,
-    loading,
-    err,
     isOneSelected,
     isMultiSelected,
     isPastable,

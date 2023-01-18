@@ -10,6 +10,9 @@ import { FolderContext } from "./folder_state"
 import { PopupContext } from "../components/popup/popup_state"
 import { FunctionalComponent } from "preact";
 import { Toolbar } from "./toolbar"
+import { AsyncState } from "../utils/useAsync"
+import { FC } from "preact/compat"
+import { File } from "../generated-sources/openapi"
 
 
 type Prop = { location?: string, matches?: { q: string | undefined, in: string | undefined } }
@@ -51,19 +54,28 @@ export const FolderPage: FolderPageType = ({ location, matches }) => {
       <Nav q={matches?.q} at={matches?.in} />
       <FolderSidebar loc={path} />
       <main class="layout-i-main min-w-0 min-h-0 flex flex-col">
-        <div class="mb-4">
-          <Toolbar />
-        </div>
-        <FolderView />
-
-        {folder.loading.value &&
-          <div>
-            <LoadingCircle />
-          </div>
-        }
-
-        {folder.err.value && <pre>{folder.err.value}</pre>}
+        <Content files={folder.files.value} />
       </main>
     </div>
   )
+}
+
+const Content: FC<{ files: AsyncState<File[], string> }> = ({ files }) => {
+  switch (files.status) {
+    case "error":
+      return <pre>{files.error}</pre>;
+    case "loading":
+      return (<div><LoadingCircle /></div>);
+    case "ok":
+      return (
+        <>
+          <div class="mb-4">
+            <Toolbar />
+          </div>
+          <FolderView />
+        </>
+      )
+    default:
+      return <></>
+  }
 }
