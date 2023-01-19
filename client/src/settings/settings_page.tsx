@@ -1,4 +1,5 @@
 import { useSignal } from "@preact/signals"
+import Router from "preact-router"
 import { FC } from "preact/compat"
 import { useEffect } from "preact/hooks"
 import { withGuard } from "../auth/Guard"
@@ -6,6 +7,7 @@ import { withGuard } from "../auth/Guard"
 import { UserService } from "../generated-sources/openapi"
 import { SingleColumnLayout } from "../layout/single_column_layout"
 import { ChangePass } from "./change_pass"
+import { EditUser } from "./edit_user"
 import { UserTable } from "./user_table"
 
 enum SettingsTab {
@@ -27,27 +29,32 @@ export const SettingsPage = withGuard(() => {
   return (
     <SingleColumnLayout>
       <h1 class="font-bold text-xl mb-4">Settings</h1>
+      <Router>
+        <EditUser path="/settings/user-edit/:id" />
+        <div path="/settings">
+          <Tabs>
+            <Tab active={tab.value === SettingsTab.changePass}
+              onClick={() => tab.value = SettingsTab.changePass}>
+              Change Password
+            </Tab>
+            {isAdmin.value &&
+              <Tab active={tab.value === SettingsTab.userTable}
+                onClick={() => tab.value = SettingsTab.userTable}>
+                Users
+              </Tab>
+            }
+          </Tabs>
 
-      <Tabs>
-        <Tab active={tab.value === SettingsTab.changePass}
-          onClick={() => tab.value = SettingsTab.changePass}>
-          Change Password
-        </Tab>
-        {isAdmin.value &&
-          <Tab active={tab.value === SettingsTab.userTable}
-            onClick={() => tab.value = SettingsTab.userTable}>
-            Users
-          </Tab>
-        }
-      </Tabs>
+          {tab.value === SettingsTab.changePass && <ChangePass />}
 
-      {tab.value === SettingsTab.changePass && <ChangePass />}
+          {isAdmin.value && <>
+            {tab.value === SettingsTab.userTable &&
+              <UserTable />
+            }
+          </>}
+        </div>
+      </Router>
 
-      {isAdmin.value && <>
-        {tab.value === SettingsTab.userTable &&
-          <UserTable />
-        }
-      </>}
     </SingleColumnLayout>
   )
 })

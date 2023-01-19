@@ -25,7 +25,7 @@ export function App() {
         <LoginPage path="/login" />
         <FolderPage path="/browse/:location*" />
         <FileViewPage path="/view/:loc*" />
-        <SettingsPage path="/settings" />
+        <SettingsPage path="/settings/:rest*" />
         <Redirect path="/" to="/browse/" />
 
       </Router>

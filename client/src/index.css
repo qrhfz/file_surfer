@@ -59,6 +59,29 @@
     grid-area: side;
   }
 
+  .myform{
+    display: flex;
+    flex-direction: column;
+    @apply gap-4
+  }
+
+  .myform-item{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .myform-label{
+    flex: 2;
+  }
+
+  .myform-input{
+    flex: 3;
+  }
+
+  .myform-actions{
+    @apply flex flex-row justify-end
+  }
   
 }
 

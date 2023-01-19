@@ -1,4 +1,5 @@
 import { useSignal } from "@preact/signals";
+import { route } from "preact-router";
 import { FC, useEffect } from "preact/compat";
 import { BiEdit } from "react-icons/bi";
 import { SmallSecondaryButton } from "../components/buttons";
@@ -19,8 +20,8 @@ export const UserTable: FC = () => {
         <colgroup>
           <col span={1} style="width: 8%;" />
           <col span={1} style="width: 40%;" />
-          <col span={1} style="width: 24%;" />
-          <col span={1} style="width: 28%;" />
+          <col span={1} style="width: 32%;" />
+          <col span={1} style="width: 20%;" />
         </colgroup>
 
         <thead class="bg-gray-100">
@@ -39,7 +40,7 @@ export const UserTable: FC = () => {
               <Td>{u.username}</Td>
               <Td>{u.role}</Td>
               <Td>
-                <SmallSecondaryButton>
+                <SmallSecondaryButton onClick={() => route(`/settings/user-edit/${u.id}`)}>
                   <div className="flex flex-row items-center gap-2">
                     <BiEdit size="16px" /> Edit
                   </div>
