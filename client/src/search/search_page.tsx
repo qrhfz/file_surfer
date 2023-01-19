@@ -1,6 +1,7 @@
-import { FunctionComponent } from "preact"
+import { FC } from "preact/compat"
 import { useEffect, useRef } from "preact/hooks"
-import { useGuard } from "../auth/useGuard"
+import { withGuard } from "../auth/Guard"
+
 import { SmallPrimaryButton } from "../components/buttons"
 import { LoadingCircle } from "../components/loading_circle"
 import { formatBytes } from "../utils/formatBytes"
@@ -9,8 +10,7 @@ import { joinPaths } from "../utils/path"
 import { createSearchState } from "./search_state"
 const state = createSearchState()
 
-export const SearchPage: FunctionComponent = () => {
-  useGuard()
+export const SearchPage: FC = withGuard(() => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -68,4 +68,4 @@ export const SearchPage: FunctionComponent = () => {
       </div>
     </div>
   )
-}
+})

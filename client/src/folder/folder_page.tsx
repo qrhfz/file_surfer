@@ -1,5 +1,4 @@
 import { useContext, useEffect } from "preact/hooks"
-import { useGuard } from "../auth/useGuard"
 import { FolderView } from "./folder_view"
 import { Nav } from "./nav"
 import { FolderSidebar } from "./folder_sidebar"
@@ -9,22 +8,22 @@ import { FolderContext } from "./folder_state"
 import { PopupContext } from "../components/popup/popup_state"
 import { FunctionalComponent } from "preact";
 import { Toolbar } from "./toolbar"
+import { withGuard } from "../auth/Guard"
 
 
 type Prop = { location?: string, matches?: { q: string | undefined, in: string | undefined } }
 type FolderPageType = FunctionalComponent<Prop>
 
-export const FolderPage: FolderPageType = ({ location, matches }) => {
-  const { authenticated } = useGuard()
+export const FolderPage: FolderPageType = withGuard(({ location, matches }) => {
 
   const { files, fetchFolder, fileOp } = useContext(FolderContext)
   const path = joinPaths(location ?? '')
 
   useEffect(() => {
-    if (authenticated.value) {
-      fetchFolder(path).catch()
-    }
-  }, [path, authenticated.value])
+
+    fetchFolder(path).catch()
+
+  }, [path])
 
   const popup = useContext(PopupContext)
   useEffect(() => {
@@ -58,4 +57,4 @@ export const FolderPage: FolderPageType = ({ location, matches }) => {
       </main>
     </div>
   )
-}
+})

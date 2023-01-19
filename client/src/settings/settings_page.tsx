@@ -1,16 +1,16 @@
 import { useSignal } from "@preact/signals"
-import { FunctionComponent } from "preact"
 import { FC } from "preact/compat"
 import { useEffect } from "preact/hooks"
 import { BiEdit } from "react-icons/bi"
-import { useGuard } from "../auth/useGuard"
+import { withGuard } from "../auth/Guard"
+
 import { SmallSecondaryButton } from "../components/buttons"
 import { User, UserService } from "../generated-sources/openapi"
 import { SingleColumnLayout } from "../layout/single_column_layout"
 import { ChangePass } from "./change_pass"
 
-export const SettingsPage: FunctionComponent = () => {
-  useGuard()
+export const SettingsPage = withGuard(() => {
+
   const isAdmin = useSignal(false)
   const users = useSignal<User[]>([])
 
@@ -63,7 +63,7 @@ export const SettingsPage: FunctionComponent = () => {
       }
     </SingleColumnLayout>
   )
-}
+})
 
 const Th: FC = ({ children }) => {
   return (

@@ -2,7 +2,7 @@ import { useSignal } from "@preact/signals"
 import { FunctionComponent } from "preact"
 import { FC } from "preact/compat"
 import { useContext, useEffect } from "preact/hooks"
-import { useGuard } from "../auth/useGuard"
+import { withGuard } from "../auth/Guard"
 import { SmallPrimaryButton } from "../components/buttons"
 import { LoadingCircle } from "../components/loading_circle"
 import { File, OpenAPI } from "../generated-sources/openapi"
@@ -10,8 +10,7 @@ import { FileViewContext } from "./file_view_state"
 
 type FilveViewPageType = FunctionComponent<{ loc?: string }>
 
-export const FileViewPage: FilveViewPageType = ({ loc }) => {
-  useGuard()
+export const FileViewPage: FilveViewPageType = withGuard(({ loc }) => {
   const fileView = useContext(FileViewContext)
   useEffect(() => {
     if (loc) {
@@ -51,7 +50,7 @@ export const FileViewPage: FilveViewPageType = ({ loc }) => {
       </div>
     </div>
   )
-}
+})
 
 type ContentProp = { path: string, file: File, accessToken: string }
 const Content: FC<ContentProp> = ({ path, file, accessToken }) => {
