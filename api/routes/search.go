@@ -4,21 +4,17 @@ import (
 	"net/http"
 
 	"file_surfer/controllers"
-	"file_surfer/fileutils"
 
 	"github.com/labstack/echo/v4"
 )
 
 func (app *App) registerSearchRoutes() {
 	app.base.GET("/search/", search)
-	app.base.GET("/search/:path", search)
+	app.base.GET("/search/:path", search, app.middlewares.ResolvePath)
 }
 
 func search(c echo.Context) error {
-	path, err := fileutils.DecodePath(c.Param("path"))
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
+	path := c.Get("fullPath").(string)
 
 	search := c.QueryParam("search")
 	results, err := controllers.SearchFolder(path, search)

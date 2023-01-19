@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"path/filepath"
-
 	"file_surfer/config"
 	"file_surfer/fileutils"
 
@@ -15,14 +13,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// Your GET endpoint
-// (GET /file)
 func GetFile(ctx echo.Context) error {
-	pathParam, err := fileutils.DecodePath(ctx.Param("path"))
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	fullPath := filepath.Join(config.Base, pathParam)
+	fullPath := ctx.Get("fullPath").(string)
 
 	info, err := fileutils.GetFileInfo(fullPath)
 	if err != nil {
@@ -32,20 +24,15 @@ func GetFile(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, info)
 }
 
-// (POST /file)
 func PostFile(ctx echo.Context) error {
-	pathParam, err := fileutils.DecodePath(ctx.Param("path"))
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	fullPath := path.Join(config.Base, pathParam)
+	fullPath := ctx.Get("fullPath").(string)
 
 	if fileutils.CheckFileExists(fullPath) {
 		return echo.NewHTTPError(http.StatusBadRequest, "item exist")
 	}
 
 	if ctx.QueryParam("isDir") == "true" {
-		err = os.Mkdir(fullPath, 0750)
+		err := os.Mkdir(fullPath, 0750)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
@@ -65,21 +52,15 @@ func PostFile(ctx echo.Context) error {
 	return ctx.JSON(http.StatusCreated, info)
 }
 
-// (PATCH /file)
 func PatchFile(ctx echo.Context) error {
-	pathParam, err := fileutils.DecodePath(ctx.Param("path"))
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
 	var body api.PatchFileJSONBody
-	err = ctx.Bind(&body)
+	err := ctx.Bind(&body)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	dir := path.Dir(pathParam)
-	oldPath := path.Join(config.Base, pathParam)
+	oldPath := ctx.Get("fullPath").(string)
+	dir := path.Dir(oldPath)
 	newPath := path.Join(config.Base, dir, *body.Name)
 
 	err = os.Rename(oldPath, newPath)
@@ -95,12 +76,9 @@ func PatchFile(ctx echo.Context) error {
 }
 
 func DeleteFile(ctx echo.Context) error {
-	pathParam, err := fileutils.DecodePath(ctx.Param("path"))
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	fullPath := path.Join(config.Base, pathParam)
-	err = fileutils.Delete(fullPath)
+	fullPath := ctx.Get("fullPath").(string)
+
+	err := fileutils.Delete(fullPath)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

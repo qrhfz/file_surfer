@@ -5,13 +5,17 @@ import (
 )
 
 func (app *App) registerFileGroup() {
-	loggedInMW := app.middlewares.LoggedInOnly
-	accessTokenMW := app.middlewares.AccessToken
+	app.base.GET("/file/:path/blob", controllers.GetBlob,
+		app.middlewares.AccessToken,
+	)
 
-	fileGroup := app.base.Group("/file/:path")
-	fileGroup.GET("", controllers.GetFile, loggedInMW)
-	fileGroup.POST("", controllers.PostFile, loggedInMW)
-	fileGroup.PATCH("", controllers.PatchFile, loggedInMW)
-	fileGroup.DELETE("", controllers.DeleteFile, loggedInMW)
-	fileGroup.GET("/blob", controllers.GetBlob, accessTokenMW)
+	fileGroup := app.base.Group("/file/:path",
+		app.middlewares.LoggedInOnly,
+		app.middlewares.ResolvePath,
+	)
+
+	fileGroup.GET("", controllers.GetFile)
+	fileGroup.POST("", controllers.PostFile)
+	fileGroup.PATCH("", controllers.PatchFile)
+	fileGroup.DELETE("", controllers.DeleteFile)
 }

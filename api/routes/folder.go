@@ -5,8 +5,11 @@ import (
 )
 
 func (app *App) registerFolderRoute() {
-
-	app.base.GET("/folder", controllers.GetFolder, app.middlewares.LoggedInOnly)
-	app.base.GET("/folder/", controllers.GetFolder, app.middlewares.LoggedInOnly)
-	app.base.GET("/folder/:path", controllers.GetFolder, app.middlewares.LoggedInOnly)
+	g := app.base.Group("/folder",
+		app.middlewares.LoggedInOnly,
+		app.middlewares.ResolvePath,
+	)
+	g.GET("", controllers.GetFolder)
+	g.GET("/", controllers.GetFolder)
+	g.GET("/:path", controllers.GetFolder)
 }

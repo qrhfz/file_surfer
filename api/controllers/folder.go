@@ -18,19 +18,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// Your GET endpoint
-// (GET /folder)
 func GetFolder(ctx echo.Context) error {
-	pathParam, err := fileutils.DecodePath(ctx.Param("path"))
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	// fmt.Println("pathParam", pathParam)
-	dirPath := filepath.Join(config.Base, pathParam)
+	dirPath := ctx.Get("fullPath").(string)
 	files, err := os.ReadDir(dirPath)
 	if err != nil {
-		// fmt.Println(err.Error())
 		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
 

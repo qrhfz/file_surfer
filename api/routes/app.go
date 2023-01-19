@@ -33,6 +33,7 @@ type Middlewares struct {
 	AdminOnly    echo.MiddlewareFunc
 	AccessToken  echo.MiddlewareFunc
 	LoggedInOnly echo.MiddlewareFunc
+	ResolvePath  echo.MiddlewareFunc
 }
 
 func (api *App) RegisterRoute() {

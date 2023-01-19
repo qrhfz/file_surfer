@@ -64,6 +64,7 @@ func main() {
 		AdminOnly:    middlewares.AdminOnly(services.Auth),
 		AccessToken:  middlewares.NeedAccessToken(services.Auth),
 		LoggedInOnly: middlewares.LoggedInOnly(services.Auth),
+		ResolvePath:  middlewares.ResolvePath(services.Auth),
 	}
 
 	routes.NewApiRoute(e, "/api", &services, &middlewares).RegisterRoute()
