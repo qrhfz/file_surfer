@@ -5,6 +5,8 @@ import (
 )
 
 func (app *App) registerClipboardRoutes() {
-	app.base.POST("/copy", controllers.PostCopy)
-	app.base.POST("/move", controllers.PostMove)
+	ctl := controllers.NewClipboardController(app.services.Auth)
+
+	app.base.POST("/copy", ctl.PostCopy, app.middlewares.LoggedInOnly)
+	app.base.POST("/move", ctl.PostMove, app.middlewares.LoggedInOnly)
 }
