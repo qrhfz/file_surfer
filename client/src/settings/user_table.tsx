@@ -16,6 +16,13 @@ export const UserTable: FC = () => {
     <h2 className="font-bold text-lg mb-4">Users</h2>
     <div class="overflow-hidden overflow-x-auto rounded-lg border border-gray-200">
       <table class="min-w-full divide-y divide-gray-200 text-sm">
+        <colgroup>
+          <col span={1} style="width: 8%;" />
+          <col span={1} style="width: 40%;" />
+          <col span={1} style="width: 24%;" />
+          <col span={1} style="width: 28%;" />
+        </colgroup>
+
         <thead class="bg-gray-100">
           <tr>
             <Th>ID</Th>
