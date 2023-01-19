@@ -27,7 +27,7 @@ export const ChangePass: FC = () => {
 
   return (
     <div>
-      <h2 className="font-bold text-lg mb-2">Change Password</h2>
+      <h2 className="font-bold text-lg mb-4">Change Password</h2>
 
       <form
         className="grid grid-cols-2 items-center gap-2"

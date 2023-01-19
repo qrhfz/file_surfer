@@ -13,7 +13,7 @@ export const Nav: FC<Prop> = () => {
       </div>
       <a href="/search">
         <div class="bg-white md:w-48 p-2 rounded-lg flex flex-row items-center">
-          <BiSearch size="1rem" />
+          <BiSearch size="16px" />
           <span class="text-slate-400 ml-4 hidden md:block">Search</span>
         </div>
       </a>

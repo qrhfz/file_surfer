@@ -1,85 +1,85 @@
 import { useSignal } from "@preact/signals"
 import { FC } from "preact/compat"
 import { useEffect } from "preact/hooks"
-import { BiEdit } from "react-icons/bi"
 import { withGuard } from "../auth/Guard"
 
-import { SmallSecondaryButton } from "../components/buttons"
-import { User, UserService } from "../generated-sources/openapi"
+import { UserService } from "../generated-sources/openapi"
 import { SingleColumnLayout } from "../layout/single_column_layout"
 import { ChangePass } from "./change_pass"
+import { UserTable } from "./user_table"
+
+enum SettingsTab {
+  changePass,
+  userTable
+}
 
 export const SettingsPage = withGuard(() => {
 
   const isAdmin = useSignal(false)
-  const users = useSignal<User[]>([])
+  const tab = useSignal(SettingsTab.changePass)
 
   useEffect(() => {
     UserService.getUserMe()
       .then(u => isAdmin.value = (u.role === "admin"))
-
-    UserService.getUsers().then(res => {
-      users.value = res
-    })
   }, [])
 
 
   return (
     <SingleColumnLayout>
       <h1 class="font-bold text-xl mb-4">Settings</h1>
-      <ChangePass />
-      <h2 className="font-bold text-lg mb-2">Users</h2>
-      {isAdmin.value &&
-        <div class="overflow-hidden overflow-x-auto rounded-lg border border-gray-200">
-          <table class="min-w-full divide-y divide-gray-200 text-sm">
-            <thead class="bg-gray-100">
-              <tr>
-                <Th>ID</Th>
-                <Th>Username</Th>
-                <Th>Role</Th>
-                <Th>Action</Th>
-              </tr>
-            </thead>
 
-            <tbody class="divide-y divide-gray-200">
-              {users.value.map(u => (
-                <tr key={u.id}>
-                  <Td>{u.id}</Td>
-                  <Td>{u.username}</Td>
-                  <Td>{u.role}</Td>
-                  <Td>
-                    <SmallSecondaryButton>
-                      <div className="flex flex-row items-center gap-2">
-                        <BiEdit size="1rem" /> Edit
-                      </div>
-                    </SmallSecondaryButton>
-                  </Td>
-                </tr>
-              ))}
+      <Tabs>
+        <Tab active={tab.value === SettingsTab.changePass}
+          onClick={() => tab.value = SettingsTab.changePass}>
+          Change Password
+        </Tab>
+        {isAdmin.value &&
+          <Tab active={tab.value === SettingsTab.userTable}
+            onClick={() => tab.value = SettingsTab.userTable}>
+            Users
+          </Tab>
+        }
+      </Tabs>
 
-            </tbody>
-          </table>
-        </div>
-      }
+      {tab.value === SettingsTab.changePass && <ChangePass />}
+
+      {isAdmin.value && <>
+        {tab.value === SettingsTab.userTable &&
+          <UserTable />
+        }
+      </>}
     </SingleColumnLayout>
   )
 })
 
-const Th: FC = ({ children }) => {
-  return (
-    <th
-      class="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-      <div class="flex items-center gap-2">
-        {children}
-      </div>
-    </th>
-  )
-}
+const Tabs: FC = ({ children }) => (
+  <ul class="flex border-b border-gray-200 text-center mb-8">
+    {children}
+  </ul>
+)
 
-const Td: FC = ({ children }) => {
+const Tab: FC<{ active: boolean, onClick: () => void }> = ({ active, children, onClick }) => {
+  if (active) {
+    return (
+      <li class="flex-1">
+        <a
+          class="relative block border-t border-l border-r border-gray-200 bg-white p-4 text-sm font-medium"
+          onClick={onClick}
+        >
+          <span class="absolute inset-x-0 -bottom-px h-px w-full bg-white" />
+          {children}
+        </a>
+      </li>
+    )
+  }
+
   return (
-    <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-      {children}
-    </td>
+    <li class="flex-1">
+      <a class="block p-4 text-sm font-medium text-gray-500"
+        onClick={onClick}
+      >
+        {children}
+      </a>
+    </li>
   )
 }
